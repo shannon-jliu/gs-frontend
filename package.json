@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "gulp": "^4.0.0",
+    "immutable": "^3.8.2",
     "q": "^1.5.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -18,5 +19,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom"
+  },
+  "devDependencies": {
+    "jest-immutable-matchers": "^2.0.1"
   }
 }
