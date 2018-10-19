@@ -23,25 +23,23 @@ const assignmentReducer = (state = initialState, action) => {
 
 function receiveNewAssignment(state, assignment) {
   return state
-      .update('assignments', l => {
-        return l.push(fromJS(assignment));
-      })
-      .set('loading', false);
+      .update('assignments', l => l.push(fromJS(assignment)))
+      .set('loading', false)
 }
 
 function startLoading(state) {
-  return state.set('loading', true);
+  return state.set('loading', true)
 }
 
 function finishLoading(state) {
-  return state.set('loading', false);
+  return state.set('loading', false)
 }
 
 function setActive(state, index) {
   if (index >= 0 && index < state.get('assignments').size) {
-      return state.set('current', index);
+      return state.set('current', index)
     } else {
-      return state;
+      return state
     }
 }
 
