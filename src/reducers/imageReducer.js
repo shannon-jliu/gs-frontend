@@ -3,7 +3,7 @@ import {fromJS} from 'immutable'
 const initialState = fromJS({
   all: {},
   recent: {
-    timestamp: 0
+    timestamp: -1
   }
 })
 

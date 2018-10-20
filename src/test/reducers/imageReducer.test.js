@@ -11,7 +11,7 @@ describe('imageReducer', () => {
   const initState = fromJS({
     all: {},
     recent: {
-      timestamp: 0
+      timestamp: -1
     }
   })
 
