@@ -6,3 +6,5 @@ export const ADLC_PAGE_ID = 'ADLC'
 export const CAMERA_SETTINGS_PAGE_ID = 'CAMERA_SETTINGS'
 export const GIMBAL_AIRDROP_PAGE_ID = 'GIMBAL_AIRDROP'
 export const LOGS_PAGE_ID = 'LOGS'
+
+export const GROUND_SERVER_URL = 'http://localhost:9000'

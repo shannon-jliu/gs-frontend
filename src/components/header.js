@@ -10,15 +10,15 @@ import {
   LOGS_PAGE_ID
 } from '../constants/links.js'
 
-const LINKS = Object.freeze([
-  {name: 'Login', key: LOGIN_PAGE_ID},
-  {name: 'Tagging', key: TAGGING_PAGE_ID},
-  {name: 'Merging', key: MERGING_PAGE_ID},
-  {name: 'ADLC', key: ADLC_PAGE_ID},
-  {name: 'Camera Settings', key: CAMERA_SETTINGS_PAGE_ID},
-  {name: 'Gimbal and Airdrop', key: GIMBAL_AIRDROP_PAGE_ID},
-  {name: 'Logs', key: LOGS_PAGE_ID},
-])
+const LINKS = Object.freeze({
+  'Login': {name: 'Login', key: LOGIN_PAGE_ID, href: '/login'},
+  'Tag': {name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag'},
+  'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '#'},
+  'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#'},
+  'Camera': {name: 'Camera Settings', key: CAMERA_SETTINGS_PAGE_ID, href: '#'},
+  'GimbalAirdrop': {name: 'Gimbal and Airdrop', key: GIMBAL_AIRDROP_PAGE_ID, href: '#'},
+  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '#'},
+})
 
 
 class Header extends Component {
@@ -37,8 +37,15 @@ class Header extends Component {
               <a href="#"><img src={require('../img/cuair_logo.png')}/></a>
             </div>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
-              {LINKS.map((link) =>
-                <li key={link.key}><a href="#">{link.name}</a></li>
+              {
+                Object.keys(LINKS).map((key) => {
+                  const link = LINKS[key]
+                  return (
+                    <li className={this.props.currentPage === key ? "active" : ""} key={link.key}>
+                      <a href={link.href}>{link.name}</a>
+                    </li>
+                  )
+                }
               )}
             </ul>
           </div>

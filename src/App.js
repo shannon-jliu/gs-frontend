@@ -1,20 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react'
 
 import Header from './components/header.js'
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header is-small-screen is-upgraded">
-          <Header onToggleSidebar={this.toggleSidebar} />
-          {
-            //this.props.main (this will be populated once we start actually having pages)
-          }
-        </div>
-      </div>
-    );
-  }
-}
+const App = (props) => (
+  <div>
+    <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header is-small-screen is-upgraded">
+      <Header currentPage={props.currentPage} />
+      {
+        props.main
+      }
+    </div>
+  </div>
+)
 
-export default App;
+export default App

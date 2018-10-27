@@ -14,11 +14,11 @@ const imageReducer = (state = initialState, action) => {
       // notice we are converting img.id to a String because JavaScript things -
       // as JavaScript Object keys are always Strings, see:
       // https://github.com/facebook/immutable-js/issues/282
-      const all = state.setIn(["all", String(img.id)], fromJS(img));
+      const all = state.setIn(["all", String(img.id)], fromJS(img))
       if (all.getIn(["recent", "timestamp"]) < img.timestamp) {
-        return all.set("recent", fromJS(img));
+        return all.set("recent", fromJS(img))
       } else {
-        return all;
+        return all
       }
     default:
       return state

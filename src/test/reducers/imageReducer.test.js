@@ -5,8 +5,8 @@ import {fromJS} from 'immutable'
 describe('imageReducer', () => {
   // this enables us to use toEqualImmutable
   beforeEach(function () {
-    jest.addMatchers(matchers);
-  });
+    jest.addMatchers(matchers)
+  })
 
   const initState = fromJS({
     all: {},
