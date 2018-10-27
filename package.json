@@ -2,6 +2,7 @@
   "name": "ground-server-site",
   "private": true,
   "dependencies": {
+    "eventsource": "^1.0.7",
     "gulp": "^4.0.0",
     "immutable": "^3.8.2",
     "lodash": "^4.17.11",

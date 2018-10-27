@@ -1,0 +1,16 @@
+.log-clipped {
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.button-log {
+    background: none;
+    border: none;
+  }
+
+.logs {
+  padding: 1%;
+}

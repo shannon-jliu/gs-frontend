@@ -17,7 +17,7 @@ const LINKS = Object.freeze({
   'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#'},
   'Camera': {name: 'Camera Settings', key: CAMERA_SETTINGS_PAGE_ID, href: '#'},
   'GimbalAirdrop': {name: 'Gimbal and Airdrop', key: GIMBAL_AIRDROP_PAGE_ID, href: '#'},
-  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '#'},
+  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs'},
 })
 
 

@@ -11,6 +11,7 @@ import rootReducer from './reducers'
 import App from './App.js'
 import Login from './pages/login/login.js'
 import Tag from './pages/tag/tag.js'
+import Logs from './pages/logs/logs.js'
 
 import AuthUtil from './util/authUtil.js'
 import {GROUND_SERVER_URL} from './constants/links.js'
@@ -52,6 +53,7 @@ const GroundServerRouter = () =>
       <Switch>
         <Route path="/login" render={() => <App main={<Login/>} currentPage={"Login"}/>}/>
         <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
+        <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
         <Redirect from="*" to="/login"/>
       </Switch>
     </BrowserRouter>
