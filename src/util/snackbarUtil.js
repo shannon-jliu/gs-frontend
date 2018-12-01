@@ -5,12 +5,12 @@ import 'node-snackbar/dist/snackbar.css'
 
 const SnackbarUtil = {
   render: function(msg) {
-  Snackbar.show({
+    Snackbar.show({
       actionText: 'Hide',
       text: msg,
       onActionClick: function(element) {
-         $(element).css('opacity', 0)
-      }
+        $(element).css('opacity', 0)
+      }
     })
   }
 }

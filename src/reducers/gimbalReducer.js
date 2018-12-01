@@ -15,23 +15,27 @@ const initialState = fromJS({
 
 const gimbalReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'UPDATE_GIMBAL_SETTINGS_SUCCESS':
-      // want to set pending to empty AND update gimbal settings
-      state = state.set('pending', Map());
-      // no return here so it will update gimbal settings in the next case statement
-    case 'RECEIVE_GIMBAL_SETTINGS':
-      const settings = action.settings
-      if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
-        return state.set('settings', settings);
-      } else {
-        return state;
-      }
-    case 'UPDATE_GIMBAL_SETTINGS_STARTED':
-      return state.set('pending', action.settings);
-    case 'UPDATE_GIMBAL_SETTINGS_FAILED':
-      return state.set('pending', Map());
-    default:
-      return state
+  case 'UPDATE_GIMBAL_SETTINGS_SUCCESS':
+    // want to set pending to empty AND update gimbal settings
+    state = state.set('pending', Map())
+    return receiveGimbalSettings(state, action)
+  case 'RECEIVE_GIMBAL_SETTINGS':
+    return receiveGimbalSettings(state, action)
+  case 'UPDATE_GIMBAL_SETTINGS_STARTED':
+    return state.set('pending', action.settings)
+  case 'UPDATE_GIMBAL_SETTINGS_FAILED':
+    return state.set('pending', Map())
+  default:
+    return state
+  }
+}
+
+function receiveGimbalSettings(state, action) {
+  const settings = action.settings
+  if (state.getIn(['settings', 'timestamp']) < settings.getIn(['timestamp'])) {
+    return state.set('settings', settings)
+  } else {
+    return state
   }
 }
 

@@ -32,8 +32,8 @@ const AuthUtil = {
         Username: username
       },
       complete: jqXHR => {
-        if (jqXHR.status !== 200) return callback(false, jqXHR.responseText);
-        AuthUtil.storeToken(JSON.parse(jqXHR.responseText).token);
+        if (jqXHR.status !== 200) return callback(false, jqXHR.responseText)
+        AuthUtil.storeToken(JSON.parse(jqXHR.responseText).token)
         callback(true)
       }
     })

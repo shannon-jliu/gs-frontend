@@ -20,19 +20,19 @@ import {AUTH_TOKEN_ID} from './constants/constants.js'
 const store = createStore(rootReducer)
 
 $.ajaxSetup({
-  dataType: "json",
-  contentType: "application/json",
+  dataType: 'json',
+  contentType: 'application/json',
   processData: false,
   beforeSend: function(jqXHR, options) {
     if (
-      options.contentType === "application/json" &&
-      typeof options.data !== "string"
+      options.contentType === 'application/json' &&
+      typeof options.data !== 'string'
     ) {
       options.data = JSON.stringify(options.data)
     }
     options.url = GROUND_SERVER_URL + options.url
     jqXHR.setRequestHeader(
-      "X-AUTH-TOKEN",
+      'X-AUTH-TOKEN',
       localStorage.getItem(AUTH_TOKEN_ID)
     )
   }
@@ -47,17 +47,17 @@ var requireAuth = Class => {
 }
 
 const GroundServerRouter = () =>
-(
-  <Provider store={store}>
-    <BrowserRouter>
-      <Switch>
-        <Route path="/login" render={() => <App main={<Login/>} currentPage={"Login"}/>}/>
-        <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
-        <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
-        <Redirect from="*" to="/login"/>
-      </Switch>
-    </BrowserRouter>
-  </Provider>
-)
+  (
+    <Provider store={store}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/login" render={() => <App main={<Login/>} currentPage={'Login'}/>}/>
+          <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
+          <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
+          <Redirect from="*" to="/login"/>
+        </Switch>
+      </BrowserRouter>
+    </Provider>
+  )
 
 ReactDOM.render(<GroundServerRouter />, document.getElementById('root'))

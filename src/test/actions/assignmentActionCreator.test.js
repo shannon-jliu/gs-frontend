@@ -5,21 +5,21 @@ import {
   finishLoading,
   setActive,
   updateAssignment
-} from '../../actions/assignmentActionCreator.js';
+} from '../../actions/assignmentActionCreator.js'
 
 it('should create an action when it receives an assignment', () => {
   // fields are omitted intentionally to avoid length
   const assignment = fromJS({
-      "id": 21,
-      "image": {
-          "id": 1,
-          "imageUrl": "/some/local/file/url.jpg",
-          "timestamp": 23412313948574072,
-      },
-      "timestamp": 1443826874918,
-      "assignee": "MDLC",
-      "done": false,
-      "username": "username"
+    'id': 21,
+    'image': {
+      'id': 1,
+      'imageUrl': '/some/local/file/url.jpg',
+      'timestamp': 23412313948574072,
+    },
+    'timestamp': 1443826874918,
+    'assignee': 'MDLC',
+    'done': false,
+    'username': 'username'
   })
   const expectedAction = {
     type: 'GET_NEW_ASSIGNMENT_SUCCESS',

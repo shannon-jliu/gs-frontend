@@ -9,8 +9,8 @@ class Login extends Component {
   constructor(props){
     super(props)
     this.state = {
-      username: "",
-      password: ""
+      username: '',
+      password: ''
     }
     this.redirect = this.redirect.bind(this)
     this.handleInput = this.handleInput.bind(this)
@@ -28,20 +28,20 @@ class Login extends Component {
   redirect(currentHref) {
     if (
       AuthUtil.authenticated() &&
-      !currentHref.endsWith("#force") &&
-      !currentHref.endsWith("#force/") &&
-      !currentHref.endsWith("#forced") &&
-      !currentHref.endsWith("#forced/")
+      !currentHref.endsWith('#force') &&
+      !currentHref.endsWith('#force/') &&
+      !currentHref.endsWith('#forced') &&
+      !currentHref.endsWith('#forced/')
     ) {
-        window.location.assign("/tag")
+      window.location.assign('/tag')
     } else {
       if (
-        (currentHref.endsWith("#force") ||
-          currentHref.endsWith("#force/")) &&
-        !currentHref.endsWith("#forced") &&
-        !currentHref.endsWith("#forced/")
+        (currentHref.endsWith('#force') ||
+          currentHref.endsWith('#force/')) &&
+        !currentHref.endsWith('#forced') &&
+        !currentHref.endsWith('#forced/')
       ) {
-        window.location.assign("/login#forced")
+        window.location.assign('/login#forced')
         window.location.reload(true)
       }
     }
@@ -63,10 +63,10 @@ class Login extends Component {
 
   loginCallback(success, res) {
     if (success) {
-        window.location.assign("/tag")
+      window.location.assign('/tag')
     } else {
       if (!res || res.responseText == null) {
-        SnackbarUtil.render("Failed to login")
+        SnackbarUtil.render('Failed to login')
       } else {
         SnackbarUtil.render(res.responseText)
       }
@@ -74,7 +74,7 @@ class Login extends Component {
   }
 
   handleKeyPress(e) {
-    if (e.key === "Enter") this.login()
+    if (e.key === 'Enter') this.login()
   }
 
   render(e) {
@@ -90,7 +90,7 @@ class Login extends Component {
                     <div className="input-field col s12">
                       <input
                         id="username-input"
-                        onChange={this.handleInput("username")}
+                        onChange={this.handleInput('username')}
                         type="text"
                         className="validate"
                         value={this.state.username}
@@ -102,13 +102,13 @@ class Login extends Component {
                   <div className="row">
                     <div className="password input-field col s12">
                       <input
-                          id="password-input"
-                          onChange={this.handleInput("password")}
-                          onKeyPress={this.handleKeyPress}
-                          type="password"
-                          className="validate"
-                          value={this.state.password}
-                        />
+                        id="password-input"
+                        onChange={this.handleInput('password')}
+                        onKeyPress={this.handleKeyPress}
+                        type="password"
+                        className="validate"
+                        value={this.state.password}
+                      />
                       <label htmlFor="password">Password</label>
                     </div>
                   </div>
@@ -116,7 +116,7 @@ class Login extends Component {
                   <button
                     to="/tag"
                     onClick={this.login}
-                    style={{ width: "100%" }}
+                    style={{ width: '100%' }}
                     className="btn waves-effect waves-light red accent-1"
                   >
                     Login

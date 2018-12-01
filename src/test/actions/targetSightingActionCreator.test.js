@@ -15,37 +15,37 @@ describe('targetSightingActionCreator', () => {
 
   //objects shortened to be concise
   const sighting = fromJS({
-    "id" : 1,
-    "timestamp" : 1443826874918,
-    "target": null,
-    "type" : "alphanum"
+    'id' : 1,
+    'timestamp' : 1443826874918,
+    'target': null,
+    'type' : 'alphanum'
   })
   const local_ts = fromJS({
-    "localId" : "341:107:938729871",
-    "timestamp" : 1443826874918,
-    "target": null,
-    "type" : "alphanum"
+    'localId' : '341:107:938729871',
+    'timestamp' : 1443826874918,
+    'target': null,
+    'type' : 'alphanum'
   })
   const attribute = fromJS({
-    color: "red"
+    color: 'red'
   })
 
   describe('ADD_TARGET_SIGHTING', () => {
     it('should create an action when it adds target sighting', () => {
       const assignment = fromJS({
-        "id": 21,
-        "image": {
-          "id": 1,
-          "timestamp": 5,
-          "state": null,
-          "imageUrl": "/api/v1/image/file/5.jpeg",
-          "telemetryData": null,
-          "gimbalView": null
+        'id': 21,
+        'image': {
+          'id': 1,
+          'timestamp': 5,
+          'state': null,
+          'imageUrl': '/api/v1/image/file/5.jpeg',
+          'telemetryData': null,
+          'gimbalView': null
         },
-        "timestamp": 1443826874918,
-        "assignee": "MDLC",
-        "done": false,
-        "username": "username"
+        'timestamp': 1443826874918,
+        'assignee': 'MDLC',
+        'done': false,
+        'username': 'username'
       })
 
       const expectedAction = {
@@ -136,10 +136,10 @@ describe('targetSightingActionCreator', () => {
       const sightings = fromJS([
         sighting,
         {
-          "id" : 2,
-          "timestamp" : 1443826874919,
-          "target": null,
-          "type" : "alphanum"
+          'id' : 2,
+          'timestamp' : 1443826874919,
+          'target': null,
+          'type' : 'alphanum'
         }
       ])
       const expectedAction = {

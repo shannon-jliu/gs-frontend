@@ -24,7 +24,7 @@ describe('componentDidMount', () => {
     expect( window.location.assign).toHaveBeenCalledWith('/tag')
   })
 
-  it('should redir to tag if authenticated and login not forced', () => {
+  it('should stay in login when forced', () => {
     AuthUtil.authenticated.mockReturnValueOnce(true)
     window.location.reload = jest.fn()
     loginObj.redirect('/login#force')

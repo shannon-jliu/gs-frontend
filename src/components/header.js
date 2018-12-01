@@ -41,18 +41,18 @@ class Header extends Component {
                 Object.keys(LINKS).map((key) => {
                   const link = LINKS[key]
                   return (
-                    <li className={this.props.currentPage === key ? "active" : ""} key={link.key}>
+                    <li className={this.props.currentPage === key ? 'active' : ''} key={link.key}>
                       <a href={link.href}>{link.name}</a>
                     </li>
                   )
                 }
-              )}
+                )}
             </ul>
           </div>
         </nav>
       </div>
-    );
+    )
   }
 }
 
-export default Header;
+export default Header

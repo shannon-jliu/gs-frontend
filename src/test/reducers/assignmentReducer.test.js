@@ -16,16 +16,16 @@ describe('assignmentReducer', () => {
 
   // fields are omitted intentionally to avoid length
   const firstAssignment = fromJS({
-    "id": 21,
-    "image": {
-        "id": 1,
-        "imageUrl": "/some/local/file/url.jpg",
-        "timestamp": 23412313948574072,
+    'id': 21,
+    'image': {
+      'id': 1,
+      'imageUrl': '/some/local/file/url.jpg',
+      'timestamp': 23412313948574072,
     },
-    "timestamp": 1443826874918,
-    "assignee": "MDLC",
-    "done": false,
-    "username": "username"
+    'timestamp': 1443826874918,
+    'assignee': 'MDLC',
+    'done': false,
+    'username': 'username'
   })
 
   const firstStateAfterInit = fromJS({
@@ -52,18 +52,17 @@ describe('assignmentReducer', () => {
 
     it('should handle a second action', () => {
       const sndAssignment = fromJS({
-        "id": 22,
-        "image": {
-            "id": 1,
-            "imageUrl": "/some/local/file/url.jpg",
-            "timestamp": 23412313948574073,
+        'id': 22,
+        'image': {
+          'id': 1,
+          'imageUrl': '/some/local/file/url.jpg',
+          'timestamp': 23412313948574073,
         },
-        "timestamp": 1443826874919,
-        "assignee": "MDLC",
-        "done": false,
-        "username": "username"
+        'timestamp': 1443826874919,
+        'assignee': 'MDLC',
+        'done': false,
+        'username': 'username'
       })
-
       expect(
         reducer(
           firstStateAfterInit,
@@ -132,7 +131,7 @@ describe('assignmentReducer', () => {
           current: -1,
           loading: false
         }))
-      })
+    })
   })
 
   describe('SET_ACTIVE_ASSIGNMENT', () => {
@@ -151,7 +150,7 @@ describe('assignmentReducer', () => {
           current: 0,
           loading: false
         }))
-      })
+    })
 
     it('should not update if index is greater than assignments list', () => {
       index = 1
@@ -168,7 +167,7 @@ describe('assignmentReducer', () => {
           current: -1,
           loading: false
         }))
-      })
+    })
 
     it('should not update if index is negative', () => {
       index = -1
@@ -185,7 +184,7 @@ describe('assignmentReducer', () => {
           current: -1,
           loading: false
         }))
-      })
+    })
   })
 
 })

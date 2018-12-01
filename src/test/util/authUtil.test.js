@@ -16,14 +16,14 @@ describe('login', () => {
 
   it('should call the auth path with the correct params', () => {
     AuthUtil.login('test', 'password', dummyCallback)
-    expect($.ajax).toBeCalledWith({
+    expect($.ajax).toHaveBeenCalledWith({
       complete: expect.any(Function),
       type: 'GET',
       url: '/api/v1/auth',
       headers: {
-          Authorization: md5('password'),
-          Username: 'test'
-        }
+        Authorization: md5('password'),
+        Username: 'test'
+      }
     })
   })
 
@@ -43,7 +43,7 @@ describe('login', () => {
   it('should return false and populate responseText if it fails with non 200', async () => {
     const response = {
       status: 400,
-      responseText: "Failed"
+      responseText: 'Failed'
     }
     $.ajax.mock.calls[0][0].complete(response)
 

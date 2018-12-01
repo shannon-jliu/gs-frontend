@@ -10,7 +10,7 @@ class Tag extends Component {
 
   render(e) {
     return (
-      "hi"
+      'hi'
     )
   }
 }

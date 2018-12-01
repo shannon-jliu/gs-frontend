@@ -3,3 +3,4 @@ node_js:
   - "node"
 before_install:
   - npm i
+  - ./node_modules/.bin/eslint src/

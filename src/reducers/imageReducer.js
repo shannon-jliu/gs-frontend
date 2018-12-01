@@ -14,19 +14,19 @@ const initialState = fromJS({
 
 const imageReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'RECEIVE_IMAGE':
-      const img = action.img
-      // notice we are converting img.id to a String because JavaScript things -
-      // as JavaScript Object keys are always Strings, see:
-      // https://github.com/facebook/immutable-js/issues/282
-      const all = state.setIn(["all", String(img.get('id'))], img)
-      if (all.getIn(["recent", "timestamp"]) < img.get('timestamp')) {
-        return all.set("recent", img)
-      } else {
-        return all
-      }
-    default:
-      return state
+  case 'RECEIVE_IMAGE':
+    var img = action.img
+    // notice we are converting img.id to a String because JavaScript things -
+    // as JavaScript Object keys are always Strings, see:
+    // https://github.com/facebook/immutable-js/issues/282
+    var all = state.setIn(['all', String(img.get('id'))], img)
+    if (all.getIn(['recent', 'timestamp']) < img.get('timestamp')) {
+      return all.set('recent', img)
+    } else {
+      return all
+    }
+  default:
+    return state
   }
 }
 

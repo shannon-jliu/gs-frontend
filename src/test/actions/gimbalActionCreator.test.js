@@ -4,7 +4,7 @@ import {
   receiveAndUpdateSettings,
   updateSettingsStart,
   updateSettingsFailed
-} from '../../actions/gimbalActionCreator.js';
+} from '../../actions/gimbalActionCreator.js'
 
 
 const settings = fromJS({

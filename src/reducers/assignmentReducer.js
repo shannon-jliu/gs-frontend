@@ -15,23 +15,23 @@ const initialState = fromJS({
 
 const assignmentReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'GET_NEW_ASSIGNMENT_SUCCESS':
-      return receiveNewAssignment(state, action.assignment)
-    case 'GET_NEW_ASSIGNMENT_STARTED':
-      return startLoading(state)
-    case 'GET_NEW_ASSIGNMENT_FAILED':
-      return finishLoading(state)
-    case 'SET_ACTIVE_ASSIGNMENT':
-      return setActive(state, action.index)
-    default:
-      return state
+  case 'GET_NEW_ASSIGNMENT_SUCCESS':
+    return receiveNewAssignment(state, action.assignment)
+  case 'GET_NEW_ASSIGNMENT_STARTED':
+    return startLoading(state)
+  case 'GET_NEW_ASSIGNMENT_FAILED':
+    return finishLoading(state)
+  case 'SET_ACTIVE_ASSIGNMENT':
+    return setActive(state, action.index)
+  default:
+    return state
   }
 }
 
 function receiveNewAssignment(state, assignment) {
   return state
-      .update('assignments', l => l.push(assignment))
-      .set('loading', false)
+    .update('assignments', l => l.push(assignment))
+    .set('loading', false)
 }
 
 function startLoading(state) {
@@ -44,10 +44,10 @@ function finishLoading(state) {
 
 function setActive(state, index) {
   if (index >= 0 && index < state.get('assignments').size) {
-      return state.set('current', index)
-    } else {
-      return state
-    }
+    return state.set('current', index)
+  } else {
+    return state
+  }
 }
 
 export default assignmentReducer

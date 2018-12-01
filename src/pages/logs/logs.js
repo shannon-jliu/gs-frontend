@@ -31,20 +31,20 @@ class Logs extends Component {
 
   // open the eventsource to the ground server
   componentWillMount() {
-    var eventSourceInitDict = {headers: {'X-AUTH-TOKEN': localStorage.getItem(AUTH_TOKEN_ID)}};
-    var eventSource = new EventSource(GROUND_SERVER_URL + "/api/v1/livelogs", eventSourceInitDict)
-    eventSource.addEventListener("message", this.listen, false)
+    var eventSourceInitDict = {headers: {'X-AUTH-TOKEN': localStorage.getItem(AUTH_TOKEN_ID)}}
+    var eventSource = new EventSource(GROUND_SERVER_URL + '/api/v1/livelogs', eventSourceInitDict)
+    eventSource.addEventListener('message', this.listen, false)
   }
 
   // retrieve the most recent 100 logs on page load
   componentDidMount() {
     $.ajax({
-      url: "/api/v1/logs",
-      type: "GET",
+      url: '/api/v1/logs',
+      type: 'GET',
       complete: response => {
         if (response.status !== 200) {
           this.setState({
-            logs: ["No logs"]
+            logs: ['No logs']
           })
         } else {
           let responseArr = response.responseJSON
@@ -81,11 +81,11 @@ class Logs extends Component {
           <div className="row">
             <div className="input-field col s12">
               <input placeholder="Filter"
-                     id="filter"
-                     type="text"
-                     className="validate"
-                     value={this.state.searchText}
-                     onChange={this.updateSearch}
+                id="filter"
+                type="text"
+                className="validate"
+                value={this.state.searchText}
+                onChange={this.updateSearch}
               />
             </div>
           </div>
@@ -93,27 +93,27 @@ class Logs extends Component {
         <div>
           <div>
             <ul className="collection">
-            {filteredLogs.map((log, key) => (
-              <li key={key} className="collection-item">
-                <span className={this.state.elided[key] ? "log-clipped" : ""}>
-                  <button
-                    className="button-log"
-                    onClick={() => {
-                      var elided = this.state.elided
-                      elided[key] = !elided[key]
-                      this.setState({
-                        elided: elided
-                      })
-                    }}
-                  >
-                    {" "}
-                    {this.state.elided[key] ? "\u25BA" : "\u25BC"}{" "}
-                  </button>
-                  {" "}
-                  {log} <br />
-                </span>
-              </li>
-            ))}
+              {filteredLogs.map((log, key) => (
+                <li key={key} className="collection-item">
+                  <span className={this.state.elided[key] ? 'log-clipped' : ''}>
+                    <button
+                      className="button-log"
+                      onClick={() => {
+                        var elided = this.state.elided
+                        elided[key] = !elided[key]
+                        this.setState({
+                          elided: elided
+                        })
+                      }}
+                    >
+                      {' '}
+                      {this.state.elided[key] ? '\u25BA' : '\u25BC'}{' '}
+                    </button>
+                    {' '}
+                    {log} <br />
+                  </span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
