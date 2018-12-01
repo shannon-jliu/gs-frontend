@@ -2,6 +2,7 @@ import $ from 'jquery'
 import md5 from 'md5'
 
 import {AUTH_TOKEN_ID} from '../constants/constants.js'
+import {REQUIRE_AUTH} from './config.js'
 
 var authenticated = !!localStorage.getItem(AUTH_TOKEN_ID)
 var confirmedAuthentication = false
@@ -43,6 +44,7 @@ const AuthUtil = {
   // determine if the user is already authenticated
   authenticated: function() {
     // if the user does not have a token or it has logged in this session
+    if (!REQUIRE_AUTH) return true
     if (!authenticated || confirmedAuthentication) return authenticated
     confirmAuthentication()
     confirmedAuthentication = true
@@ -50,6 +52,7 @@ const AuthUtil = {
   },
   // determine if this user is an admin use
   admin: function() {
+    if (!REQUIRE_AUTH) return true
     if (confirmedAuthentication) return admin
     confirmAuthentication()
     confirmedAuthentication = true
