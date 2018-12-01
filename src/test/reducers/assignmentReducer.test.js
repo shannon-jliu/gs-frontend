@@ -15,7 +15,7 @@ describe('assignmentReducer', () => {
   })
 
   // fields are omitted intentionally to avoid length
-  const firstAssignment = {
+  const firstAssignment = fromJS({
     "id": 21,
     "image": {
         "id": 1,
@@ -26,7 +26,7 @@ describe('assignmentReducer', () => {
     "assignee": "MDLC",
     "done": false,
     "username": "username"
-  }
+  })
 
   const firstStateAfterInit = fromJS({
     assignments: [firstAssignment],
@@ -51,7 +51,7 @@ describe('assignmentReducer', () => {
     })
 
     it('should handle a second action', () => {
-      const sndAssignment = {
+      const sndAssignment = fromJS({
         "id": 22,
         "image": {
             "id": 1,
@@ -62,7 +62,7 @@ describe('assignmentReducer', () => {
         "assignee": "MDLC",
         "done": false,
         "username": "username"
-      }
+      })
 
       expect(
         reducer(

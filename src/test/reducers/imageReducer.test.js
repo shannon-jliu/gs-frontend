@@ -20,14 +20,14 @@ describe('imageReducer', () => {
   })
 
   describe('RECEIVE_IMAGE', () => {
-    const firstImg = {
+    const firstImg = fromJS({
       "id": 1,
       "timestamp": 5,
       "state": null,
       "imageUrl": "/api/v1/image/file/5.jpeg",
       "telemetryData": null,
       "gimbalView": null
-    }
+    })
     it('should handle RECEIVE_IMAGE', () => {
       expect(
         reducer(
@@ -47,14 +47,14 @@ describe('imageReducer', () => {
     })
 
     it('should update recent img on RECEIVE_IMAGE', () => {
-      const secondImg = {
+      const secondImg = fromJS({
         "id": 2,
         "timestamp": 6,
         "state": null,
         "imageUrl": "/api/v1/image/file/6.jpeg",
         "telemetryData": null,
         "gimbalView": null
-      }
+      })
 
       expect(
         reducer(
@@ -80,14 +80,14 @@ describe('imageReducer', () => {
     })
 
     it('should not update recent img on RECEIVE_IMAGE', () => {
-      const secondImg = {
+      const secondImg = fromJS({
         "id": 2,
         "timestamp": 2,
         "state": null,
         "imageUrl": "/api/v1/image/file/2.jpeg",
         "telemetryData": null,
         "gimbalView": null
-      }
+      })
 
       expect(
         reducer(

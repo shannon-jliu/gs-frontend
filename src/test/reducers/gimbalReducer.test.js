@@ -20,13 +20,13 @@ describe('gimbalReducer', () => {
   })
 
   describe('RECEIVE_GIMBAL_SETTINGS', () => {
-    const settings = {
+    const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
       'mode': 'retract',
       'gps': null,
       'orientation': null
-    }
+    })
 
     it('should handle from the initial state', () => {
       expect(
@@ -45,13 +45,13 @@ describe('gimbalReducer', () => {
     })
 
     it('should update only on a greater timestamp', () => {
-      const sndSettings =  {
+      const sndSettings =  fromJS({
         'id': 1,
         'timestamp': 1443826874919,
         'mode': 'retract',
         'gps': null,
         'orientation': null
-      }
+      })
 
       const startingState = fromJS({
         settings,
@@ -80,13 +80,13 @@ describe('gimbalReducer', () => {
     })
 
     it('should not update if the timestamp is less', () => {
-      const sndSettings =  {
+      const sndSettings = fromJS({
         'id': 1,
         'timestamp': 1443826874917,
         'mode': 'retract',
         'gps': null,
         'orientation': null
-      }
+      })
 
       const startingState = fromJS({
         settings,
@@ -116,13 +116,13 @@ describe('gimbalReducer', () => {
   })
 
   describe('UPDATE_GIMBAL_SETTINGS_SUCCESS', () => {
-    const settings = {
+    const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
       'mode': 'retract',
       'gps': null,
       'orientation': null
-    }
+    })
 
     it('should handle from the initial state', () => {
       expect(
@@ -141,13 +141,13 @@ describe('gimbalReducer', () => {
     })
 
     it('should set pending to empty', () => {
-      const settings =  {
+      const settings = fromJS({
         'id': 1,
         'timestamp': 1443826874919,
         'mode': 'retract',
         'gps': null,
         'orientation': null
-      }
+      })
 
       const startingState = fromJS({
         settings: {
@@ -179,13 +179,13 @@ describe('gimbalReducer', () => {
   })
 
   describe('UPDATE_GIMBAL_SETTINGS_STARTED', () => {
-    const settings = {
+    const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
       'mode': 'retract',
       'gps': null,
       'orientation': null
-    }
+    })
 
     it('should handle from the initial state', () => {
       expect(
@@ -212,13 +212,13 @@ describe('gimbalReducer', () => {
     })
 
     it('should set pending', () => {
-      const settings =  {
+      const settings = fromJS({
         'id': 1,
         'timestamp': 1443826874919,
         'mode': 'retract',
         'gps': null,
         'orientation': null
-      }
+      })
 
       expect(
         reducer(
@@ -258,13 +258,13 @@ describe('gimbalReducer', () => {
   })
 
   describe('UPDATE_GIMBAL_SETTINGS_FAILED', () => {
-    const settings = {
+    const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
       'mode': 'retract',
       'gps': null,
       'orientation': null
-    }
+    })
 
     it('should handle from the initial state', () => {
       expect(

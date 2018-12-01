@@ -1,3 +1,4 @@
+import {fromJS} from 'immutable'
 import {
   receiveNewAssignment,
   startLoading,
@@ -8,7 +9,7 @@ import {
 
 it('should create an action when it receives an assignment', () => {
   // fields are omitted intentionally to avoid length
-  const assignment = {
+  const assignment = fromJS({
       "id": 21,
       "image": {
           "id": 1,
@@ -19,7 +20,7 @@ it('should create an action when it receives an assignment', () => {
       "assignee": "MDLC",
       "done": false,
       "username": "username"
-  }
+  })
   const expectedAction = {
     type: 'GET_NEW_ASSIGNMENT_SUCCESS',
     assignment

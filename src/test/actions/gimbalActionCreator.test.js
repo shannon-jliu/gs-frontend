@@ -1,17 +1,19 @@
+import { fromJS } from 'immutable'
 import {
   receiveSettings,
   receiveAndUpdateSettings,
   updateSettingsStart,
-  updateSettingsFinish
+  updateSettingsFailed
 } from '../../actions/gimbalActionCreator.js';
 
-const settings = {
+
+const settings = fromJS({
   'id': 1,
   'timestamp': 1443826874918,
   'mode': 'retract',
   'gps': null,
   'orientation': null
-}
+})
 
 it('should create an action when it receives gimbal settings', () => {
 
@@ -34,7 +36,7 @@ it('should create an action when it fails updating gimbal settings', () => {
   const expectedAction = {
     type: 'UPDATE_GIMBAL_SETTINGS_FAILED'
   }
-  expect(updateSettingsFinish()).toEqual(expectedAction)
+  expect(updateSettingsFailed()).toEqual(expectedAction)
 })
 
 it('should create an action when it succeeds updating gimbal settings', () => {

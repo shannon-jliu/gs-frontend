@@ -13,6 +13,6 @@ export const updateSettingsStart = settings => ({
   settings
 })
 
-export const updateSettingsFinish = () => ({
+export const updateSettingsFailed = () => ({
   type: 'UPDATE_GIMBAL_SETTINGS_FAILED'
 })
