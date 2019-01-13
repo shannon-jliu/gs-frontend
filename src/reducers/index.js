@@ -4,11 +4,13 @@ import { combineReducers } from 'redux'
 import imageReducer from './imageReducer.js'
 import gimbalReducer from './gimbalReducer.js'
 import assignmentReducer from './assignmentReducer.js'
+import targetReducer from './targetReducer.js'
 import targetSightingReducer from './targetSightingReducer.js'
 
 export default combineReducers({
   imageReducer,
   targetSightingReducer,
   gimbalReducer,
-  assignmentReducer
+  assignmentReducer,
+  targetReducer,
 })
