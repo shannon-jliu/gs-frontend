@@ -180,7 +180,7 @@ describe('targetSightingReducer', () => {
         reducer(
           populatedState, {
             type: 'START_SAVE_TARGET_SIGHTING',
-            sighting: lts1
+            localId: lts1.get('localId')
           })
       ).toEqualImmutable(
         fromJS({
@@ -197,8 +197,8 @@ describe('targetSightingReducer', () => {
         reducer(
           populatedState, {
             type: 'SUCCEED_SAVE_TARGET_SIGHTING',
-            newSighting: lts1.delete('localId').set('id', 14),
-            sighting: lts1.set('dfdasf', 'dfads') //makes sure fields are deleted
+            sighting: lts1.delete('localId').set('id', 14),
+            localId: lts1.get('localId')
           })
       ).toEqualImmutable(
         fromJS({
@@ -215,7 +215,7 @@ describe('targetSightingReducer', () => {
         reducer(
           populatedState.set('local', List.of(lts1.set('pending', fromJS({})), lts2)), {
             type: 'FAIL_SAVE_TARGET_SIGHTING',
-            sighting: lts1
+            localId: lts1.get('localId')
           })
       ).toEqualImmutable(populatedState)
     })
@@ -264,7 +264,7 @@ describe('targetSightingReducer', () => {
       ).toEqualImmutable(
         fromJS({
           local: populatedState.get('local'),
-          saved: List.of(newSts, sts2)
+          saved: List.of(newSts.set('localTargetId', sts1.get('localTargetId')), sts2)
         })
       )
     })
@@ -317,6 +317,7 @@ describe('targetSightingReducer', () => {
   describe('ADD_TARGET_SIGHTINGS_FROM_SERVER', () => {
     it('should add, update, and delete target sightings from server', () => {
       const newPopState = populatedState.set('saved', List.of(
+        sts1.set('type', 'emergent'),
         sts1.set('pending', fromJS({ shape: 'circle' })),
         sts2.delete('localTargetId'), 
         sts3))
@@ -346,6 +347,25 @@ describe('targetSightingReducer', () => {
             sts1.merge({ color: 'blue', pending: fromJS({ shape: 'circle' }) }),
             sts2.delete('localTargetId'),
             newTs)
+        })
+      )
+    })
+  })
+
+  describe('REPLACE_LOCAL_TARGET', () => {
+    it('should convert only saved with same localTargetId', () => {
+      const tgt = fromJS({id: 300})
+      expect(
+        reducer(
+          populatedState, {
+            type: 'REPLACE_LOCAL_TARGET',
+            localTargetId: 1,
+            target: tgt
+          })
+      ).toEqualImmutable(
+        fromJS({
+          local: populatedState.get('local'),
+          saved: List.of(sts1.delete('localTargetId').set('target', tgt), sts2)
         })
       )
     })

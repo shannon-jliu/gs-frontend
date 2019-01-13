@@ -9,20 +9,20 @@ export const deleteTargetSighting = sighting => ({
   sighting
 })
 
-export const startSaveTargetSighting = sighting => ({
+export const startSaveTargetSighting = localId => ({
   type: 'START_SAVE_TARGET_SIGHTING',
-  sighting
+  localId
 })
 
-export const succeedSaveTargetSighting = (newSighting, sighting) => ({
+export const succeedSaveTargetSighting = (sighting, localId) => ({
   type: 'SUCCEED_SAVE_TARGET_SIGHTING',
-  newSighting,
-  sighting
+  sighting,
+  localId
 })
 
-export const failSaveTargetSighting = sighting => ({
+export const failSaveTargetSighting = localId => ({
   type: 'FAIL_SAVE_TARGET_SIGHTING',
-  sighting
+  localId
 })
 
 export const startUpdateTargetSighting = (sighting, attribute) => ({
@@ -46,4 +46,10 @@ export const failUpdateTargetSighting = (sighting, attribute) => ({
 export const addTargetSightingsFromServer = sightings => ({
   type: 'ADD_TARGET_SIGHTINGS_FROM_SERVER',
   sightings
+})
+
+export const replaceLocalTargetInSightings = (localTargetId, target) => ({
+  type: 'REPLACE_LOCAL_TARGET',
+  localTargetId,
+  target
 })

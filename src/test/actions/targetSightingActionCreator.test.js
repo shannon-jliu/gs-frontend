@@ -7,7 +7,8 @@ import {
   startUpdateTargetSighting,
   succeedUpdateTargetSighting,
   failUpdateTargetSighting,
-  addTargetSightingsFromServer
+  addTargetSightingsFromServer,
+  replaceLocalTargetInSightings
 } from '../../actions/targetSightingActionCreator.js'
 import { fromJS } from 'immutable'
 
@@ -71,9 +72,9 @@ describe('targetSightingActionCreator', () => {
     it('should create an action when it starts save of target sighting', () => {
       const expectedAction = {
         type: 'START_SAVE_TARGET_SIGHTING',
-        sighting: local_ts
+        localId: '341:107:938729871'
       }
-      expect(startSaveTargetSighting(local_ts)).toEqual(expectedAction)
+      expect(startSaveTargetSighting('341:107:938729871')).toEqual(expectedAction)
     })
   })
 
@@ -81,10 +82,10 @@ describe('targetSightingActionCreator', () => {
     it('should create an action when it succeeds save of target sighting', () => {
       const expectedAction = {
         type: 'SUCCEED_SAVE_TARGET_SIGHTING',
-        newSighting: sighting,
-        sighting: local_ts
+        sighting: sighting,
+        localId: '341:107:938729871'
       }
-      expect(succeedSaveTargetSighting(sighting, local_ts)).toEqual(expectedAction)
+      expect(succeedSaveTargetSighting(sighting, '341:107:938729871')).toEqual(expectedAction)
     })
   })
 
@@ -92,9 +93,9 @@ describe('targetSightingActionCreator', () => {
     it('should create an action when it fails save of target sighting', () => {
       const expectedAction = {
         type: 'FAIL_SAVE_TARGET_SIGHTING',
-        sighting: local_ts
+        localId: '341:107:938729871'
       }
-      expect(failSaveTargetSighting(local_ts)).toEqual(expectedAction)
+      expect(failSaveTargetSighting('341:107:938729871')).toEqual(expectedAction)
     })
   })
 
@@ -147,6 +148,18 @@ describe('targetSightingActionCreator', () => {
         sightings
       }
       expect(addTargetSightingsFromServer(sightings)).toEqual(expectedAction)
+    })
+  })
+
+  describe('REPLACE_LOCAL_TARGET', () => {
+    it('should create an action when local target ids are replaced with targets', () => {
+      const tgt = fromJS({id:10, color:'blue'})
+      const expectedAction = {
+        type:'REPLACE_LOCAL_TARGET',
+        localTargetId: 3,
+        target: tgt
+      }
+      expect(replaceLocalTargetInSightings(3, tgt)).toEqual(expectedAction)
     })
   })
 })
