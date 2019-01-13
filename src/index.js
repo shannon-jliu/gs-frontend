@@ -40,7 +40,7 @@ $.ajaxSetup({
 
 var requireAuth = Class => {
   if (AuthUtil.authenticated()) {
-    return <App main={Class} currentPage={Class.type.name}/>
+    return <App main={Class} />
   } else {
     return <Redirect to="/login"/>
   }
@@ -51,7 +51,7 @@ const GroundServerRouter = () =>
     <Provider store={store}>
       <BrowserRouter>
         <Switch>
-          <Route path="/login" render={() => <App main={<Login/>} currentPage={'Login'}/>}/>
+          <Route path="/login" render={() => <App main={<Login/>}/>}/>
           <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
           <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
           <Redirect from="*" to="/login"/>
