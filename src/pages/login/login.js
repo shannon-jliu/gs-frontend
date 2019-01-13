@@ -22,7 +22,7 @@ class Login extends Component {
   componentDidMount() {
     this.redirect(window.location.href)
   }
-  
+
   // append #force if you want to access login page once
   // already authenticated
   redirect(currentHref) {
@@ -57,7 +57,7 @@ class Login extends Component {
 
   login() {
     AuthUtil.login(this.state.username, this.state.password, (success, res) => {
-      this.loginCallback()
+      this.loginCallback(success, res)
     })
   }
 
