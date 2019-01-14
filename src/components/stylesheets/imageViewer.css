@@ -1,0 +1,39 @@
+.image-viewer {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+  display: inline-block;
+  vertical-align: top;
+  width: 100%;
+  height:100%;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.tagger {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border: 4px solid red;
+}
+
+.dash {
+  position: absolute;
+  width: 0px;
+  height: 10px;
+  border: 3px solid red;
+  border-radius: 0 0 3px 3px;
+  top: 0px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.dot {
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  border: 3px solid red;
+  border-radius: 3px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
