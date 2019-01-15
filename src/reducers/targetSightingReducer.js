@@ -1,5 +1,5 @@
 import { fromJS, merge, List, Map } from 'immutable'
-import { _ } from 'lodash'
+import _ from 'lodash'
 
 /**
  * Notes on state representation:
@@ -45,7 +45,7 @@ const targetSightingReducer = (state = initialState, action) => {
 }
 
 function addTargetSighting(state, sighting, assignment) {
-  const newSighting = sighting.merge({ assignment: fromJS(assignment) })
+  const newSighting = sighting.set('assignment', assignment)
   return state.update('local', l => l.push(newSighting))
 }
 
@@ -101,9 +101,7 @@ function succeedUpdateTargetSighting(state, sighting, attribute) {
           newSighting = sighting.set('pending', newPending)
         }
       }
-      return ts.get('localTargetId') == undefined ?
-        newSighting :
-        newSighting.set('localTargetId', ts.get('localTargetId'))
+      return newSighting
     }
     return ts
   }))

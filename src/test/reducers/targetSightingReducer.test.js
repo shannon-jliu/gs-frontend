@@ -253,7 +253,7 @@ describe('targetSightingReducer', () => {
   describe('SUCCEED_UPDATE_TARGET_SIGHTING', () => {
     it('should succeed updating ts for only attribute updating', () => {
       //newAttrib mocks whether it handles other changed values
-      const newSts = sts1.merge({ color: 'blue', newAttrib: true }).delete('localTargetId')
+      const newSts = sts1.merge({ color: 'blue', newAttrib: true })
       expect(
         reducer(
           popState1Attrib, {
@@ -264,13 +264,13 @@ describe('targetSightingReducer', () => {
       ).toEqualImmutable(
         fromJS({
           local: populatedState.get('local'),
-          saved: List.of(newSts.set('localTargetId', sts1.get('localTargetId')), sts2)
+          saved: List.of(newSts, sts2)
         })
       )
     })
 
     it('should succeed updating ts with other attributes updating', () => {
-      const newSts = sts1.merge({ shape: 'circle', newAttrib: true }).delete('localTargetId')
+      const newSts = sts1.merge({ shape: 'circle', newAttrib: true })
       expect(
         reducer(
           popState2Attrib, {
@@ -281,10 +281,7 @@ describe('targetSightingReducer', () => {
       ).toEqualImmutable(
         fromJS({
           local: popState1Attrib.get('local'),
-          saved: List.of(newSts.merge({
-            pending: fromJS({ color: 'blue' }),
-            localTargetId: sts1.get('localTargetId')
-          }), sts2)
+          saved: List.of(newSts.set('pending', fromJS({ color: 'blue' })), sts2)
         })
       )
     })
