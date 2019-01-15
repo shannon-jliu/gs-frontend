@@ -352,14 +352,14 @@ describe('targetSightingReducer', () => {
     })
   })
 
-  describe('REPLACE_LOCAL_TARGET', () => {
+  describe('SUCCEED_SAVE_TARGET', () => {
     it('should convert only saved with same localTargetId', () => {
       const tgt = fromJS({id: 300})
       expect(
         reducer(
           populatedState, {
-            type: 'REPLACE_LOCAL_TARGET',
-            localTargetId: 1,
+            type: 'SUCCEED_SAVE_TARGET',
+            localId: 1,
             target: tgt
           })
       ).toEqualImmutable(

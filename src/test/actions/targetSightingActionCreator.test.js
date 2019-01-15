@@ -150,16 +150,4 @@ describe('targetSightingActionCreator', () => {
       expect(addTargetSightingsFromServer(sightings)).toEqual(expectedAction)
     })
   })
-
-  describe('REPLACE_LOCAL_TARGET', () => {
-    it('should create an action when local target ids are replaced with targets', () => {
-      const tgt = fromJS({id:10, color:'blue'})
-      const expectedAction = {
-        type:'REPLACE_LOCAL_TARGET',
-        localTargetId: 3,
-        target: tgt
-      }
-      expect(replaceLocalTargetInSightings(3, tgt)).toEqual(expectedAction)
-    })
-  })
 })

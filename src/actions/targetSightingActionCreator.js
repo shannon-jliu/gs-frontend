@@ -47,9 +47,3 @@ export const addTargetSightingsFromServer = sightings => ({
   type: 'ADD_TARGET_SIGHTINGS_FROM_SERVER',
   sightings
 })
-
-export const replaceLocalTargetInSightings = (localTargetId, target) => ({
-  type: 'REPLACE_LOCAL_TARGET',
-  localTargetId,
-  target
-})

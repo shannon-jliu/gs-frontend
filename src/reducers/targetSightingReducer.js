@@ -37,8 +37,8 @@ const targetSightingReducer = (state = initialState, action) => {
     return failUpdateTargetSighting(state, action.sighting, action.attribute)
   case 'ADD_TARGET_SIGHTINGS_FROM_SERVER':
     return addTargetSightingsFromServer(state, action.sightings)
-  case 'REPLACE_LOCAL_TARGET':
-    return replaceLocalTarget(state, action.localTargetId, action.target)
+  case 'SUCCEED_SAVE_TARGET':
+    return replaceLocalTarget(state, action.target, action.localId)
   default:
     return state
   }
@@ -142,7 +142,7 @@ function addTargetSightingsFromServer(state, sightings) {
   )
 }
 
-function replaceLocalTarget(state, localTargetId, target) {
+function replaceLocalTarget(state, target, localTargetId) {
   //no need to worry about emergent id overlapping because the emergent tgt is never local
   return state.update('saved', s => s.map(ts =>
     ts.get('localTargetId') == localTargetId ? ts.delete('localTargetId').set('target', target) : ts))
