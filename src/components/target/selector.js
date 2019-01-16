@@ -12,6 +12,7 @@ const Selector = ({ value, onChange, className, title, options }) => {
   return (
     <div className={className + 'input-field'}>
       <select onChange={onChange} defaultValue={value}>
+        <option value={''}/>
         {opts}
       </select>
       <label>{title}</label>

@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import renderer from 'react-test-renderer'
 import Enzyme, { mount } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
-import TypeSelect from '../../../components/target/typeSelect.js'
+import ConfSelect from '../../../components/target/confSelect.js'
 
 Enzyme.configure({ adapter: new Adapter() })
 
@@ -12,39 +11,39 @@ it('renders without crashing', () => {
   const div = document.createElement('div')
   const props = {
     onChange: jest.fn(() => 'onChange'),
-    title: 'Type'
+    title: 'Confidence'
   }
-  ReactDOM.render(<TypeSelect {...props}/>, div)
+  ReactDOM.render(<ConfSelect {...props}/>, div)
 })
 
-describe('TypeSelect tests with default value', () => {
+describe('ConfSelect tests', () => {
   let wrapper, props
   beforeEach(() => {
     props = {
       onChange: jest.fn(() => 'onChange'),
-      value: 'emergent',
-      title: 'Type'
+      value: 'HIGH',
+      title: 'Confidence'
     }
-    wrapper = mount(<TypeSelect {...props} />)
+    wrapper = mount(<ConfSelect {...props} />)
   })
 
   it('renders all the options correctly', () => {
-    expect(wrapper.find('option')).toHaveLength(3)
+    expect(wrapper.find('option')).toHaveLength(4)
   })
 
   it('renders the default value correctly', () => {
     const select = wrapper.find('select').first()
-    expect(select.prop('defaultValue')).toContain('emergent')
+    expect(select.prop('defaultValue')).toContain('HIGH')
   })
 
   it('renders label correctly', () => {
     const label = wrapper.find('label').first()
-    expect(label.text()).toContain('Type')
+    expect(label.text()).toContain('Confidence')
   })
 
   it('calls onChange properly', () => {
     const select = wrapper.find('select').first()
-    select.simulate('change', {target: 'alphanum'})
+    select.simulate('change', {target: 'MEDIUM'})
     expect(props.onChange).toHaveBeenCalled()
   })
 })
@@ -53,9 +52,9 @@ describe('TypeSelect tests without default value', () => {
   it('renders without default value correctly', () => {
     const props = {
       onChange: jest.fn(() => 'onChange'),
-      title: 'Type'
+      title: 'Confidence'
     }
-    const wrapper = mount(<TypeSelect {...props} />)
+    const wrapper = mount(<ConfSelect {...props} />)
     const select = wrapper.find('select').first()
     expect(select.prop('defaultValue')).toBeUndefined()
   })

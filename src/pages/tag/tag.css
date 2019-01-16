@@ -7,6 +7,9 @@
   padding: 0;
   text-align: right;
   -webkit-user-select: none;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
 }
 
 .tag-image {
@@ -17,4 +20,29 @@
   right: 25%;
   width: auto;
   height: auto;
+}
+
+.sightings {
+  position: relative;
+  /*display: inline-block;*/
+  top: 70px;
+  left: 78.25%;
+  width: 350px;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0 10px;
+}
+
+.sighting {
+  width: 100%;
+  margin: 10px 0;
+  padding: 0 0 10px 0;
+  text-align: center;
+  overflow: visible;
+  position: static;
+}
+
+.hidden {
+  display: none;
 }

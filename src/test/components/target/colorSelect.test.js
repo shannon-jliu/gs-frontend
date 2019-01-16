@@ -29,7 +29,7 @@ describe('colorSelect.js tests', () => {
   })
 
   it('renders all the options correctly', () => {
-    expect(wrapper.find('option')).toHaveLength(10)
+    expect(wrapper.find('option')).toHaveLength(11)
   })
 
   it('renders the default value correctly', () => {

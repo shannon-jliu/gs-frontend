@@ -28,7 +28,7 @@ describe('ShapeSelect tests', () => {
   })
 
   it('renders all the options correctly', () => {
-    expect(wrapper.find('option')).toHaveLength(13)
+    expect(wrapper.find('option')).toHaveLength(14)
   })
 
   it('renders the default value correctly', () => {

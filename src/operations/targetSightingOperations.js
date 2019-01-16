@@ -40,7 +40,7 @@ const targetSightingOperations = {
 
       const successCallback = data => {
         SnackbarUtil.render('Succesfully saved target sighting')
-        const recievedSighting = fromJS(data).set('type', sighting.get('type')) 
+        const recievedSighting = fromJS(data).set('type', sighting.get('type'))
         dispatch(action.succeedSaveTargetSighting(recievedSighting, sighting.get('localId')))
 
         /*
@@ -64,7 +64,7 @@ const targetSightingOperations = {
         SnackbarUtil.render('Failed to save target sighting')
         dispatch(action.failSaveTargetSighting(sighting.get('localId')))
       }
-      
+
       targetSightingRequests.saveTargetSighting(sighting.get('type') == 'alphanum', sighting.getIn(['assignment', 'id']), sightingToSend, successCallback, failureCallback)
     }
   ),
