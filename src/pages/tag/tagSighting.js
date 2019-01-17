@@ -8,7 +8,7 @@ import _ from 'lodash'
 import SnackbarUtil from '../../util/snackbarUtil.js'
 import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting } from './components'
 import { ColorSelect, ShapeSelect, TypeSelect, ConfSelect } from '../../components/target'
-import targetSightingOperations from '../../operations/targetSightingOperations'
+import TargetSightingOperations from '../../operations/targetSightingOperations'
 
 export class TagSighting extends Component {
   constructor(props) {
@@ -276,10 +276,10 @@ TagSighting.propTypes = {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  saveTargetSighting: sighting => targetSightingOperations.saveTargetSighting(dispatch)(fromJS(sighting)),
-  updateTargetSighting: sighting => targetSightingOperations.updateTargetSighting(dispatch)(fromJS(sighting)),
-  deleteUnsavedTargetSighting: sighting => targetSightingOperations.deleteUnsavedTargetSighting(dispatch)(fromJS(sighting)),
-  deleteSavedTargetSighting: sighting => targetSightingOperations.deleteSavedTargetSighting(dispatch)(fromJS(sighting))
+  saveTargetSighting: sighting => TargetSightingOperations.saveTargetSighting(dispatch)(fromJS(sighting)),
+  updateTargetSighting: sighting => TargetSightingOperations.updateTargetSighting(dispatch)(fromJS(sighting)),
+  deleteUnsavedTargetSighting: sighting => TargetSightingOperations.deleteUnsavedTargetSighting(dispatch)(fromJS(sighting)),
+  deleteSavedTargetSighting: sighting => TargetSightingOperations.deleteSavedTargetSighting(dispatch)(fromJS(sighting))
 })
 
 export default connect(null, mapDispatchToProps)(TagSighting)

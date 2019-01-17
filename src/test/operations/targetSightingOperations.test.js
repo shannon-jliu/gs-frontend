@@ -1,11 +1,12 @@
 import 'jest-localstorage-mock'
-import { targetSightingRequests } from '../../util/sendApi.js'
-import targetSightingOperations from '../../operations/targetSightingOperations.js'
 import { fromJS } from 'immutable'
+
+import { targetSightingRequests } from '../../util/sendApi.js'
+import TargetSightingOperations from '../../operations/targetSightingOperations.js'
 import * as action from '../../actions/targetSightingActionCreator.js'
 import SnackbarUtil from '../../util/snackbarUtil.js'
 
-describe('targetSightingOperations', () => {
+describe('TargetSightingOperations', () => {
   const assignment = fromJS({
     id: 11,
     timestamp: 1443826874918,
@@ -20,7 +21,7 @@ describe('targetSightingOperations', () => {
     alpha: 'r',
     alphaColor: 'blue',
     type: 'alphanum',
-    offaxis: 'false',
+    offaxis: false,
     mdlcClassConf: 'low',
     assignment: assignment
   })
@@ -32,7 +33,7 @@ describe('targetSightingOperations', () => {
     alpha: 'r',
     alphaColor: 'blue',
     type: 'alphanum',
-    offaxis: 'false',
+    offaxis: false,
     mdlcClassConf: 'low',
     assignment: assignment,
     geotag: {id: 21}
@@ -45,7 +46,7 @@ describe('targetSightingOperations', () => {
   })
 
   it('adds target sighting', () => {
-    targetSightingOperations.addTargetSighting(dispatch)(localTs.delete('assignment'), assignment)
+    TargetSightingOperations.addTargetSighting(dispatch)(localTs.delete('assignment'), assignment)
 
     expect(dispatch).toHaveBeenCalledWith(action.addTargetSighting(localTs.delete('assignment'), assignment))
     expect(dispatch).toHaveBeenCalledTimes(1)
@@ -54,7 +55,7 @@ describe('targetSightingOperations', () => {
   })
 
   it('deletes unsaved target sighting', () => {
-    targetSightingOperations.deleteUnsavedTargetSighting(dispatch)(localTs)
+    TargetSightingOperations.deleteUnsavedTargetSighting(dispatch)(localTs)
 
     expect(dispatch).toHaveBeenCalledWith(action.deleteTargetSighting(localTs))
     expect(dispatch).toHaveBeenCalledTimes(1)
@@ -63,10 +64,10 @@ describe('targetSightingOperations', () => {
   })
 
   describe('deleteSavedTargetSighting', () => {
-    it('only deletes when delete succeeds', () => {
+    it('deletes when delete succeeds', () => {
       targetSightingRequests.deleteTargetSighting = jest.fn((isAlphanum, id, successCallback, failureCallback) => successCallback())
 
-      targetSightingOperations.deleteSavedTargetSighting(dispatch)(ts)
+      TargetSightingOperations.deleteSavedTargetSighting(dispatch)(ts)
 
       expect(dispatch).toHaveBeenCalledWith(action.deleteTargetSighting(ts))
       expect(dispatch).toHaveBeenCalledTimes(1)
@@ -83,7 +84,7 @@ describe('targetSightingOperations', () => {
     it('re-adds when delete fails', () => {
       targetSightingRequests.deleteTargetSighting = jest.fn((isAlphanum, id, successCallback, failureCallback) => failureCallback())
 
-      targetSightingOperations.deleteSavedTargetSighting(dispatch)(ts)
+      TargetSightingOperations.deleteSavedTargetSighting(dispatch)(ts)
 
       expect(dispatch).toHaveBeenCalledWith(action.deleteTargetSighting(ts))
       expect(dispatch).toHaveBeenCalledWith(action.addTargetSighting(ts, assignment))
@@ -102,9 +103,9 @@ describe('targetSightingOperations', () => {
     it('saves successfully correctly', () => {
       const expected = localTs.delete('type').delete('localId').set('creator', 'MDLC')
       const returned = expected.set('id', 2)
-      targetSightingRequests.saveTargetSighting = jest.fn((isAlphanum, assignmentId, sighting, successCallback, failureCallback) => successCallback(returned))
+      targetSightingRequests.saveTargetSighting = jest.fn((isAlphanum, assignmentId, sighting, successCallback, failureCallback) => successCallback(returned.toJS()))
 
-      targetSightingOperations.saveTargetSighting(dispatch)(localTs)
+      TargetSightingOperations.saveTargetSighting(dispatch)(localTs)
 
       expect(dispatch).toHaveBeenCalledWith(action.startSaveTargetSighting(localTs.get('localId')))
       expect(dispatch).toHaveBeenCalledWith(action.succeedSaveTargetSighting(returned.set('type', 'alphanum'), localTs.get('localId')))
@@ -123,7 +124,7 @@ describe('targetSightingOperations', () => {
       const expected = localTs.delete('type').delete('localId').set('creator', 'MDLC')
       targetSightingRequests.saveTargetSighting = jest.fn((isAlphanum, assignmentId, sighting, successCallback, failureCallback) => failureCallback())
 
-      targetSightingOperations.saveTargetSighting(dispatch)(localTs)
+      TargetSightingOperations.saveTargetSighting(dispatch)(localTs)
 
       expect(dispatch).toHaveBeenCalledWith(action.startSaveTargetSighting(localTs.get('localId')))
       expect(dispatch).toHaveBeenCalledWith(action.failSaveTargetSighting(localTs.get('localId')))
@@ -148,12 +149,38 @@ describe('targetSightingOperations', () => {
       const returned = ts.set('color', 'green').delete('type').set('creator', 'MDLC')
       const final = savedTs.set('color', 'green')
 
-      targetSightingRequests.updateTargetSighting = jest.fn((isAlphanum, id, sighting, successCallback, failureCallback) => successCallback(returned))
+      targetSightingRequests.updateTargetSighting = jest.fn((isAlphanum, id, sighting, successCallback, failureCallback) => successCallback(returned.toJS()))
 
-      targetSightingOperations.updateTargetSighting(dispatch)(savedTs, attrib)
+      TargetSightingOperations.updateTargetSighting(dispatch)(savedTs, attrib)
 
       expect(dispatch).toHaveBeenCalledWith(action.startUpdateTargetSighting(savedTs, attrib))
       expect(dispatch).toHaveBeenCalledWith(action.succeedUpdateTargetSighting(final, attrib))
+      expect(dispatch).toHaveBeenCalledTimes(2)
+
+      expect(targetSightingRequests.updateTargetSighting.mock.calls[0][0]).toBe(true)
+      expect(targetSightingRequests.updateTargetSighting.mock.calls[0][1]).toBe(2)
+      expect(targetSightingRequests.updateTargetSighting.mock.calls[0][2]).toEqual(sentTs.toJS())
+      expect(targetSightingRequests.updateTargetSighting).toHaveBeenCalledTimes(1)
+
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Succesfully updated target sighting')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
+    })
+
+    it('updates target in target sighting correctly', () => {
+      const tgt = fromJS({id: 30})
+      const tgtAttrib = attrib.set('target', tgt)
+
+      const savedTs = ts.set('localTargetId', '23:63:2048').set('creator', 'MDLC')
+      const sentTs = ts.set('color', 'green').delete('type').delete('geotag').delete('id').set('target', tgt)
+      const returned = ts.set('color', 'green').delete('type').set('creator', 'MDLC').set('target', tgt)
+      const final = returned.set('type', ts.get('type'))
+
+      targetSightingRequests.updateTargetSighting = jest.fn((isAlphanum, id, sighting, successCallback, failureCallback) => successCallback(returned.toJS()))
+
+      TargetSightingOperations.updateTargetSighting(dispatch)(savedTs, tgtAttrib)
+
+      expect(dispatch).toHaveBeenCalledWith(action.startUpdateTargetSighting(savedTs, tgtAttrib))
+      expect(dispatch).toHaveBeenCalledWith(action.succeedUpdateTargetSighting(final, tgtAttrib))
       expect(dispatch).toHaveBeenCalledTimes(2)
 
       expect(targetSightingRequests.updateTargetSighting.mock.calls[0][0]).toBe(true)
@@ -171,7 +198,7 @@ describe('targetSightingOperations', () => {
 
       targetSightingRequests.updateTargetSighting = jest.fn((isAlphanum, id, sighting, successCallback, failureCallback) => failureCallback())
 
-      targetSightingOperations.updateTargetSighting(dispatch)(savedTs, attrib)
+      TargetSightingOperations.updateTargetSighting(dispatch)(savedTs, attrib)
 
       expect(dispatch).toHaveBeenCalledWith(action.startUpdateTargetSighting(savedTs, attrib))
       expect(dispatch).toHaveBeenCalledWith(action.failUpdateTargetSighting(savedTs, attrib))

@@ -18,7 +18,7 @@ describe('targetSightingReducer', () => {
     'type': 'alphanum',
     'color': 'red',
     'shape': 'square',
-    'localTargetId': 1,
+    'localTargetId': '1',
     'assignment': {
       'id': 25,
       'image': {
@@ -32,7 +32,7 @@ describe('targetSightingReducer', () => {
     'type': 'alphanum',
     'color': 'red',
     'shape': 'square',
-    'localTargetId': 2,
+    'localTargetId': '2',
     'assignment': {
       'id': 26,
       'image': {
@@ -45,7 +45,7 @@ describe('targetSightingReducer', () => {
     'id': 13,
     'type': 'alphanum',
     'color': 'red',
-    'localTargetId': 3,
+    'localTargetId': '3',
     'assignment': {
       'id': 27,
       'image': {
@@ -349,22 +349,64 @@ describe('targetSightingReducer', () => {
     })
   })
 
-  describe('SUCCEED_SAVE_TARGET', () => {
-    it('should convert only saved with same localTargetId', () => {
+  describe('DELETE_TARGET', () => {
+    it('should delete localTargetId for correct ts', () => {
       const tgt = fromJS({id: 300})
       expect(
         reducer(
           populatedState, {
-            type: 'SUCCEED_SAVE_TARGET',
-            localId: 1,
+            type: 'DELETE_TARGET',
+            target: fromJS({localId: '1'})
+          })
+      ).toEqualImmutable(
+        fromJS({
+          local: populatedState.get('local'),
+          saved: List.of(sts1.delete('localTargetId'), sts2)
+        })
+      )
+    })
+
+    it('should not delete saved target', () => {
+      const tgt = fromJS({id: 300, type: 'alphanum'})
+      const newPopState = populatedState.set('saved', List.of(sts1.delete('localTargetId').set('target', tgt), sts2))
+      expect(
+        reducer(
+          newPopState, {
+            type: 'DELETE_TARGET',
+            target: tgt
+          })
+      ).toEqualImmutable(newPopState)
+    })
+  })
+
+  describe('DELETE_TARGET_FROM_TARGET_SIGHTINGS', () => {
+    it('should delete target for correct ts', () => {
+      const tgt = fromJS({id: 300, type: 'alphanum'})
+      const newPopState = populatedState.set('saved', List.of(sts1.delete('localTargetId').set('target', tgt), sts2))
+      expect(
+        reducer(
+          newPopState, {
+            type: 'DELETE_TARGET_FROM_TARGET_SIGHTINGS',
             target: tgt
           })
       ).toEqualImmutable(
         fromJS({
           local: populatedState.get('local'),
-          saved: List.of(sts1.delete('localTargetId').set('target', tgt), sts2)
+          saved: List.of(sts1.delete('localTargetId'), sts2)
         })
       )
+    })
+
+    it('should not delete target for different saved type', () => {
+      const tgt = fromJS({id: 300, type: 'emergent'})
+      const newPopState = populatedState.set('saved', List.of(sts1.delete('localTargetId').set('target', tgt), sts2))
+      expect(
+        reducer(
+          newPopState, {
+            type: 'DELETE_TARGET_FROM_TARGET_SIGHTINGS',
+            target: tgt
+          })
+      ).toEqualImmutable(newPopState)
     })
   })
 })

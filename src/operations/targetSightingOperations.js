@@ -5,7 +5,7 @@ import * as action from '../actions/targetSightingActionCreator.js'
 import { targetSightingRequests } from '../util/sendApi.js'
 import SnackbarUtil from '../util/snackbarUtil.js'
 
-const targetSightingOperations = {
+const TargetSightingOperations = {
   addTargetSighting: dispatch => (
     (sighting, assignment) => {
       dispatch(action.addTargetSighting(sighting, assignment))
@@ -23,7 +23,7 @@ const targetSightingOperations = {
       dispatch(action.deleteTargetSighting(sighting))
       const failureCallback = () => {
         SnackbarUtil.render('Failed to delete target sighting')
-        targetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
+        TargetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
       }
 
       targetSightingRequests.deleteTargetSighting(sighting.get('type') == 'alphanum', sighting.get('id'), () => ({}), failureCallback)
@@ -35,18 +35,18 @@ const targetSightingOperations = {
       dispatch(action.startSaveTargetSighting(sighting.get('localId')))
 
       const sightingToSend = _.assign(
-        _.omit(sighting.toJS(), ['pending', 'localId', 'type']),
+        _.omit(sighting.toJS(), ['localId', 'type']),
         { creator: 'MDLC' })
 
       const successCallback = data => {
         SnackbarUtil.render('Succesfully saved target sighting')
-        const recievedSighting = fromJS(data).set('type', sighting.get('type'))
-        dispatch(action.succeedSaveTargetSighting(recievedSighting, sighting.get('localId')))
+        const receivedSighting = fromJS(data).set('type', sighting.get('type'))
+        dispatch(action.succeedSaveTargetSighting(receivedSighting, sighting.get('localId')))
 
         /*
         //if the target is emergent and has no description the description is updated to match that of the target sighting
-        if (sighting.get('type') == "emergent" && recievedSighting.get('target').description == "") {
-          const newEmergentTarget = recievedSighting.get('target').set('description', recievedSighting.get('description'))
+        if (sighting.get('type') == "emergent" && receivedSighting.get('target').description == "") {
+          const newEmergentTarget = receivedSighting.get('target').set('description', receivedSighting.get('description'))
           //TODO call future targetOperations to save the target (I feel like maybe this should be done on BE though, but leaving for now)
         } else if (sighting.get('type') == "alphanum" && sighting.get('offaxis') && data.get('target').shape === "") {
           //if the target is off-axis and contains empty fields, target fields are populated
@@ -75,7 +75,7 @@ const targetSightingOperations = {
       dispatch(action.startUpdateTargetSighting(sighting, attribute))
 
       let sightingToSend = _.assign(
-        _.omit(sighting.toJS(), ['type', 'localTargetId', 'id', 'creator', 'pending', 'geotag']),
+        _.omit(sighting.toJS(), ['type', 'localTargetId', 'id', 'creator', 'geotag']),
         attribute.toJS())
       if (sighting.get('type') == 'emergent' || sighting.get('offaxis')) {
         sightingToSend = _.omit(sightingToSend, ['target'])
@@ -83,8 +83,11 @@ const targetSightingOperations = {
 
       const successCallback = data => {
         SnackbarUtil.render('Succesfully updated target sighting')
-        const recievedSighting = sighting.merge(fromJS(data))
-        dispatch(action.succeedUpdateTargetSighting(recievedSighting, attribute))
+        let receivedSighting = fromJS(data).set('type', sighting.get('type'))
+        if (!_.has(data, 'target') && sighting.has('localTargetId')) {
+          receivedSighting = receivedSighting.set('localTargetId', sighting.get('localTargetId'))
+        }
+        dispatch(action.succeedUpdateTargetSighting(receivedSighting, attribute))
       }
 
       const failureCallback = () => {
@@ -97,4 +100,4 @@ const targetSightingOperations = {
   )
 }
 
-export default targetSightingOperations
+export default TargetSightingOperations

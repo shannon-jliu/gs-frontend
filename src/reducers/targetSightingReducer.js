@@ -37,8 +37,10 @@ const targetSightingReducer = (state = initialState, action) => {
     return failUpdateTargetSighting(state, action.sighting, action.attribute)
   case 'ADD_TARGET_SIGHTINGS_FROM_SERVER':
     return addTargetSightingsFromServer(state, action.sightings)
-  case 'SUCCEED_SAVE_TARGET':
-    return replaceLocalTarget(state, action.target, action.localId)
+  case 'DELETE_TARGET':
+    return deleteLocalTarget(state, action.target)
+  case 'DELETE_TARGET_FROM_TARGET_SIGHTINGS':
+    return deleteTargetFromTargetSightings(state, action.target)
   default:
     return state
   }
@@ -140,10 +142,21 @@ function addTargetSightingsFromServer(state, sightings) {
   )
 }
 
-function replaceLocalTarget(state, target, localTargetId) {
-  //no need to worry about emergent id overlapping because the emergent tgt is never local
+function deleteLocalTarget(state, target) {
+  if (target.has('localId')) {
+    const localTargetId = target.get('localId')
+    //no need to worry about emergent id overlapping because the emergent tgt is never local
+    return state.update('saved', s => s.map(ts =>
+      ts.get('localTargetId') == localTargetId ? ts.delete('localTargetId') : ts))
+  }
+  return state
+}
+
+function deleteTargetFromTargetSightings(state, target) {
+  const targetId = target.get('id')
+  const type = target.get('type')
   return state.update('saved', s => s.map(ts =>
-    ts.get('localTargetId') == localTargetId ? ts.delete('localTargetId').set('target', target) : ts))
+    ts.getIn(['target', 'id']) == targetId && ts.get('type') == type ? ts.delete('target') : ts))
 }
 
 export default targetSightingReducer

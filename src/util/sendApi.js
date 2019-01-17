@@ -21,3 +21,26 @@ export const targetSightingRequests = {
       .fail(failureCallback)
   }
 }
+
+export const targetRequests = {
+  deleteTarget: function(id, successCallback, failureCallback) {
+    //no option for emergent bc it shouldn't be deleted
+    $.ajax('/api/v1/alphanum_target/' + id, {method: 'DELETE'})
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+
+  saveTarget: function(target, successCallback, failureCallback) {
+    //no option for emergent bc it shouldn't be created here
+    $.post('/api/v1/alphanum_target/', target)
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+
+  updateTarget: function(isAlphanum, id, target, successCallback, failureCallback) {
+    $.ajax('/api/v1/' + (isAlphanum ? 'alphanum' : 'emergent') + '_target/' + id,
+      {method: 'PUT', data: target})
+      .done(successCallback)
+      .fail(failureCallback)
+  }
+}

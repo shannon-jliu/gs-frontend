@@ -8,7 +8,8 @@ import {
   succeedUpdateTargetSighting,
   failUpdateTargetSighting,
   addTargetSightingsFromServer,
-  replaceLocalTargetInSightings
+  replaceLocalTargetInSightings,
+  deleteTargetFromTargetSightings
 } from '../../actions/targetSightingActionCreator.js'
 import { fromJS } from 'immutable'
 
@@ -148,6 +149,18 @@ describe('targetSightingActionCreator', () => {
         sightings
       }
       expect(addTargetSightingsFromServer(sightings)).toEqual(expectedAction)
+    })
+  })
+
+  describe('DELETE_TARGET_FROM_TARGET_SIGHTINGS', () => {
+    it('should create an action when it fails update of target sighting', () => {
+      const target = fromJS({id: 5})
+
+      const expectedAction = {
+        type: 'DELETE_TARGET_FROM_TARGET_SIGHTINGS',
+        target
+      }
+      expect(deleteTargetFromTargetSightings(target)).toEqual(expectedAction)
     })
   })
 })
