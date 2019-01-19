@@ -1,4 +1,4 @@
-# ground-server-site
+# ground-server-site [![Build Status](https://travis-ci.com/CUAir/gs-frontend.svg?token=5rYdzxLAqYT3UTDm5ZVh&branch=master)](https://travis-ci.com/CUAir/gs-frontend)
 
 Welcome to the fully upgraded, WIP `ground-server` frontend. We are now using the latest version of ReactJS and Redux instead of NuclearJS.
 
@@ -15,3 +15,14 @@ Before submitting your branch for a PR, Travis CI will enforce linting practices
 `scripts/bin/lint`
 
 and push the modified files (as it will analyze/fix linting errors, warnings are ok for now) to ensure that Travis will not error.
+
+## Documentation
+
+Documentation will generally be found within `README`s on this repository. See:
+
+- [Action Creators](src/actions/README.md)
+- [Components](src/components/README.md)
+- [Operations](src/operations/README.md)
+- [Pages](src/pages/README.md)
+- [Reducers](src/actions/README.md)
+- [Util](src/util/README.md)
