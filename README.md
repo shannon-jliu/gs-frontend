@@ -20,9 +20,9 @@ and push the modified files (as it will analyze/fix linting errors, warnings are
 
 Documentation will generally be found within `README`s on this repository. See:
 
-- [Action Creators](src/actions/README.md)
-- [Components](src/components/README.md)
-- [Operations](src/operations/README.md)
-- [Pages](src/pages/README.md)
-- [Reducers](src/actions/README.md)
-- [Util](src/util/README.md)
+- [Action Creators](src/actions)
+- [Components](src/components)
+- [Operations](src/operations)
+- [Pages](src/pages)
+- [Reducers](src/actions)
+- [Util](src/util)
