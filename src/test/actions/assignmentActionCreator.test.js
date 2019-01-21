@@ -7,20 +7,21 @@ import {
   updateAssignment
 } from '../../actions/assignmentActionCreator.js'
 
+// fields are omitted intentionally to avoid length
+const assignment = fromJS({
+  'id': 21,
+  'image': {
+    'id': 1,
+    'imageUrl': '/some/local/file/url.jpg',
+    'timestamp': 23412313948574072,
+  },
+  'timestamp': 1443826874918,
+  'assignee': 'MDLC',
+  'done': false,
+  'username': 'username'
+})
+
 it('should create an action when it receives an assignment', () => {
-  // fields are omitted intentionally to avoid length
-  const assignment = fromJS({
-    'id': 21,
-    'image': {
-      'id': 1,
-      'imageUrl': '/some/local/file/url.jpg',
-      'timestamp': 23412313948574072,
-    },
-    'timestamp': 1443826874918,
-    'assignee': 'MDLC',
-    'done': false,
-    'username': 'username'
-  })
   const expectedAction = {
     type: 'GET_NEW_ASSIGNMENT_SUCCESS',
     assignment
@@ -49,4 +50,12 @@ it('should create an action when it sets the active assignment', () => {
     index
   }
   expect(setActive(1)).toEqual(expectedAction)
+})
+
+it('should create an action upon updating an assignment', () => {
+  const expectedAction = {
+    type: 'UPDATE_ASSIGNMENT',
+    assignment
+  }
+  expect(updateAssignment(assignment)).toEqual(expectedAction)
 })

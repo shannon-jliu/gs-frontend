@@ -15,3 +15,8 @@ export const setActive = index => ({
   type: 'SET_ACTIVE_ASSIGNMENT',
   index
 })
+
+export const updateAssignment = assignment => ({
+  type: 'UPDATE_ASSIGNMENT',
+  assignment
+})

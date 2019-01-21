@@ -16,16 +16,16 @@ describe('assignmentReducer', () => {
 
   // fields are omitted intentionally to avoid length
   const firstAssignment = fromJS({
-    'id': 21,
-    'image': {
-      'id': 1,
-      'imageUrl': '/some/local/file/url.jpg',
-      'timestamp': 23412313948574072,
+    id: 21,
+    image: {
+      id: 1,
+      imageUrl: '/some/local/file/url.jpg',
+      timestamp: 23412313948574072,
     },
-    'timestamp': 1443826874918,
-    'assignee': 'MDLC',
-    'done': false,
-    'username': 'username'
+    timestamp: 1443826874918,
+    assignee: 'MDLC',
+    done: false,
+    username: 'username'
   })
 
   const firstStateAfterInit = fromJS({
@@ -184,6 +184,34 @@ describe('assignmentReducer', () => {
           current: -1,
           loading: false
         }))
+    })
+  })
+  describe('UPDATE_ASSIGNMENT', () => {
+    it('should properly update', () => {
+      expect(
+        reducer(
+          firstStateAfterInit,
+          {
+            type: 'UPDATE_ASSIGNMENT',
+            assignment: firstAssignment.set('done', true)
+          })
+      ).toEqualImmutable(
+        fromJS({
+          assignments: [firstAssignment.set('done', true)],
+          current: -1,
+          loading: false
+        }))
+    })
+
+    it('should ignore non matching assignments', () => {
+      expect(
+        reducer(
+          firstStateAfterInit,
+          {
+            type: 'UPDATE_ASSIGNMENT',
+            assignment: firstAssignment.set('id', 50).set('done', true)
+          })
+      ).toEqualImmutable(firstStateAfterInit)
     })
   })
 

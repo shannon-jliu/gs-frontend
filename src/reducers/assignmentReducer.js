@@ -23,6 +23,8 @@ const assignmentReducer = (state = initialState, action) => {
     return finishLoading(state)
   case 'SET_ACTIVE_ASSIGNMENT':
     return setActive(state, action.index)
+  case 'UPDATE_ASSIGNMENT':
+    return updateAssignment(state, action.assignment)
   default:
     return state
   }
@@ -30,7 +32,7 @@ const assignmentReducer = (state = initialState, action) => {
 
 function receiveNewAssignment(state, assignment) {
   return state
-    .update('assignments', l => l.push(assignment))
+    .update('assignments', assignments => assignments.push(assignment))
     .set('loading', false)
 }
 
@@ -48,6 +50,18 @@ function setActive(state, index) {
   } else {
     return state
   }
+}
+
+function updateAssignment(state, updatedAssign) {
+  return state.update('assignments', assignments =>
+    assignments.map(localAssignment => {
+      if (localAssignment.get('id') === updatedAssign.get('id')) {
+        return updatedAssign
+      } else {
+        return localAssignment
+      }
+    })
+  )
 }
 
 export default assignmentReducer
