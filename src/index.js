@@ -5,6 +5,10 @@ import $ from 'jquery'
 
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
+import { persistStore, persistReducer } from 'redux-persist'
+import { PersistGate } from 'redux-persist/integration/react'
+import immutableTransform from 'redux-persist-transform-immutable'
+import storage from 'redux-persist/lib/storage'
 
 import rootReducer from './reducers'
 
@@ -17,7 +21,14 @@ import AuthUtil from './util/authUtil.js'
 import {GROUND_SERVER_URL} from './constants/links.js'
 import {AUTH_TOKEN_ID} from './constants/constants.js'
 
-const store = createStore(rootReducer)
+const config = {
+  transforms: [immutableTransform()], // required to convert localstorage to immutable
+  key: 'root',
+  storage
+}
+const persistedReducer = persistReducer(config, rootReducer)
+const store = createStore(persistedReducer)
+const persistor = persistStore(store)
 
 $.ajaxSetup({
   dataType: 'json',
@@ -46,17 +57,21 @@ var requireAuth = Class => {
   }
 }
 
+// PersistGate required to delay until persistence complete
+// see https://github.com/rt2zz/redux-persist#react-integration
 const GroundServerRouter = () =>
   (
     <Provider store={store}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/login" render={() => <App main={<Login/>}/>}/>
-          <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
-          <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
-          <Redirect from="*" to="/login"/>
-        </Switch>
-      </BrowserRouter>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/login" render={() => <App main={<Login/>}/>}/>
+            <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
+            <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
+            <Redirect from="*" to="/login"/>
+          </Switch>
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   )
 
