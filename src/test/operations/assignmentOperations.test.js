@@ -37,21 +37,21 @@ describe('AssignmentOperations', () => {
     })
     it('only processes assignments if there are assignments to process', () => {
       assignments = []
-      AssignmentOperations.processAssignments(dispatch)(assignments, null)
+      AssignmentOperations.processAssignments(dispatch)(assignments, -1, true)
 
       expect(dispatch).toHaveBeenCalledTimes(0)
     })
 
     it('properly processes each assignment and sets index to the end', () => {
-      AssignmentOperations.processAssignments(dispatch)(assignments, null)
+      AssignmentOperations.processAssignments(dispatch)(assignments, 0, true)
       expect(dispatch).toHaveBeenCalledTimes(7) // twice per assignment and once at the end
-      expect(dispatch).toHaveBeenLastCalledWith(action.setActive, 3)
+      expect(dispatch).toHaveBeenLastCalledWith(action.setActive(3))
     })
 
-    it('correctly sets index to the next one if currAssignment is defined', () => {
-      AssignmentOperations.processAssignments(dispatch)(assignments, assignment)
+    it('correctly sets index to the next one', () => {
+      AssignmentOperations.processAssignments(dispatch)(assignments, 1, false)
       expect(dispatch).toHaveBeenCalledTimes(7)
-      expect(dispatch).toHaveBeenLastCalledWith(action.setActive, 2)
+      expect(dispatch).toHaveBeenLastCalledWith(action.setActive(2))
     })
   })
 
@@ -80,7 +80,7 @@ describe('AssignmentOperations', () => {
       const result = await AssignmentOperations.finishAssignment(dispatch)(assignment)
 
       expect(result).toBeTruthy()
-      expect(dispatch).toHaveBeenCalledWith(action.updateAssignment, finishedAssignment)
+      expect(dispatch).toHaveBeenCalledWith(action.updateAssignment(finishedAssignment))
       expect(dispatch).toHaveBeenCalledTimes(1)
       expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
     })
@@ -131,9 +131,9 @@ describe('AssignmentOperations', () => {
       AssignmentOperations.nextAssignmentSuccess(dispatch)(assignment)(assignments)
       expect(AssignmentRequests.requestWork).toHaveBeenCalledTimes(1)
       expect(dispatch).toHaveBeenCalledTimes(3)
-      expect(dispatch).toHaveBeenNthCalledWith(1, action.receiveNewAssignment, assignment)
-      expect(dispatch).toHaveBeenNthCalledWith(2, imageAction.receiveImage, assignment.get('image'))
-      expect(dispatch).toHaveBeenNthCalledWith(3, action.setActive, 2)
+      expect(dispatch).toHaveBeenNthCalledWith(1, action.receiveNewAssignment(assignment))
+      expect(dispatch).toHaveBeenNthCalledWith(2, imageAction.receiveImage(assignment.get('image')))
+      expect(dispatch).toHaveBeenNthCalledWith(3, action.setActive(2))
     })
   })
 
@@ -160,7 +160,7 @@ describe('AssignmentOperations', () => {
     it('grabs the next assignment if it is already in the local', async () => {
       const multipleAssignments = assignment.set('total', 3)
       await AssignmentOperations.getNextAssignment(dispatch)(multipleAssignments)
-      expect(dispatch).toHaveBeenCalledWith(action.setActive, 2)
+      expect(dispatch).toHaveBeenCalledWith(action.setActive(2))
       expect(dispatch).toHaveBeenCalledTimes(1)
     })
 
@@ -175,7 +175,7 @@ describe('AssignmentOperations', () => {
     it('successfully move to the previous assignment', () => {
       AssignmentOperations.getPrevAssignment(dispatch)(assignment)
 
-      expect(dispatch).toHaveBeenCalledWith(action.setActive, 0)
+      expect(dispatch).toHaveBeenCalledWith(action.setActive(0))
       expect(dispatch).toHaveBeenCalledTimes(1)
     })
 
