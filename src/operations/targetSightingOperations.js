@@ -2,10 +2,41 @@ import { fromJS } from 'immutable'
 import _ from 'lodash'
 
 import * as action from '../actions/targetSightingActionCreator.js'
-import { targetSightingRequests } from '../util/sendApi.js'
+import { TargetSightingRequests } from '../util/sendApi.js'
+import { TargetSightingGetRequests as GetRequests } from '../util/receiveApi.js'
 import SnackbarUtil from '../util/snackbarUtil.js'
 
 const TargetSightingOperations = {
+  getAllSightings: dispatch => (
+    () => {
+      // the flow is essentially getAlphanum -> getEmergent -> combine -> dispatch
+
+      const alphanumSuccess = data => {
+        const alphanumSightings = _.map(data, sighting => {
+          sighting.type = 'alphanum'
+          return sighting
+        })
+        GetRequests.getEmergentSightings(emergentSuccess(alphanumSightings), emergentFail)
+      }
+
+      const emergentSuccess = alphanumSightings => (
+        data => {
+          const emergentSightings = _.map(data, sighting => {
+            sighting.type = 'emergent'
+            return sighting
+          })
+          const allSightings = fromJS(_.concat(alphanumSightings, emergentSightings))
+          dispatch(action.addTargetSightingsFromServer(allSightings))
+        }
+      )
+
+      const alphanumFail = () => SnackbarUtil.render('Failed to get alphanumeric target sightings')
+      const emergentFail = () => SnackbarUtil.render('Failed to get emergent target sightings')
+
+      GetRequests.getAlphanumSightings(alphanumSuccess, alphanumFail)
+    }
+  ),
+
   addTargetSighting: dispatch => (
     (sighting, assignment) => {
       dispatch(action.addTargetSighting(sighting, assignment))
@@ -26,7 +57,7 @@ const TargetSightingOperations = {
         TargetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
       }
 
-      targetSightingRequests.deleteTargetSighting(sighting.get('type') == 'alphanum', sighting.get('id'), () => ({}), failureCallback)
+      TargetSightingRequests.deleteTargetSighting(sighting.get('type') == 'alphanum', sighting.get('id'), () => ({}), failureCallback)
     }
   ),
 
@@ -65,7 +96,7 @@ const TargetSightingOperations = {
         dispatch(action.failSaveTargetSighting(sighting.get('localId')))
       }
 
-      targetSightingRequests.saveTargetSighting(sighting.get('type') == 'alphanum', sighting.getIn(['assignment', 'id']), sightingToSend, successCallback, failureCallback)
+      TargetSightingRequests.saveTargetSighting(sighting.get('type') == 'alphanum', sighting.getIn(['assignment', 'id']), sightingToSend, successCallback, failureCallback)
     }
   ),
 
@@ -95,7 +126,7 @@ const TargetSightingOperations = {
         dispatch(action.failUpdateTargetSighting(sighting, attribute))
       }
 
-      targetSightingRequests.updateTargetSighting(sighting.get('type') == 'alphanum', sighting.get('id'), sightingToSend, successCallback, failureCallback)
+      TargetSightingRequests.updateTargetSighting(sighting.get('type') == 'alphanum', sighting.get('id'), sightingToSend, successCallback, failureCallback)
     }
   )
 }

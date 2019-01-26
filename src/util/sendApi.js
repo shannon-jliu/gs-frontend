@@ -2,7 +2,7 @@ import $ from 'jquery'
 import _ from 'lodash'
 // non-GET requests here
 
-export const targetSightingRequests = {
+export const TargetSightingRequests = {
   deleteTargetSighting: function(isAlphanum, id, successCallback, failureCallback) {
     $.ajax('/api/v1/' + (isAlphanum ? 'alphanum' : 'emergent') + '_target_sighting/' + id, {method: 'DELETE'})
       .done(successCallback)
