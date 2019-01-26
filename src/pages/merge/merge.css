@@ -1,0 +1,130 @@
+.merge .image {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+}
+
+.merge .image.merged-ts {
+  margin: 0px 5px;
+}
+
+.merge .sightings {
+  position: relative;
+  width: 300px;
+  overflow: hidden;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.merge .sightings .sighting {
+  width: 100%;
+  margin: 10px 0;
+  display: flex;
+  flex-direction: row;
+  min-height: 100px;
+  /* height: 100px; */
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+
+.merge .sightings .sighting .fact-container {
+  display: flex;
+  padding: 0 10px;
+  flex: 1 1 50%;
+  cursor: auto;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.merge .sightings .sighting .fact-container .image {
+  cursor: pointer;
+}
+
+.merge .sightings .sighting .adlc-sighting {
+  cursor: auto;
+}
+
+.merge .targets {
+  position: absolute;
+  top: 0;
+  left: 300px;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px;
+/*  background-color: @bgColor; */
+}
+
+.merge .targets .target{
+  width: 100%;
+  margin: 10px 0;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  min-height: 0;
+  position: static;
+  overflow: visible;
+}
+
+.merge .targets .target .facts {
+  display: inline-block;
+  width: 250px;
+}
+
+.merge .targets .target .facts .row {
+  display: flex;
+  flex-direction: row;
+}
+
+.merge .targets .target .facts .row .obj {
+  flex: 1 1 50%;
+  width: auto;
+  margin: 0 10px;
+  margin: -6px 10px -14px 10px;
+  height: 67px;
+}
+
+.merge .targets .target .facts .row .obj .read-field {
+  cursor: text;
+}
+
+.merge .targets .target .facts .row .button-container {
+  display: inline-flex;
+  width: auto;
+  margin: 0 10px;
+  flex: 1 1 50%;
+}
+
+.merge .targets .target .facts .row .button-container .button {
+  width: 100%;
+}
+
+.merge .targets .target .sighting-images {
+  display: inline-block;
+  flex: 1 1 1px;
+  height: 130px;
+  overflow-y: auto;
+  /* -webkit-user-select: none; */
+}
+
+.merge .targets .target .sighting-images.adlc-target {
+  height: 96px;
+}
+
+.merge .targets .target.drag-over {
+  background-color: #00FF00;
+}
+
+.merge .targets .target.new-target {
+  text-align: center;
+  padding: 40px 10px;
+  font-size: 2em;
+  display: block;
+  cursor: pointer;
+  -webkit-user-select: none;
+}
+
+.merge .targets .t-thumb {
+  border: 5px solid #F44336;
+}

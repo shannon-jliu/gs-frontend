@@ -12,7 +12,7 @@
   overflow: hidden;
 }
 
-.tag-image {
+.tag .tag-image {
   position: absolute;
   top: 60px;
   bottom: 30px;
@@ -22,7 +22,7 @@
   height: auto;
 }
 
-.sightings {
+.tag .sightings {
   position: relative;
   /*display: inline-block;*/
   top: 70px;
@@ -34,7 +34,7 @@
   padding: 0 10px;
 }
 
-.sighting {
+.tag .sighting {
   width: 100%;
   margin: 10px 0;
   padding: 0 0 10px 0;
