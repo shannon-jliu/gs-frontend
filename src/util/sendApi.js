@@ -10,7 +10,7 @@ export const TargetSightingRequests = {
   },
 
   saveTargetSighting: function(isAlphanum, assignmentId, sighting, successCallback, failureCallback) {
-    $.post('/api/v1/assignment/' + assignmentId + (isAlphanum ? '/alphanum' : '/emergent') + '_target_sighting/', sighting)
+    $.post('/api/v1/assignment/' + assignmentId + (isAlphanum ? '/alphanum' : '/emergent') + '_target_sighting', sighting)
       .done(successCallback)
       .fail(failureCallback)
   },
@@ -54,9 +54,32 @@ export const AssignmentRequests = {
       .fail(failureCallback)
   },
 
-  requestWork: function(assignment, successCallback, failureCallback) {
+  requestWork: function(successCallback, failureCallback) {
     $.post('/api/v1/assignment/work/MDLC')
       .done(successCallback)
       .fail(failureCallback)
+  }
+}
+
+export const SettingsRequest = {
+  updateSetting: function(route, settings, successCallback, failureCallback) {
+    $.post(route, settings)
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+
+  updateAirdropSetting: function(settings, successCallback, failureCallback) {
+    // TODO: Find correct route
+    SettingsRequest.updateSetting('/api/v1/settings/airdrop', settings, successCallback, failureCallback)
+  },
+
+  updateCameraSetting: function(settings, successCallback, failureCallback) {
+    // TODO: Find correct route
+    SettingsRequest.updateSetting('/api/v1/settings/camera/types', settings, successCallback, failureCallback)
+  },
+
+  updateGimbalSetting: function(settings, successCallback, failureCallback) {
+    // TODO: Find correct route
+    SettingsRequest.updateSetting('/api/set-mode', settings, successCallback, failureCallback)
   }
 }

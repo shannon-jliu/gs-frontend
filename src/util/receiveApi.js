@@ -36,3 +36,31 @@ export const AssignmentGetRequests = {
       .fail(failureCallback)
   }
 }
+
+export const SettingsGetRequests = {
+  getSetting: function(route, successCallback, failureCallback) {
+    $.get(route)
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+
+  getAirdropSetting: function(successCallback, failureCallback) {
+    // TODO: Find correct route
+    SettingsGetRequests.getSetting('/api/v1/settings/airdrop', successCallback, failureCallback)
+  },
+
+  getCameraSettingCapturing: function(successCallback, failureCallback) {
+    // TODO: Find correct route
+    SettingsGetRequests.getSetting('/api/continuous-capture', successCallback, failureCallback)
+  },
+
+  getCameraSettingZoom: function(successCallback, failureCallback) {
+    // TODO: Find correct route
+    SettingsGetRequests.getSetting('/api/dev/get-zoom', successCallback, failureCallback)
+  },
+
+  getGimbalSetting: function(successCallback, failureCallback) {
+    // TODO: Find correct route
+    SettingsGetRequests.getSetting('/api/set-mode', successCallback, failureCallback)
+  }
+}

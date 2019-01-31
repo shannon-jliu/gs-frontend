@@ -10,9 +10,7 @@ import {
 const settings = fromJS({
   'id': 1,
   'timestamp': 1443826874918,
-  'mode': 'retract',
-  'gps': null,
-  'orientation': null
+  'mode': 'retract'
 })
 
 it('should create an action when it receives gimbal settings', () => {

@@ -360,7 +360,7 @@ describe('airdropReducer', () => {
       ).toEqualImmutable(
         fromJS({
           settings: {
-            timestamp: -1,
+            timestamp: -1
           },
           pending: {}
         })

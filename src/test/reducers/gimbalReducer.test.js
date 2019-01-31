@@ -275,12 +275,7 @@ describe('gimbalReducer', () => {
             settings: settings,
           })
       ).toEqualImmutable(
-        fromJS({
-          settings:{
-            timestamp: -1
-          },
-          pending: {}
-        })
+        initState
       )
     })
 
@@ -298,12 +293,7 @@ describe('gimbalReducer', () => {
             settings: settings,
           })
       ).toEqualImmutable(
-        fromJS({
-          settings: {
-            'timestamp': -1,
-          },
-          pending: {}
-        })
+        initState
       )
     })
   })
