@@ -96,16 +96,12 @@ export class TagSighting extends Component {
     return false
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // required for selectors.
     // See: https://materializecss.com/select.html#initialization
-    document.addEventListener('DOMContentLoaded', () => {
-      let elems = document.querySelectorAll('select')
-      let instances = M.FormSelect.init(elems, {})
-    })
-  }
+    let elems = document.querySelectorAll('select')
+    let instances = M.FormSelect.init(elems, {})
 
-  componentDidMount() {
     this.loadImage(this.props.imageUrl)
   }
 
@@ -188,8 +184,8 @@ export class TagSighting extends Component {
         ])
       }
       if (this.props.sighting.has('id')) {
-        // if it has an id, then it has been saved and needs to be update
-        this.props.updateTargetSighting(this.props.sighting, fromJS(attr))
+        // if it has an id, then it has been saved and needs to be updated
+        this.props.updateTargetSighting(this.props.sighting, attr)
       } else {
         this.props.saveTargetSighting(newSighting)
       }
@@ -233,7 +229,7 @@ export class TagSighting extends Component {
             shapeColor={this.state.shapeColor}
             alpha={this.state.alpha}
             alphaColor={this.state.alphaColor}
-            cameraTilt={true}
+            cameraTilt={this.props.cameraTilt}
             isOffAxis={this.state.offaxis}
             getHandler={this.getHandler}
           />
@@ -273,13 +269,14 @@ export class TagSighting extends Component {
 TagSighting.propTypes = {
   sighting: PropTypes.object.isRequired,
   imageUrl: PropTypes.string.isRequired,
+  cameraTilt: PropTypes.bool.isRequired,
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  saveTargetSighting: sighting => TargetSightingOperations.saveTargetSighting(dispatch)(fromJS(sighting)),
-  updateTargetSighting: sighting => TargetSightingOperations.updateTargetSighting(dispatch)(fromJS(sighting)),
-  deleteUnsavedTargetSighting: sighting => TargetSightingOperations.deleteUnsavedTargetSighting(dispatch)(fromJS(sighting)),
-  deleteSavedTargetSighting: sighting => TargetSightingOperations.deleteSavedTargetSighting(dispatch)(fromJS(sighting))
+  saveTargetSighting: TargetSightingOperations.saveTargetSighting(dispatch),
+  updateTargetSighting: TargetSightingOperations.updateTargetSighting(dispatch),
+  deleteUnsavedTargetSighting: TargetSightingOperations.deleteUnsavedTargetSighting(dispatch),
+  deleteSavedTargetSighting: TargetSightingOperations.deleteSavedTargetSighting(dispatch)
 })
 
 export default connect(null, mapDispatchToProps)(TagSighting)

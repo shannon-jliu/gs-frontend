@@ -8,7 +8,7 @@ import { createStore } from 'redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import immutableTransform from 'redux-persist-transform-immutable'
-import storage from 'redux-persist/lib/storage'
+import storageSession from 'redux-persist/lib/storage/session'
 
 import rootReducer from './reducers'
 
@@ -25,7 +25,7 @@ import {AUTH_TOKEN_ID} from './constants/constants.js'
 const config = {
   transforms: [immutableTransform()], // required to convert localstorage to immutable
   key: 'root',
-  storage
+  storage: storageSession
 }
 const persistedReducer = persistReducer(config, rootReducer)
 const store = createStore(persistedReducer)

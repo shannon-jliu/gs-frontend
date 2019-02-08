@@ -47,7 +47,8 @@ describe('Base tests with no pending field', () => {
   beforeEach(() => {
     props = {
       sighting: sighting,
-      imageUrl: '../../../img/cuair_default.png'
+      imageUrl: '../../../img/cuair_default.png',
+      cameraTilt: true
     }
     wrapper = shallow(<TagSighting {...props} />)
     instance = wrapper.instance()
@@ -221,6 +222,7 @@ describe.each([
     props = {
       sighting: sightingToUse,
       imageUrl: '../../../img/cuair_default.png',
+      cameraTilt: true,
       saveTargetSighting: saveTargetSighting,
       updateTargetSighting: updateTargetSighting,
       deleteSavedTargetSighting: deleteSavedTargetSighting,
@@ -243,7 +245,7 @@ describe.each([
       alpha: 'C',
       alphaColor: 'black',
       offaxis: false,
-      mdlcClassConf: 'high'
+      mdlcClassConf: 'HIGH'
     }
     instance.canSave = jest.fn(() => true)
     instance.setState(ts)
@@ -254,7 +256,7 @@ describe.each([
         'shape': 'square',
         'shapeColor': 'black',
         'alphaColor': 'black',
-        'mdlcClassConf': 'high'
+        'mdlcClassConf': 'HIGH'
       })
       expect(saveFunc).toHaveBeenCalledWith(sightingToUse, diff)
     } else expect(saveFunc).toHaveBeenCalledWith(newSighting)
@@ -264,14 +266,14 @@ describe.each([
     const ts = {
       type: 'emergent',
       description: 'i miss u ram',
-      mdlcClassConf: 'high'
+      mdlcClassConf: 'HIGH'
     }
     instance.canSave = jest.fn(() => true)
     instance.setState(ts)
     instance.save()
     const newSighting = sightingToUse.merge(ts)
     if (saveFunc == updateTargetSighting) {
-      const diff = fromJS({ description: 'i miss u ram', mdlcClassConf: 'high' })
+      const diff = fromJS({ description: 'i miss u ram', mdlcClassConf: 'HIGH' })
       expect(saveFunc).toHaveBeenCalledWith(sightingToUse, diff)
     } else expect(saveFunc).toHaveBeenCalledWith(newSighting)
   })
@@ -288,6 +290,7 @@ describe('pending ts tests', () => {
     props = {
       sighting: pendingSighting,
       imageUrl: '../../../img/cuair_default.png',
+      cameraTilt: true,
       updateTargetSighting: jest.fn(),
       saveTargetSighting: jest.fn(),
       deleteSavedTargetSighting: jest.fn(),

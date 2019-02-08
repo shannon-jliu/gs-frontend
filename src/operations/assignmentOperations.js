@@ -44,8 +44,8 @@ const AssignmentOperations = {
           if (currAssignment.get('currentIndex') < currAssignment.get('total') - 1) {
             dispatch(action.setActive(currAssignment.get('currentIndex') + 1))
           } else if (!currAssignment.get('loading')) {
-            dispatch(action.startLoading)
-            const failure = () => dispatch(action.finishLoading)
+            dispatch(action.startLoading())
+            const failure = () => dispatch(action.finishLoading())
             AssignmentGetRequests.getAllAssignmentsAfter(
               currAssignment.get('currentIndex') + 1,
               AssignmentOperations.nextAssignmentSuccess(dispatch)(currAssignment),
@@ -68,7 +68,7 @@ const AssignmentOperations = {
         AssignmentRequests.requestWork((data, _, xhr) => {
           // if 204 is returned, no new assignments, do not increment
           if (xhr.status == 204) {
-            dispatch(action.finishLoading)
+            dispatch(action.finishLoading())
             SnackbarUtil.render('No new assignments' + msg)
           } else {
             dispatch(action.receiveNewAssignment(fromJS(data)))
