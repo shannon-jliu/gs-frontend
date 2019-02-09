@@ -62,7 +62,7 @@ describe('not saveable', () => {
 
   it('correctly disables the button', () => {
     const saveButton = wrapper.find('a').first()
-    expect(saveButton.hasClass('disabled')).toBeTruthy()
+    expect(saveButton.hasClass('disabled')).toBe(true)
   })
 })
 
@@ -86,7 +86,7 @@ describe('not deleteable', () => {
 
   it('correctly disables the button', () => {
     const deleteable = wrapper.find('a').at(1)
-    expect(deleteable.hasClass('disabled')).toBeTruthy()
+    expect(deleteable.hasClass('disabled')).toBe(true)
   })
 })
 

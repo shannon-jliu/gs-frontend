@@ -60,7 +60,7 @@ describe('Base tests with no pending field', () => {
 
   it('hides div if image is saved', () => {
     instance.setState({saved: true})
-    expect(wrapper.find('div').first().hasClass('hidden')).toBeTruthy()
+    expect(wrapper.find('div').first().hasClass('hidden')).toBe(true)
   })
 
   it('renders the image', () => {
@@ -70,47 +70,47 @@ describe('Base tests with no pending field', () => {
 
   it('renders typeselect if no id', () => {
     const typeSelect = wrapper.find('div').at(1)
-    expect(typeSelect.hasClass('hidden')).toBeFalsy()
+    expect(typeSelect.hasClass('hidden')).toBe(false)
   })
 
   it('renders only alphanum when alphanum selected', () => {
     const typeSelect = wrapper.find('TypeSelect').first()
     typeSelect.simulate('change', { target: { value: 'alphanum'} })
-    expect(wrapper.find('div').at(2).hasClass('row')).toBeTruthy()
-    expect(wrapper.find('div').at(3).hasClass('hidden')).toBeTruthy()
+    expect(wrapper.find('div').at(2).hasClass('row')).toBe(true)
+    expect(wrapper.find('div').at(3).hasClass('hidden')).toBe(true)
   })
 
   it('renders only emergent when emergent selected', () => {
     const typeSelect = wrapper.find('TypeSelect').first()
     typeSelect.simulate('change', { target: { value: 'emergent'} })
-    expect(wrapper.find('div').at(2).hasClass('hidden')).toBeTruthy()
-    expect(wrapper.find('div').at(3).hasClass('row')).toBeTruthy()
+    expect(wrapper.find('div').at(2).hasClass('hidden')).toBe(true)
+    expect(wrapper.find('div').at(3).hasClass('row')).toBe(true)
   })
 
   it('renders conf when a type is selected', () => {
     // set no type, so should be hidden
     instance.setState({type: ''})
-    expect(wrapper.find('div').at(4).hasClass('hidden')).toBeTruthy()
+    expect(wrapper.find('div').at(4).hasClass('hidden')).toBe(true)
 
     const typeSelect = wrapper.find('TypeSelect').first()
     typeSelect.simulate('change', { target: { value: 'alphanum'} })
-    expect(wrapper.find('div').at(4).hasClass('row')).toBeTruthy()
+    expect(wrapper.find('div').at(4).hasClass('row')).toBe(true)
 
     typeSelect.simulate('change', { target: { value: 'emergent'} })
-    expect(wrapper.find('div').at(4).hasClass('row')).toBeTruthy()
+    expect(wrapper.find('div').at(4).hasClass('row')).toBe(true)
   })
 
   it('renders button when a type is selected', () => {
     // set no type, so should be hidden
     instance.setState({type: ''})
-    expect(wrapper.find('div').at(5).hasClass('hidden')).toBeTruthy()
+    expect(wrapper.find('div').at(5).hasClass('hidden')).toBe(true)
 
     const typeSelect = wrapper.find('TypeSelect').first()
     typeSelect.simulate('change', { target: { value: 'alphanum'} })
-    expect(wrapper.find('div').at(5).hasClass('row')).toBeTruthy()
+    expect(wrapper.find('div').at(5).hasClass('row')).toBe(true)
 
     typeSelect.simulate('change', { target: { value: 'emergent'} })
-    expect(wrapper.find('div').at(5).hasClass('row')).toBeTruthy()
+    expect(wrapper.find('div').at(5).hasClass('row')).toBe(true)
   })
 
   describe('canSave', () => {
@@ -123,7 +123,7 @@ describe('Base tests with no pending field', () => {
         alphaColor: 'white',
         mdlcClassConf: 'high'
       })
-      expect(instance.canSave()).toBeTruthy()
+      expect(instance.canSave()).toBe(true)
     })
 
     it('will properly return false if not saveable as alphanum', () => {
@@ -135,7 +135,7 @@ describe('Base tests with no pending field', () => {
         alphaColor: '',
         mdlcClassConf: 'high'
       })
-      expect(instance.canSave()).toBeFalsy()
+      expect(instance.canSave()).toBe(false)
     })
 
     it('will properly return true if saveable as emergent', () => {
@@ -144,7 +144,7 @@ describe('Base tests with no pending field', () => {
         description: 'test',
         mdlcClassConf: 'Low'
       })
-      expect(instance.canSave()).toBeTruthy()
+      expect(instance.canSave()).toBe(true)
     })
 
     it('will properly return false if not saveable as emergent', () => {
@@ -153,7 +153,7 @@ describe('Base tests with no pending field', () => {
         description: 'test',
         mdlcClassConf: ''
       })
-      expect(instance.canSave()).toBeFalsy()
+      expect(instance.canSave()).toBe(false)
     })
   })
 
@@ -165,7 +165,7 @@ describe('Base tests with no pending field', () => {
           checked: true
         }
       })
-      expect(instance.state.offaxis).toBeTruthy()
+      expect(instance.state.offaxis).toBe(true)
     })
 
     it('will properly update type', () => {
@@ -301,11 +301,11 @@ describe('pending ts tests', () => {
   })
 
   it('will properly return false on actionable', () => {
-    expect(instance.actionable()).toBeFalsy()
+    expect(instance.actionable()).toBe(false)
   })
 
   it('will properly return false on canSave', () => {
-    expect(instance.canSave()).toBeFalsy()
+    expect(instance.canSave()).toBe(false)
   })
 
   it('will properly return if not saveable', () => {

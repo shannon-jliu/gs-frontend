@@ -35,7 +35,7 @@ describe('Base tests', () => {
 
   it('off-axis is checked by default', () => {
     const offAxis = wrapper.find('input').at(1)
-    expect(offAxis.props().checked).toBeTruthy()
+    expect(offAxis.props().checked).toBe(true)
   })
 })
 
@@ -60,7 +60,7 @@ describe('disabled offaxis by default', () => {
 
   it('off-axis is checked by default', () => {
     const offAxis = wrapper.find('input').at(1)
-    expect(offAxis.props().checked).toBeFalsy()
+    expect(offAxis.props().checked).toBe(false)
   })
 })
 
@@ -86,6 +86,6 @@ describe('No camera tilt', () => {
 
   it('renders all the selectors correctly and not the off-axis switch', () => {
     const offAxisSwitch = wrapper.find('div').at(4)
-    expect(offAxisSwitch.hasClass('hidden')).toBeTruthy()
+    expect(offAxisSwitch.hasClass('hidden')).toBe(true)
   })
 })
