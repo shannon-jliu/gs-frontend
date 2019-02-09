@@ -8,7 +8,8 @@ import { AssignmentRequests } from '../util/sendApi.js'
 import { AssignmentGetRequests } from '../util/receiveApi.js'
 import SnackbarUtil from '../util/snackbarUtil.js'
 
-// 'currAssignment' will always denotes an Immutable object
+// 'currAssignment' will always denotes an Immutable object, structured after Tag props
+// 'assignment' denotes the inside assignment object within currAssignment
 const AssignmentOperations = {
   getAllAssignments: dispatch => (
     currIndex => {
@@ -18,42 +19,41 @@ const AssignmentOperations = {
     }
   ),
 
-  // will return false if failed to update, true if it succeeded or was already done
+  // will call getNextAssignment if updating was success or if it was already done
   finishAssignment: dispatch => (
-    async currAssignment => {
+    currAssignment => {
+      dispatch(action.startLoading())
+      const assignment = currAssignment.get('assignment') || null
       const success = data => {
         dispatch(action.updateAssignment(fromJS(data)))
-        return true
+        AssignmentOperations.getNextAssignment(dispatch)(currAssignment)
       }
       const failure = () => {
         SnackbarUtil.render('Failed to complete assignment')
-        return false
+        dispatch(action.finishLoading())
       }
-      if (currAssignment && currAssignment.has('id') && !currAssignment.get('done'))
-        return AssignmentRequests.updateAssignment(currAssignment.toJS(), success, failure)
-      else if (currAssignment.get('done')) return true // if the assignment was already completed
+      if (assignment && assignment.has('id') && !assignment.get('done')){
+        AssignmentRequests.updateAssignment(assignment.toJS(), success, failure)
+      }
+      // if null initial assignment, the assignment was already completed, continue
+      else if (!assignment || assignment.get('done')) AssignmentOperations.getNextAssignment(dispatch)(currAssignment)
       else failure()
     }
   ),
 
+  // only called from finishAssignment if conditions met to get the next assignment
   getNextAssignment: dispatch => (
     currAssignment => {
-      AssignmentOperations.finishAssignment(dispatch)(currAssignment.get('assignment')).then(result => {
-        // only grab next assignment upon successfully completing the current one
-        if (result) {
-          if (currAssignment.get('currentIndex') < currAssignment.get('total') - 1) {
-            dispatch(action.setActive(currAssignment.get('currentIndex') + 1))
-          } else if (!currAssignment.get('loading')) {
-            dispatch(action.startLoading())
-            const failure = () => dispatch(action.finishLoading())
-            AssignmentGetRequests.getAllAssignmentsAfter(
-              currAssignment.get('currentIndex') + 1,
-              AssignmentOperations.nextAssignmentSuccess(dispatch)(currAssignment),
-              failure
-            )
-          }
-        }
-      })
+      if (currAssignment.get('currentIndex') < currAssignment.get('total') - 1) {
+        dispatch(action.setActive(currAssignment.get('currentIndex') + 1))
+      } else if (!currAssignment.get('loading')) {
+        const failure = () => dispatch(action.finishLoading())
+        AssignmentGetRequests.getAllAssignmentsAfter(
+          currAssignment.getIn(['assignment', 'id']) || 0,
+          AssignmentOperations.nextAssignmentSuccess(dispatch)(currAssignment),
+          failure
+        )
+      }
     }
   ),
 

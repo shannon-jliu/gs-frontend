@@ -54,7 +54,7 @@ describe('Basic tests no sightings', () => {
     props = {
       assignment: mappedAssignment,
       sightings: List(),
-      getNextAssignment: jest.fn((assignment) => assignment),
+      finishAssignment: jest.fn((assignment) => assignment),
       getPrevAssignment: jest.fn((assignment) => assignment),
     }
     wrapper = shallow(<TagClass {...props} />)
@@ -79,7 +79,7 @@ describe('Basic tests no sightings', () => {
   it('calls onNext and next button is not disabled', () => {
     const nextButton = wrapper.find('button').at(1)
     nextButton.simulate('click')
-    expect(props.getNextAssignment).toHaveBeenCalledTimes(1)
+    expect(props.finishAssignment).toHaveBeenCalledTimes(1)
     expect(nextButton.hasClass('disabled')).toBe(false)
   })
 

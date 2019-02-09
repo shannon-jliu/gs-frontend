@@ -10,17 +10,19 @@ import SnackbarUtil from '../../util/snackbarUtil.js'
 
 describe('AssignmentOperations', () => {
   const assignment = fromJS({
-    id: 11,
-    currentIndex: 1,
-    timestamp: 1443826874918,
-    assignee: 'MDLC',
-    image: 'image.png',
-    loading: false,
+    assignment: {
+      id: 11,
+      timestamp: 1443826874918,
+      assignee: 'MDLC',
+      image: 'image.png',
+      loading: false,
+      done: false
+    },
     total: 1,
-    done: false
+    currentIndex: 1,
   })
 
-  const finishedAssignment = assignment.set('done', true)
+  const finishedAssignment = assignment.setIn(['assignment', 'done'], true)
 
   let dispatch
   beforeEach(() => {
@@ -74,36 +76,6 @@ describe('AssignmentOperations', () => {
     })
   })
 
-  describe('finishAssignment', () => {
-    it('successfully completes the assignment', async () => {
-      AssignmentRequests.updateAssignment = jest.fn((_, success, __) => success(finishedAssignment.toJS()))
-      const result = await AssignmentOperations.finishAssignment(dispatch)(assignment)
-
-      expect(result).toBeTruthy()
-      expect(dispatch).toHaveBeenCalledWith(action.updateAssignment(finishedAssignment))
-      expect(dispatch).toHaveBeenCalledTimes(1)
-      expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
-    })
-
-    it('it will correctly fail to complete the assignment', async () => {
-      AssignmentRequests.updateAssignment = jest.fn((_, __, failure) => failure())
-      const result = await AssignmentOperations.finishAssignment(dispatch)(assignment)
-
-      expect(result).toBeFalsy()
-      expect(dispatch).toHaveBeenCalledTimes(0)
-      expect(SnackbarUtil.render).toHaveBeenCalledWith('Failed to complete assignment')
-      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
-    })
-
-    it('does not complete if the assignment is done', async () => {
-      const result = await AssignmentOperations.finishAssignment(dispatch)(finishedAssignment)
-
-      expect(result).toBeTruthy()
-      expect(dispatch).toHaveBeenCalledTimes(0)
-      expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
-    })
-  })
-
   describe('nextAssignmentSuccess', () => {
     it('correctly prints no new assignments', () => {
       AssignmentRequests.requestWork = jest.fn((success, fail) => success(null, null, {status: 204}))
@@ -123,7 +95,7 @@ describe('AssignmentOperations', () => {
       expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
     })
 
-    it('correctly grabs the next assignment', () => {
+    it('correctly grabs the next assignment with requestWork', () => {
       AssignmentRequests.requestWork = jest.fn((success, fail) =>
         success(assignment.toJS(), null, {status: 200})
       )
@@ -140,34 +112,59 @@ describe('AssignmentOperations', () => {
   describe('getNextAssignment', () => {
     beforeEach(() => {
       AssignmentGetRequests.getAllAssignmentsAfter = jest.fn((x, y, z) => (x, y, z))
-      AssignmentOperations.finishAssignment = jest.fn((dispatch) =>
-        jest.fn((curr) => 'finish').mockResolvedValue(true)
-      )
     })
-    it('only moves on if it completed the current and calls getWork', async () => {
-      await AssignmentOperations.getNextAssignment(dispatch)(assignment)
+
+    it('it properly calls getAfter with the correct id', () => {
+      AssignmentOperations.getNextAssignment(dispatch)(assignment)
       expect(AssignmentGetRequests.getAllAssignmentsAfter).toHaveBeenCalledTimes(1)
-      expect(dispatch).toHaveBeenCalledTimes(1)
-    })
-
-    it('does not grab next if it failed to finish the current', async () => {
-      AssignmentOperations.finishAssignment = jest.fn((dispatch) =>
-        jest.fn((curr) => 'finish').mockResolvedValue(false)
+      expect(AssignmentGetRequests.getAllAssignmentsAfter).toHaveBeenCalledWith(
+        11,
+        expect.any(Function),
+        expect.any(Function)
       )
-      await AssignmentOperations.getNextAssignment(dispatch)(assignment)
+      expect(dispatch).toHaveBeenCalledTimes(0)
     })
 
-    it('grabs the next assignment if it is already in the local', async () => {
+    it('grabs the next assignment if it is already in the local', () => {
       const multipleAssignments = assignment.set('total', 3)
-      await AssignmentOperations.getNextAssignment(dispatch)(multipleAssignments)
+      AssignmentOperations.getNextAssignment(dispatch)(multipleAssignments)
       expect(dispatch).toHaveBeenCalledWith(action.setActive(2))
       expect(dispatch).toHaveBeenCalledTimes(1)
     })
 
-    it('does not grab the next assignment if it is loading', async () => {
+    it('does not grab the next assignment if it is loading', () => {
       const loadingAssignment = assignment.set('loading', true)
-      await AssignmentOperations.getNextAssignment(dispatch)(loadingAssignment)
+      AssignmentOperations.getNextAssignment(dispatch)(loadingAssignment)
       expect(dispatch).toHaveBeenCalledTimes(0)
+    })
+  })
+
+  describe('finishAssignment', () => {
+    it('successfully completes the assignment', () => {
+      AssignmentOperations.getNextAssignment = jest.fn((dispatch) => (currAssignment) => currAssignment)
+      AssignmentRequests.updateAssignment = jest.fn((_, success, __) => success(finishedAssignment.toJS()))
+
+      AssignmentOperations.finishAssignment(dispatch)(assignment)
+
+      expect(dispatch).toHaveBeenCalledWith(action.updateAssignment(finishedAssignment))
+      expect(dispatch).toHaveBeenCalledTimes(2)
+      expect(AssignmentOperations.getNextAssignment).toHaveBeenCalledTimes(1)
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
+    })
+
+    it('it will correctly fail to complete the assignment', () => {
+      AssignmentRequests.updateAssignment = jest.fn((_, __, failure) => failure())
+      AssignmentOperations.finishAssignment(dispatch)(assignment)
+
+      expect(dispatch).toHaveBeenCalledTimes(2) // startLoading and finishLoading
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Failed to complete assignment')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not complete if the assignment is done', () => {
+      AssignmentOperations.finishAssignment(dispatch)(finishedAssignment)
+      expect(dispatch).toHaveBeenCalledTimes(1) // startLoading
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
     })
   })
 

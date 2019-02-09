@@ -26,7 +26,7 @@ export class Tag extends Component {
   }
 
   onNext() {
-    this.props.getNextAssignment(this.props.assignment)
+    this.props.finishAssignment(this.props.assignment)
   }
 
   onPrev() {
@@ -127,7 +127,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   addTargetSighting: TargetSightingOperations.addTargetSighting(dispatch),
   getAllSightings: TargetSightingOperations.getAllSightings(dispatch),
   getAllAssignments: AssignmentOperations.getAllAssignments(dispatch),
-  getNextAssignment: AssignmentOperations.getNextAssignment(dispatch),
+  finishAssignment: AssignmentOperations.finishAssignment(dispatch),
   getPrevAssignment: AssignmentOperations.getPrevAssignment(dispatch),
 })
 

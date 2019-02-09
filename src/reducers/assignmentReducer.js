@@ -46,7 +46,7 @@ function finishLoading(state) {
 
 function setActive(state, index) {
   if (index >= 0 && index < state.get('assignments').size) {
-    return state.set('current', index)
+    return state.merge({'current': index, 'loading': false})
   } else {
     return state
   }
