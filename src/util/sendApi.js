@@ -21,6 +21,19 @@ export const TargetSightingRequests = {
       .done(successCallback)
       .fail(failureCallback)
   }
+
+  // TODO these to have yet to be finalized
+  deleteROISighting: function(id, successCallback, failureCallback) {
+    $.ajax('/api/v1/roi/sighting/' + id, {method: 'DELETE'})
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+
+  saveROISighting: function(sighting, successCallback, failureCallback) {
+    $.post('/api/v1/roi/sighting/, sighting)
+      .done(successCallback)
+      .fail(failureCallback)
+  }
 }
 
 export const targetRequests = {

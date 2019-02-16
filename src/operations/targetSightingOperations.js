@@ -100,6 +100,39 @@ const TargetSightingOperations = {
     }
   ),
 
+  saveROISighting: dispatch => (
+    sighting => {
+      dispatch(action.startSaveTargetSighting(sighting.get('localId')))
+      const sightingToSend = _.omit(sighting.toJS(), ['localId', 'type'])
+
+      const successCallback = data => {
+        SnackbarUtil.render('Succesfully saved target sighting')
+        const receivedSighting = fromJS(data).set('type', 'roi')
+        dispatch(action.succeedSaveTargetSighting(receivedSighting, sighting.get('localId')))
+      }
+
+      const failureCallback = () => {
+        SnackbarUtil.render('Failed to save target sighting')
+        dispatch(action.failSaveTargetSighting(sighting.get('localId')))
+      }
+
+      TargetSightingRequests.saveROISighting(sightingToSend, successCallback, failureCallback)
+
+    }
+  ),
+
+  deleteSavedROISighting: dispatch => (
+    sighting => {
+      dispatch(action.deleteTargetSighting(sighting))
+      const failureCallback = () => {
+        SnackbarUtil.render('Failed to delete target sighting')
+        TargetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
+      }
+
+      TargetSightingRequests.deleteROISighting(() => {}, failureCallback)
+    }
+  ),
+
   updateTargetSighting: dispatch => (
     (sighting, attribute) => {
       //in the future, this will send specific requests per attribute (but has to be implemented on BE first)

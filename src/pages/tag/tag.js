@@ -8,8 +8,10 @@ import TargetSightingOperations from '../../operations/targetSightingOperations'
 import AssignmentOperations from '../../operations/assignmentOperations'
 import ImageViewer from '../../components/imageViewer'
 import TagSighting from './tagSighting'
+import ROISighting from './roiSighting'
 
 import { GROUND_SERVER_URL } from '../../constants/links'
+import { TWO_PASS_MODE } from '../../util/config'
 import './tag.css'
 
 export class Tag extends Component {
@@ -18,7 +20,12 @@ export class Tag extends Component {
     this.onTag = this.onTag.bind(this)
     this.onNext = this.onNext.bind(this)
     this.onPrev = this.onPrev.bind(this)
+    this.listen = this.listen.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
+
+    this.state = {
+      roiMode: TWO_PASS_MODE,
+    }
   }
 
   onTag(tagged) {
@@ -33,6 +40,23 @@ export class Tag extends Component {
     this.props.getPrevAssignment(this.props.assignment)
   }
 
+  listen(e) {
+    // let log = e.data
+    // let oldLogs = this.state.logs
+    // this.setState({
+    //   roiMode: false
+    // })
+  }
+
+  // open the eventsource to the ground server
+  componentWillMount() {
+    if (TWO_PASS_MODE) {
+      // var eventSourceInitDict = {headers: {'X-AUTH-TOKEN': localStorage.getItem(AUTH_TOKEN_ID)}}
+      // var eventSource = new EventSource(GROUND_SERVER_URL + '/api/v1/livelogs', eventSourceInitDict)
+      // eventSource.addEventListener('message', this.listen, false)
+    }
+  }
+
   componentDidMount() {
     if (!this.props.assignment.hasIn(['assignment', 'id'])) {
       this.props.getAllAssignments(this.props.assignment.get('currentIndex'))
@@ -45,14 +69,24 @@ export class Tag extends Component {
 
     // TODO once gimbal settings is set in stone do this
     const showOffaxis = /* mode === 'angle' || mode === undefined || mode === null*/ true
-    return (
-      <TagSighting
-        key={s.get('id') + s.get('type') || s.get('localId')}
-        sighting={s}
-        imageUrl={GROUND_SERVER_URL + imageUrl}
-        cameraTilt={showOffaxis}
-      />
-    )
+
+    if (this.state.roiMode)
+      return (
+        <ROISighting
+          key={s.get('id') + s.get('type') || s.get('localId')}
+          sighting={s}
+          imageUrl={GROUND_SERVER_URL + imageUrl}
+        />
+      )
+    else
+      return (
+        <TagSighting
+          key={s.get('id') + s.get('type') || s.get('localId')}
+          sighting={s}
+          imageUrl={GROUND_SERVER_URL + imageUrl}
+          cameraTilt={showOffaxis}
+        />
+      )
   }
 
   render() {
@@ -64,10 +98,13 @@ export class Tag extends Component {
     )
     const imageUrl = assignment.getIn(['assignment', 'image', 'imageUrl'])
 
+    // TODO the object parameters are not finalized yet
+    const isROI = assignment.getIn(['assignment', 'image', 'gimbalState', 'mode']) || TWO_PASS_MODE
+
     const name = imageUrl ? imageUrl.substring(
       imageUrl.lastIndexOf('/') + 1,
       imageUrl.lastIndexOf('.')
-    ) : 'none'
+    ) + (' ' +  isROI ? '(ROI)' : '(TARGET)')  : 'none'
     const count = (assignment.get('currentIndex') + 1) + '/' + assignment.get('total')
 
     const btnClass = 'btn-floating btn-large red'

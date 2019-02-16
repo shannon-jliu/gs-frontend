@@ -5,7 +5,6 @@ import { fromJS } from 'immutable'
 import M from 'materialize-css'
 import _ from 'lodash'
 
-import SnackbarUtil from '../../util/snackbarUtil.js'
 import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting } from './components'
 import { ColorSelect, ShapeSelect, TypeSelect, ConfSelect } from '../../components/target'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
