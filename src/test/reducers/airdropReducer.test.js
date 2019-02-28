@@ -183,7 +183,7 @@ describe('airdropReducer', () => {
         },
         pending: settings
       })
-
+      
       expect(
         reducer(
           startingState,

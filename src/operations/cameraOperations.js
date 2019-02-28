@@ -7,33 +7,35 @@ import SnackbarUtil from '../util/snackbarUtil.js'
 
 const CameraOperations = {
   getCapturing: dispatch => {
-    // TODO: Not sending a full setting. Only sending capturing property
-    const successCallback = data => dispatch(action.receiveCameraSettings(data))
+    const successCallback = data => {
+      dispatch(action.receiveCameraSettings(fromJS(data)))
+    }
 
     SettingsGetRequests.getCameraSettingCapturing(successCallback, () => {})
   },
 
   getZoom: dispatch => {
-    // TODO: Not sending a full setting. Only sending zoom property
-    const successCallback = data => dispatch(action.receiveCameraSettings(data))
+    const successCallback = data => {
+      dispatch(action.receiveCameraSettings(fromJS(data)))
+    }
 
     SettingsGetRequests.getCameraSettingZoom(successCallback, () => {})
   },
 
   updateSettingsStart: dispatch => (
     setting => {
-      dispatch(action.updateCameraSettingsStart(setting))
+      dispatch(action.updateCameraSettingsStart(fromJS(setting)))
 
       const successCallback = data => {
         SnackbarUtil.render('Successfully updated camera setting')
-        dispatch(action.receiveAndUpdateCameraSettings(data))
+        dispatch(action.receiveAndUpdateCameraSettings(fromJS(data)))
       }
-  
+
       const failureCallback = () => {
         SnackbarUtil.render('Failed to update camera setting')
-        dispatch(action.updateCameraSettingsFailed(setting))
+        dispatch(action.updateCameraSettingsFailed(fromJS(setting)))
       }
-  
+
       SettingsRequest.updateCameraSetting(setting, successCallback, failureCallback)
     }
   )

@@ -1,12 +1,11 @@
 import {fromJS, Map} from 'immutable'
 
-/**
+/*
  * Notes on state representation:
  * - settings - (object) the current airdrop settings from the server. See API for reference.
  *   - contains a timestamp of the latest airdrop settings, -1 if none
  * - pending - (object) object in 'queue' to send to the ground server. If success, this will reset to {}.
 */
-
 const initialState = fromJS({
   settings: {
     timestamp: -1
@@ -32,7 +31,7 @@ const airdropReducer = (state = initialState, action) => {
 }
 
 function receiveSettings(state, settings) {
-  if (state.getIn(['settings', 'timestamp']) < settings.getIn(['timestamp'])) {
+  if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
     return state.set('settings', settings)
   } else {
     return state

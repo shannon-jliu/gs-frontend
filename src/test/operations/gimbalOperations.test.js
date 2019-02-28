@@ -20,10 +20,10 @@ describe('GimbalOperations', () => {
 
   describe('getSetting', () => {
     it('gets the gimbal settings when succeeds', () => {
-      SettingsGetRequests.getGimbalSetting = jest.fn((successCallback, failureCallback) => successCallback())
+      SettingsGetRequests.getGimbalSetting = jest.fn((successCallback, failureCallback) => successCallback(setting))
       GimbalOperations.getSetting(dispatch)
 
-      expect(dispatch).toHaveBeenCalledWith(action.receiveSettings())
+      expect(dispatch).toHaveBeenCalledWith(action.receiveSettings(setting))
       expect(dispatch).toHaveBeenCalledTimes(1)
 
       expect(JSON.stringify(SettingsGetRequests.getGimbalSetting.mock.calls[0][0])).toBe(JSON.stringify(GimbalOperations.getSetting.successCallback))
@@ -49,10 +49,10 @@ describe('GimbalOperations', () => {
 
   describe('updateSettingsStart', () => {
     it('updates the gimbal settings when succeeds', () => {
-      SettingsRequest.updateGimbalSetting = jest.fn((settings, successCallback, failureCallback) => successCallback())
+      SettingsRequest.updateGimbalSetting = jest.fn((settings, successCallback, failureCallback) => successCallback(setting))
       GimbalOperations.updateSettingsStart(dispatch)(setting)
 
-      expect(dispatch).toHaveBeenCalledWith(action.receiveAndUpdateSettings())
+      expect(dispatch).toHaveBeenCalledWith(action.receiveAndUpdateSettings(setting))
       expect(dispatch).toHaveBeenCalledTimes(2)
 
       expect(SettingsRequest.updateGimbalSetting.mock.calls[0][0]).toBe(setting)

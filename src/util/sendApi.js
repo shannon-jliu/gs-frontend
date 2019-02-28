@@ -82,17 +82,14 @@ export const SettingsRequest = {
   },
 
   updateAirdropSetting: function(settings, successCallback, failureCallback) {
-    // TODO: Find correct route
     SettingsRequest.updateSetting('/api/v1/settings/airdrop', settings, successCallback, failureCallback)
   },
 
   updateCameraSetting: function(settings, successCallback, failureCallback) {
-    // TODO: Find correct route
-    SettingsRequest.updateSetting('/api/v1/settings/camera/types', settings, successCallback, failureCallback)
+    SettingsRequest.updateSetting('/api/v1/settings/camera', settings, successCallback, failureCallback)
   },
 
   updateGimbalSetting: function(settings, successCallback, failureCallback) {
-    // TODO: Find correct route
-    SettingsRequest.updateSetting('/api/set-mode', settings, successCallback, failureCallback)
+    SettingsRequest.updateSetting('/api/v1/settings/camera_gimbal', settings, successCallback, failureCallback)
   }
 }

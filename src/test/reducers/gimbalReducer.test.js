@@ -1,6 +1,6 @@
 import reducer from '../../reducers/gimbalReducer.js'
 import * as matchers from 'jest-immutable-matchers'
-import {fromJS} from 'immutable'
+import {fromJS, Map} from 'immutable'
 
 describe('gimbalReducer', () => {
   // this enables us to use toEqualImmutable
@@ -9,10 +9,10 @@ describe('gimbalReducer', () => {
   })
 
   const initState = fromJS({
-    settings: {
+    settings: fromJS({
       timestamp: -1
-    },
-    pending: {}
+    }),
+    pending: Map()
   })
 
   it('should return the initial state', () => {
@@ -23,9 +23,7 @@ describe('gimbalReducer', () => {
     const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
-      'mode': 'retract',
-      'gps': null,
-      'orientation': null
+      'mode': 0
     })
 
     it('should handle from the initial state', () => {
@@ -48,9 +46,7 @@ describe('gimbalReducer', () => {
       const sndSettings =  fromJS({
         'id': 1,
         'timestamp': 1443826874919,
-        'mode': 'retract',
-        'gps': null,
-        'orientation': null
+        'mode': 0
       })
 
       const startingState = fromJS({
@@ -70,9 +66,7 @@ describe('gimbalReducer', () => {
           settings: {
             'id': 1,
             'timestamp': 1443826874919,
-            'mode': 'retract',
-            'gps': null,
-            'orientation': null
+            'mode': 0
           },
           pending: {}
         })
@@ -83,9 +77,7 @@ describe('gimbalReducer', () => {
       const sndSettings = fromJS({
         'id': 1,
         'timestamp': 1443826874917,
-        'mode': 'retract',
-        'gps': null,
-        'orientation': null
+        'mode': 0
       })
 
       const startingState = fromJS({
@@ -105,9 +97,7 @@ describe('gimbalReducer', () => {
           settings: {
             'id': 1,
             'timestamp': 1443826874918,
-            'mode': 'retract',
-            'gps': null,
-            'orientation': null
+            'mode': 0
           },
           pending: {}
         })
@@ -119,9 +109,7 @@ describe('gimbalReducer', () => {
     const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
-      'mode': 'retract',
-      'gps': null,
-      'orientation': null
+      'mode': 0
     })
 
     it('should handle from the initial state', () => {
@@ -144,9 +132,7 @@ describe('gimbalReducer', () => {
       const settings = fromJS({
         'id': 1,
         'timestamp': 1443826874919,
-        'mode': 'retract',
-        'gps': null,
-        'orientation': null
+        'mode': 0
       })
 
       const startingState = fromJS({
@@ -168,9 +154,7 @@ describe('gimbalReducer', () => {
           settings: {
             'id': 1,
             'timestamp': 1443826874919,
-            'mode': 'retract',
-            'gps': null,
-            'orientation': null
+            'mode': 0
           },
           pending: {}
         })
@@ -182,9 +166,7 @@ describe('gimbalReducer', () => {
     const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
-      'mode': 'retract',
-      'gps': null,
-      'orientation': null
+      'mode': 0
     })
 
     it('should handle from the initial state', () => {
@@ -203,9 +185,7 @@ describe('gimbalReducer', () => {
           pending: {
             'id': 1,
             'timestamp': 1443826874918,
-            'mode': 'retract',
-            'gps': null,
-            'orientation': null
+            'mode': 0
           }
         })
       )
@@ -215,9 +195,7 @@ describe('gimbalReducer', () => {
       const settings = fromJS({
         'id': 1,
         'timestamp': 1443826874919,
-        'mode': 'retract',
-        'gps': null,
-        'orientation': null
+        'mode': 0
       })
 
       expect(
@@ -226,9 +204,7 @@ describe('gimbalReducer', () => {
             settings: {
               'id': 1,
               'timestamp': 1443826874919,
-              'mode': 'retract',
-              'gps': null,
-              'orientation': null
+              'mode': 0
             },
             pending: settings
           }),
@@ -241,16 +217,12 @@ describe('gimbalReducer', () => {
           settings: {
             'id': 1,
             'timestamp': 1443826874919,
-            'mode': 'retract',
-            'gps': null,
-            'orientation': null
+            'mode': 0
           },
           pending: {
             'id': 1,
             'timestamp': 1443826874919,
-            'mode': 'retract',
-            'gps': null,
-            'orientation': null
+            'mode': 0
           }
         })
       )
@@ -261,9 +233,7 @@ describe('gimbalReducer', () => {
     const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
-      'mode': 'retract',
-      'gps': null,
-      'orientation': null
+      'mode': 0
     })
 
     it('should handle from the initial state', () => {
@@ -297,5 +267,4 @@ describe('gimbalReducer', () => {
       )
     })
   })
-
 })

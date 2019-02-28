@@ -21,10 +21,10 @@ describe('CameraOperations', () => {
 
   describe('getCapturing', () => {
     it('gets the capturing property when succeeds', () => {
-      SettingsGetRequests.getCameraSettingCapturing = jest.fn((successCallback, failureCallback) => successCallback())
+      SettingsGetRequests.getCameraSettingCapturing = jest.fn((successCallback, failureCallback) => successCallback(setting))
       CameraOperations.getCapturing(dispatch)
 
-      expect(dispatch).toHaveBeenCalledWith(action.receiveCameraSettings())
+      expect(dispatch).toHaveBeenCalledWith(action.receiveCameraSettings(setting))
       expect(dispatch).toHaveBeenCalledTimes(1)
 
       expect(JSON.stringify(SettingsGetRequests.getCameraSettingCapturing.mock.calls[0][0])).toBe(JSON.stringify(CameraOperations.getCapturing.successCallback))
@@ -50,10 +50,10 @@ describe('CameraOperations', () => {
 
   describe('getZoom', () => {
     it('gets the capturing property when succeeds', () => {
-      SettingsGetRequests.getCameraSettingZoom = jest.fn((successCallback, failureCallback) => successCallback())
+      SettingsGetRequests.getCameraSettingZoom = jest.fn((successCallback, failureCallback) => successCallback(setting))
       CameraOperations.getZoom(dispatch)
 
-      expect(dispatch).toHaveBeenCalledWith(action.receiveCameraSettings())
+      expect(dispatch).toHaveBeenCalledWith(action.receiveCameraSettings(setting))
       expect(dispatch).toHaveBeenCalledTimes(1)
 
       expect(JSON.stringify(SettingsGetRequests.getCameraSettingZoom.mock.calls[0][0])).toBe(JSON.stringify(CameraOperations.getZoom.successCallback))
@@ -79,10 +79,10 @@ describe('CameraOperations', () => {
 
   describe('updateSettingsStart', () => {
     it('updates the camera settings when succeeds', () => {
-      SettingsRequest.updateCameraSetting = jest.fn((settings, successCallback, failureCallback) => successCallback())
+      SettingsRequest.updateCameraSetting = jest.fn((settings, successCallback, failureCallback) => successCallback(setting))
       CameraOperations.updateSettingsStart(dispatch)(setting)
 
-      expect(dispatch).toHaveBeenCalledWith(action.receiveAndUpdateCameraSettings())
+      expect(dispatch).toHaveBeenCalledWith(action.receiveAndUpdateCameraSettings(setting))
       expect(dispatch).toHaveBeenCalledTimes(2)
 
       expect(SettingsRequest.updateCameraSetting.mock.calls[0][0]).toBe(setting)
