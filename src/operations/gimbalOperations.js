@@ -7,25 +7,27 @@ import SnackbarUtil from '../util/snackbarUtil.js'
 
 const GimbalOperations = {
   getSetting: dispatch => {
-    const successCallback = data => dispatch(action.receiveSettings(data))
-    
+    const successCallback = data => {
+      dispatch(action.receiveSettings(fromJS(data)))
+    }
+
     SettingsGetRequests.getGimbalSetting(successCallback, () => {})
   },
 
   updateSettingsStart: dispatch => (
     setting => {
-      dispatch(action.updateSettingsStart(setting))
+      dispatch(action.updateSettingsStart(fromJS(setting)))
 
       const successCallback = data => {
         SnackbarUtil.render('Successfully updated gimbal setting')
-        dispatch(action.receiveAndUpdateSettings(data))
+        dispatch(action.receiveAndUpdateSettings(fromJS(data)))
       }
-  
+
       const failureCallback = () => {
         SnackbarUtil.render('Failed to update gimbal setting')
-        dispatch(action.updateSettingsFailed(setting))
+        dispatch(action.updateSettingsFailed(fromJS(setting)))
       }
-  
+
       SettingsRequest.updateGimbalSetting(setting, successCallback, failureCallback)
     }
   )

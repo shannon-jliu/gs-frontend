@@ -5,8 +5,7 @@ import {
   TAGGING_PAGE_ID,
   MERGING_PAGE_ID,
   ADLC_PAGE_ID,
-  CAMERA_SETTINGS_PAGE_ID,
-  GIMBAL_AIRDROP_PAGE_ID,
+  SETTINGS_PAGE_ID,
   LOGS_PAGE_ID
 } from '../constants/links.js'
 
@@ -15,8 +14,7 @@ const LINKS = Object.freeze({
   'Tag': {name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag'},
   'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '/merge'},
   'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#'},
-  'Camera': {name: 'Camera Settings', key: CAMERA_SETTINGS_PAGE_ID, href: '#'},
-  'GimbalAirdrop': {name: 'Gimbal and Airdrop', key: GIMBAL_AIRDROP_PAGE_ID, href: '#'},
+  'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings'},
   'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs'},
 })
 

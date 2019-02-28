@@ -15,6 +15,7 @@ import rootReducer from './reducers'
 import App from './App.js'
 import Login from './pages/login/login.js'
 import Tag from './pages/tag/tag.js'
+import Settings from './pages/settings/settings.js'
 import Merge from './pages/merge/merge.js'
 import Logs from './pages/logs/logs.js'
 
@@ -68,6 +69,7 @@ const GroundServerRouter = () =>
           <Switch>
             <Route path="/login" render={() => <App main={<Login/>}/>}/>
             <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
+            <Route path="/settings" render={() => requireAuth(<Settings/>)}/>
             <Route path="/merge" render={() => requireAuth(<Merge/>)}/>
             <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
             <Redirect from="*" to="/login"/>

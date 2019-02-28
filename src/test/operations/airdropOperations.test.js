@@ -26,10 +26,10 @@ describe('AirdropOperations', () => {
 
   describe('getSetting', () => {
     it('gets the airdrop settings when succeeds', () => {
-      SettingsGetRequests.getAirdropSetting = jest.fn((successCallback, failureCallback) => successCallback())
+      SettingsGetRequests.getAirdropSetting = jest.fn((successCallback, failureCallback) => successCallback(setting))
       AirdropOperations.getSetting(dispatch)
 
-      expect(dispatch).toHaveBeenCalledWith(action.receiveSettings())
+      expect(dispatch).toHaveBeenCalledWith(action.receiveSettings(setting))
       expect(dispatch).toHaveBeenCalledTimes(1)
 
       expect(JSON.stringify(SettingsGetRequests.getAirdropSetting.mock.calls[0][0])).toBe(JSON.stringify(AirdropOperations.getSetting.successCallback))
@@ -55,10 +55,10 @@ describe('AirdropOperations', () => {
 
   describe('updateSettingsStart', () => {
     it('updates the airdrop settings when succeeds', () => {
-      SettingsRequest.updateAirdropSetting = jest.fn((settings, successCallback, failureCallback) => successCallback())
+      SettingsRequest.updateAirdropSetting = jest.fn((settings, successCallback, failureCallback) => successCallback(setting))
       AirdropOperations.updateSettingsStart(dispatch)(setting)
 
-      expect(dispatch).toHaveBeenCalledWith(action.updateSettingsSuccessFinish())
+      expect(dispatch).toHaveBeenCalledWith(action.updateSettingsSuccessFinish(setting))
       expect(dispatch).toHaveBeenCalledTimes(2)
 
       expect(SettingsRequest.updateAirdropSetting.mock.calls[0][0]).toBe(setting)

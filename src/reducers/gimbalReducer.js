@@ -7,9 +7,9 @@ import {fromJS, Map} from 'immutable'
  * - pending - (object) object in 'queue' to send to the ground server. If success, this will reset to {}.
 */
 const initialState = fromJS({
-  settings: {
+  settings: fromJS({
     timestamp: -1
-  },
+  }),
   pending: {}
 })
 
@@ -32,7 +32,7 @@ const gimbalReducer = (state = initialState, action) => {
 
 function receiveGimbalSettings(state, action) {
   const settings = action.settings
-  if (state.getIn(['settings', 'timestamp']) < settings.getIn(['timestamp'])) {
+  if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
     return state.set('settings', settings)
   } else {
     return state
