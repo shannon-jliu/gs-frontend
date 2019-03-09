@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import PropTypes from 'prop-types'
 
 class MergeSightingPreview extends Component {
@@ -68,7 +69,7 @@ class MergeSightingPreview extends Component {
 }
 
 MergeSightingPreview.propTypes = {
-  sighting: PropTypes.object.isRequired,
+  sighting: ImmutablePropTypes.map.isRequired,
   onClick: PropTypes.func,
   onDragStart: PropTypes.func,
   onDragEnd: PropTypes.func,
