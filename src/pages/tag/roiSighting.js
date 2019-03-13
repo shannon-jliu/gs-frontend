@@ -31,7 +31,7 @@ export class ROISighting extends Component {
   }
 
   save() {
-    this.props.saveTargetSighting(newSighting)
+    this.props.saveTargetSighting()
   }
 
   deleteSighting() {
@@ -61,14 +61,14 @@ export class ROISighting extends Component {
   }
 }
 
-TagSighting.propTypes = {
+ROISighting.propTypes = {
   sighting: PropTypes.object.isRequired,
   imageUrl: PropTypes.string.isRequired,
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   saveROISighting: TargetSightingOperations.saveROISighting(dispatch),
-  deleteSavedROISighting: TargetSightingOperations.deleteSavedROISighting(dispatch)
+  deleteSavedROISighting: TargetSightingOperations.deleteSavedROISighting(dispatch),
   deleteUnsavedTargetSighting: TargetSightingOperations.deleteUnsavedTargetSighting(dispatch),
 })
 

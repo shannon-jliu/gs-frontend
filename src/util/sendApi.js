@@ -20,7 +20,7 @@ export const TargetSightingRequests = {
       {method: 'PUT', data: sighting})
       .done(successCallback)
       .fail(failureCallback)
-  }
+  },
 
   // TODO these to have yet to be finalized
   deleteROISighting: function(id, successCallback, failureCallback) {
@@ -30,7 +30,7 @@ export const TargetSightingRequests = {
   },
 
   saveROISighting: function(sighting, successCallback, failureCallback) {
-    $.post('/api/v1/roi/sighting/, sighting)
+    $.post('/api/v1/roi/sighting/', sighting)
       .done(successCallback)
       .fail(failureCallback)
   }

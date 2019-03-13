@@ -11,6 +11,7 @@ import TagSighting from './tagSighting'
 import ROISighting from './roiSighting'
 
 import { GROUND_SERVER_URL } from '../../constants/links'
+import { AUTH_TOKEN_ID } from '../../constants/constants'
 import { TWO_PASS_MODE } from '../../util/config'
 import './tag.css'
 
@@ -41,8 +42,8 @@ export class Tag extends Component {
   }
 
   listen(e) {
-    // let log = e.data
-    // let oldLogs = this.state.logs
+    const setting = e.data
+    console.log(setting)
     // this.setState({
     //   roiMode: false
     // })
@@ -51,9 +52,9 @@ export class Tag extends Component {
   // open the eventsource to the ground server
   componentWillMount() {
     if (TWO_PASS_MODE) {
-      // var eventSourceInitDict = {headers: {'X-AUTH-TOKEN': localStorage.getItem(AUTH_TOKEN_ID)}}
-      // var eventSource = new EventSource(GROUND_SERVER_URL + '/api/v1/livelogs', eventSourceInitDict)
-      // eventSource.addEventListener('message', this.listen, false)
+      var eventSourceInitDict = {headers: {'X-AUTH-TOKEN': localStorage.getItem(AUTH_TOKEN_ID)}}
+      var eventSource = new EventSource(GROUND_SERVER_URL + '/api/v1/settings/camera_gimbal/stream', eventSourceInitDict)
+      eventSource.addEventListener('message', this.listen, false)
     }
   }
 
