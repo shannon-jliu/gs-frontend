@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
 import _ from 'lodash'
 
-import SnackbarUtil from '../../util/snackbarUtil'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import AssignmentOperations from '../../operations/assignmentOperations'
 import ImageViewer from '../../components/imageViewer'
@@ -42,11 +41,8 @@ export class Tag extends Component {
   }
 
   listen(e) {
-    const setting = e.data
-    console.log(setting)
-    // this.setState({
-    //   roiMode: false
-    // })
+    // TODO determine if this is even needed lmao
+    // const setting = e.data
   }
 
   // open the eventsource to the ground server
@@ -65,27 +61,27 @@ export class Tag extends Component {
     }
   }
 
-  renderSighting(s) {
+  renderSighting(s, isROI) {
     const imageUrl = this.props.assignment.getIn(['assignment', 'image', 'imageUrl'])
 
     // TODO once gimbal settings is set in stone do this
     const showOffaxis = /* mode === 'angle' || mode === undefined || mode === null*/ true
 
-    if (this.state.roiMode)
-      return (
-        <ROISighting
-          key={s.get('id') + s.get('type') || s.get('localId')}
-          sighting={s}
-          imageUrl={GROUND_SERVER_URL + imageUrl}
-        />
-      )
-    else
+    if (isROI)
       return (
         <TagSighting
           key={s.get('id') + s.get('type') || s.get('localId')}
           sighting={s}
           imageUrl={GROUND_SERVER_URL + imageUrl}
           cameraTilt={showOffaxis}
+        />
+      )
+    else
+      return (
+        <ROISighting
+          key={s.get('id') + s.get('type') || s.get('localId')}
+          sighting={s}
+          imageUrl={GROUND_SERVER_URL + imageUrl}
         />
       )
   }
@@ -99,13 +95,14 @@ export class Tag extends Component {
     )
     const imageUrl = assignment.getIn(['assignment', 'image', 'imageUrl'])
 
-    // TODO the object parameters are not finalized yet
-    const isROI = assignment.getIn(['assignment', 'image', 'gimbalState', 'mode']) || TWO_PASS_MODE
+    // extract the gimbalMode to determine if it is an ROI image (if fixed) or regular (tracking)
+    const gimbalMode = assignment.getIn(['assignment', 'image', 'camGimMode']) || TWO_PASS_MODE
+    const isROI = gimbalMode && gimbalMode === 'tracking'
 
     const name = imageUrl ? imageUrl.substring(
       imageUrl.lastIndexOf('/') + 1,
       imageUrl.lastIndexOf('.')
-    ) + (' ' +  isROI ? '(ROI)' : '(TARGET)')  : 'none'
+    ) + (' ' +  isROI ? ' (ROI)' : ' (TARGET)')  : 'none'
     const count = (assignment.get('currentIndex') + 1) + '/' + assignment.get('total')
 
     const btnClass = 'btn-floating btn-large red'
@@ -129,7 +126,7 @@ export class Tag extends Component {
           <i className='material-icons'>arrow_forward</i>
         </button>
         <div className='sightings'>
-          {mdlcSightings.map(s => this.renderSighting(s))}
+          {_.map(mdlcSightings, s => this.renderSighting(s, isROI))}
         </div>
       </div>
     )

@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { fromJS } from 'immutable'
-import _ from 'lodash'
 
-import { ButtonRow } from './components'
+import { ButtonRow, ImageSighting } from './components'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 
 export class ROISighting extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      imgWidth: -1,
+      imgHeight: -1
+    }
 
     this.save = this.save.bind(this)
     this.deleteSighting = this.deleteSighting.bind(this)
@@ -35,25 +38,30 @@ export class ROISighting extends Component {
   }
 
   deleteSighting() {
-    if(this.actionable()) {
-      if (this.props.sighting.has('id')) {
-        this.props.deleteSavedTargetSighting(this.props.sighting)
-      } else {
-        this.props.deleteUnsavedTargetSighting(this.props.sighting)
-      }
+    if (this.props.sighting.has('id')) {
+      this.props.deleteSavedTargetSighting(this.props.sighting)
+    } else {
+      this.props.deleteUnsavedTargetSighting(this.props.sighting)
     }
   }
 
   render() {
     const height_width = 300
     return (
-      <div>
+      <div className={this.state.saved ? 'hidden' : 'sighting card'}>
+        <ImageSighting
+          heightWidth={height_width}
+          imgWidth={this.state.imgWidth}
+          imgHeight={this.state.imgHeight}
+          imageUrl={this.props.imageUrl}
+          sighting={this.props.sighting}
+        />
         <ButtonRow
           type={'ROI'}
           isSaved={this.props.sighting.has('id')}
-          saveable={this.canSave()}
+          saveable={true}
           save={this.save}
-          deletable={this.actionable()}
+          deletable={true}
           deleteSighting={this.deleteSighting}
         />
       </div>

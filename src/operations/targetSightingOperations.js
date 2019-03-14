@@ -116,7 +116,7 @@ const TargetSightingOperations = {
         dispatch(action.failSaveTargetSighting(sighting.get('localId')))
       }
 
-      TargetSightingRequests.saveROISighting(sightingToSend, successCallback, failureCallback)
+      TargetSightingRequests.saveROISighting(sighting.getIn(['assignment', 'id']), sightingToSend, successCallback, failureCallback)
 
     }
   ),

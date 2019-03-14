@@ -6,7 +6,7 @@ import M from 'materialize-css'
 import _ from 'lodash'
 
 import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting } from './components'
-import { ColorSelect, ShapeSelect, TypeSelect, ConfSelect } from '../../components/target'
+import { TypeSelect, ConfSelect } from '../../components/target'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 
 export class TagSighting extends Component {
@@ -99,7 +99,7 @@ export class TagSighting extends Component {
     // required for selectors.
     // See: https://materializecss.com/select.html#initialization
     let elems = document.querySelectorAll('select')
-    let instances = M.FormSelect.init(elems, {})
+    M.FormSelect.init(elems, {})
 
     this.loadImage(this.props.imageUrl)
   }

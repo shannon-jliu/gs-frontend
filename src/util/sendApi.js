@@ -29,8 +29,8 @@ export const TargetSightingRequests = {
       .fail(failureCallback)
   },
 
-  saveROISighting: function(sighting, successCallback, failureCallback) {
-    $.post('/api/v1/roi/sighting/', sighting)
+  saveROISighting: function(assignmentId, sighting, successCallback, failureCallback) {
+    $.post('/api/v1/roi/' + assignmentId, sighting)
       .done(successCallback)
       .fail(failureCallback)
   }
