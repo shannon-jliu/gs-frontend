@@ -22,15 +22,15 @@ export const TargetSightingRequests = {
       .fail(failureCallback)
   },
 
-  // TODO these to have yet to be finalized
-  deleteROISighting: function(id, successCallback, failureCallback) {
-    $.ajax('/api/v1/roi/sighting/' + id, {method: 'DELETE'})
-      .done(successCallback)
-      .fail(failureCallback)
-  },
+  // TODO doesn't exist on backend yet
+  // deleteROISighting: function(id, successCallback, failureCallback) {
+  //   $.ajax('/api/v1/roi/sighting/' + id, {method: 'DELETE'})
+  //     .done(successCallback)
+  //     .fail(failureCallback)
+  // },
 
   saveROISighting: function(assignmentId, sighting, successCallback, failureCallback) {
-    $.post('/api/v1/roi/' + assignmentId, sighting)
+    $.post('/api/v1/assignmentId/${assignmentId}/roi', sighting)
       .done(successCallback)
       .fail(failureCallback)
   }

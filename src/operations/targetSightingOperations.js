@@ -121,17 +121,18 @@ const TargetSightingOperations = {
     }
   ),
 
-  deleteSavedROISighting: dispatch => (
-    sighting => {
-      dispatch(action.deleteTargetSighting(sighting))
-      const failureCallback = () => {
-        SnackbarUtil.render('Failed to delete target sighting')
-        TargetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
-      }
+  // TODO doesn't exist on backend yet
+  // deleteSavedROISighting: dispatch => (
+  //   sighting => {
+  //     dispatch(action.deleteTargetSighting(sighting))
+  //     const failureCallback = () => {
+  //       SnackbarUtil.render('Failed to delete target sighting')
+  //       TargetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
+  //     }
 
-      TargetSightingRequests.deleteROISighting(() => {}, failureCallback)
-    }
-  ),
+  //     TargetSightingRequests.deleteROISighting(() => {}, failureCallback)
+  //   }
+  // ),
 
   updateTargetSighting: dispatch => (
     (sighting, attribute) => {

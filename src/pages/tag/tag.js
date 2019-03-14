@@ -22,10 +22,6 @@ export class Tag extends Component {
     this.onPrev = this.onPrev.bind(this)
     this.listen = this.listen.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
-
-    this.state = {
-      roiMode: TWO_PASS_MODE,
-    }
   }
 
   onTag(tagged) {
