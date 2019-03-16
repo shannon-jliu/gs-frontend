@@ -107,8 +107,8 @@ describe('Basic tests with sightings', () => {
   })
 
   it('renders the TagSighting', () => {
-    expect(wrapper.find("Connect(TagSighting)")).toHaveLength(1)
-    expect(wrapper.find(".name").text().includes("TARGET")).toBe(true)
+    expect(wrapper.find('Connect(TagSighting)')).toHaveLength(1)
+    expect(wrapper.find('.name').text().includes('TARGET')).toBe(true)
   })
 
   it('ensures prev button is not disabled', () => {
@@ -131,9 +131,8 @@ describe('Basic tests with ROI sightings', () => {
       sightings: fromJS([sighting])
     }
     wrapper = shallow(<TagClass {...props} />)
-    console.log('length:', wrapper.find("Connect(ROISighting)").length)
-    expect(wrapper.find("Connect(ROISighting)")).toHaveLength(1)
-    expect(wrapper.find(".name").text().includes("ROI")).toBe(true)
+    expect(wrapper.find('Connect(ROISighting)')).toHaveLength(1)
+    expect(wrapper.find('.name').text().includes('ROI')).toBe(true)
   })
 })
 
