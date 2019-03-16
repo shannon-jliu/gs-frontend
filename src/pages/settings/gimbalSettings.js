@@ -28,6 +28,7 @@ export class GimbalSettings extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log('it updated!')
     if (prevProps != this.props && (prevProps.settings.get('settings').get('mode') === this.state.mode)) {
       this.state.mode = this.props.settings.get('settings').get('mode')
     }

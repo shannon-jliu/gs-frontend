@@ -16,6 +16,7 @@ const GimbalOperations = {
 
   updateSettingsStart: dispatch => (
     setting => {
+        console.log('OONF')
       dispatch(action.updateSettingsStart(fromJS(setting)))
 
       const successCallback = data => {
