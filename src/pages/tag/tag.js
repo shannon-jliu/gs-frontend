@@ -19,7 +19,6 @@ export class Tag extends Component {
     this.onTag = this.onTag.bind(this)
     this.onNext = this.onNext.bind(this)
     this.onPrev = this.onPrev.bind(this)
-    this.listen = this.listen.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
   }
 
@@ -35,20 +34,6 @@ export class Tag extends Component {
     this.props.getPrevAssignment(this.props.assignment)
   }
 
-  listen(e) {
-    // TODO determine if this is even needed lmao
-    // const setting = e.data
-  }
-
-  // open the eventsource to the ground server
-  componentWillMount() {
-    if (TWO_PASS_MODE) {
-      var eventSourceInitDict = {headers: {'X-AUTH-TOKEN': localStorage.getItem(AUTH_TOKEN_ID)}}
-      var eventSource = new EventSource(GROUND_SERVER_URL + '/api/v1/settings/camera_gimbal/stream', eventSourceInitDict)
-      eventSource.addEventListener('message', this.listen, false)
-    }
-  }
-
   componentDidMount() {
     if (!this.props.assignment.hasIn(['assignment', 'id'])) {
       this.props.getAllAssignments(this.props.assignment.get('currentIndex'))
@@ -56,13 +41,12 @@ export class Tag extends Component {
     }
   }
 
-  renderSighting(s, isROI) {
+  renderSighting(s, isTracking) {
     const imageUrl = this.props.assignment.getIn(['assignment', 'image', 'imageUrl'])
 
     // TODO once gimbal settings is set in stone do this
     const showOffaxis = /* mode === 'angle' || mode === undefined || mode === null*/ true
-    console.log(s, isROI)
-    if (isROI)
+    if (isTracking)
       return (
         <TagSighting
           key={s.get('id') + s.get('type') || s.get('localId')}
@@ -91,15 +75,13 @@ export class Tag extends Component {
     const imageUrl = assignment.getIn(['assignment', 'image', 'imageUrl'])
 
     // extract the gimbalMode to determine if it is an ROI image (if fixed) or regular (tracking)
-    const gimbalMode = assignment.getIn(['assignment', 'image', 'camGimMode']) || TWO_PASS_MODE
-    const isROI = gimbalMode && gimbalMode === 'tracking'
-
+    const gimbalMode = assignment.getIn(['assignment', 'image', 'camGimMode'])
+    const isTracking = gimbalMode && gimbalMode === 'tracking' || !TWO_PASS_MODE
     const name = imageUrl ? imageUrl.substring(
       imageUrl.lastIndexOf('/') + 1,
       imageUrl.lastIndexOf('.')
-    ) + (' ' +  isROI ? ' (ROI)' : ' (TARGET)')  : 'none'
+    ) + (' ' +  (isTracking ? ' (TARGET)' : ' (ROI)'))  : 'none'
     const count = (assignment.get('currentIndex') + 1) + '/' + assignment.get('total')
-    console.log(mdlcSightings)
     const btnClass = 'btn-floating btn-large red'
     const backClass = 'prev ' + btnClass + (assignment.get('currentIndex') <= 0 ? ' disabled' : '')
     const nextClass = 'next ' + btnClass + (assignment.get('loading') ? ' disabled' : '')
@@ -121,7 +103,7 @@ export class Tag extends Component {
           <i className='material-icons'>arrow_forward</i>
         </button>
         <div className='sightings'>
-          {mdlcSightings.map(s => this.renderSighting(s, isROI))}
+          {mdlcSightings.map(s => this.renderSighting(s, isTracking))}
         </div>
       </div>
     )
