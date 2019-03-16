@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
 import _ from 'lodash'
+import SnackbarUtil from './util/snackbarUtil.js'
 
 import { GROUND_SERVER_URL } from './constants/links'
 import { AUTH_TOKEN_ID } from './constants/constants'
@@ -18,6 +19,7 @@ export class App extends Component {
 
   listen(e) {
     this.state.mode = e.data
+    SnackbarUtil.render('Camera-Gimbal mode has been changed')
   }
 
   componentWillMount() {
