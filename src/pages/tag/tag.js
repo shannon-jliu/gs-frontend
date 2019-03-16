@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
-import _ from 'lodash'
 
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import AssignmentOperations from '../../operations/assignmentOperations'
@@ -62,7 +61,7 @@ export class Tag extends Component {
 
     // TODO once gimbal settings is set in stone do this
     const showOffaxis = /* mode === 'angle' || mode === undefined || mode === null*/ true
-
+    console.log(s, isROI)
     if (isROI)
       return (
         <TagSighting
@@ -100,7 +99,7 @@ export class Tag extends Component {
       imageUrl.lastIndexOf('.')
     ) + (' ' +  isROI ? ' (ROI)' : ' (TARGET)')  : 'none'
     const count = (assignment.get('currentIndex') + 1) + '/' + assignment.get('total')
-
+    console.log(mdlcSightings)
     const btnClass = 'btn-floating btn-large red'
     const backClass = 'prev ' + btnClass + (assignment.get('currentIndex') <= 0 ? ' disabled' : '')
     const nextClass = 'next ' + btnClass + (assignment.get('loading') ? ' disabled' : '')
@@ -122,7 +121,7 @@ export class Tag extends Component {
           <i className='material-icons'>arrow_forward</i>
         </button>
         <div className='sightings'>
-          {_.map(mdlcSightings, s => this.renderSighting(s, isROI))}
+          {mdlcSightings.map(s => this.renderSighting(s, isROI))}
         </div>
       </div>
     )

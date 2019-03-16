@@ -34,12 +34,12 @@ export class ROISighting extends Component {
   }
 
   save() {
-    this.props.saveTargetSighting()
+    this.props.saveROISighting(this.props.sighting)
   }
 
   deleteSighting() {
     if (this.props.sighting.has('id')) {
-      this.props.deleteSavedTargetSighting(this.props.sighting)
+      this.props.deleteSavedROISighting(this.props.sighting)
     } else {
       this.props.deleteUnsavedTargetSighting(this.props.sighting)
     }
