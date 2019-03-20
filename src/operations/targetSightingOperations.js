@@ -106,13 +106,13 @@ const TargetSightingOperations = {
       const sightingToSend = _.omit(sighting.toJS(), ['localId', 'type'])
 
       const successCallback = data => {
-        SnackbarUtil.render('Succesfully saved target sighting')
+        SnackbarUtil.render('Succesfully saved ROI sighting')
         const receivedSighting = fromJS(data).set('type', 'roi')
         dispatch(action.succeedSaveTargetSighting(receivedSighting, sighting.get('localId')))
       }
 
       const failureCallback = () => {
-        SnackbarUtil.render('Failed to save target sighting')
+        SnackbarUtil.render('Failed to save ROI sighting')
         dispatch(action.failSaveTargetSighting(sighting.get('localId')))
       }
 
@@ -121,7 +121,7 @@ const TargetSightingOperations = {
     }
   ),
 
-  // TODO doesn't exist on backend yet
+  // TODO doesn't exist on backend yet but it will
   deleteSavedROISighting: dispatch => (
     sighting => {
       dispatch(action.deleteTargetSighting(sighting))
