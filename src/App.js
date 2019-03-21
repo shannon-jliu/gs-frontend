@@ -10,6 +10,7 @@ import Header from './components/header.js'
 
 import appOperations from './operations/appOperations.js'
 import gimbalOperations from './operations/gimbalOperations.js'
+import gimbalReducer from './reducers/gimbalReducer.js'
 
 export class App extends Component {
   constructor(props) {
@@ -17,7 +18,6 @@ export class App extends Component {
   }
 
   listen(e) {
-    console.log(e)
     let mode = -1;
     let modeString = "";
     if (e.data === 'retract' || e.data === 'fixed') {
@@ -32,8 +32,7 @@ export class App extends Component {
     }
 
     if (mode !== -1) {
-        // console.log('HIII')
-        const modeObj = { mode: mode }
+        const modeObj = { timestamp : this.props.cameraGimbalSettings.get('settings').get('timestamp')+1, mode: mode }
         this.props.updateCameraGimbal(modeObj)
         SnackbarUtil.render('Camera-Gimbal mode has been changed to: ' + modeString)
     }
@@ -58,8 +57,12 @@ export class App extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  cameraGimbalSettings: state.gimbalReducer
+})
+
 const mapDispatchToProps = dispatch => ({
   updateCameraGimbal: data => appOperations.updateCameraGimbalSettingsLocal(dispatch)(data)
 })
 
-export default connect(null, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(App)

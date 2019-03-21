@@ -8,7 +8,10 @@ import SnackbarUtil from '../util/snackbarUtil.js'
 const AppOperations = {
   updateCameraGimbalSettingsLocal: dispatch => (
     setting => {
-      dispatch(cameraGimbalAction.updateSettingsStart(fromJS(setting)))
+        // console.log(setting, fromJS(setting))
+        console.log('updating')
+        dispatch(cameraGimbalAction.receiveAndUpdateSettings(fromJS(setting)))
+      // dispatch(cameraGimbalAction.updateSettingsStart(fromJS(setting)))
     }
   )
 }
