@@ -8,6 +8,7 @@ import { GROUND_SERVER_URL } from './constants/links'
 import { AUTH_TOKEN_ID } from './constants/constants'
 import Header from './components/header.js'
 
+import appOperations from './operations/appOperations.js'
 import gimbalOperations from './operations/gimbalOperations.js'
 
 export class App extends Component {
@@ -16,6 +17,7 @@ export class App extends Component {
   }
 
   listen(e) {
+    console.log(e)
     let mode = -1;
     let modeString = "";
     if (e.data === 'retract' || e.data === 'fixed') {
@@ -30,13 +32,14 @@ export class App extends Component {
     }
 
     if (mode !== -1) {
+        // console.log('HIII')
         const modeObj = { mode: mode }
         this.props.updateCameraGimbal(modeObj)
         SnackbarUtil.render('Camera-Gimbal mode has been changed to: ' + modeString)
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     let eventSourceInitDict = {headers: {'X-AUTH-TOKEN': localStorage.getItem(AUTH_TOKEN_ID)}}
     let eventSource = new EventSource(GROUND_SERVER_URL + '/api/v1/settings/camera_gimbal/stream', eventSourceInitDict)
     let boundListen = this.listen.bind(this)
@@ -56,7 +59,7 @@ export class App extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateCameraGimbal: data => gimbalOperations.updateSettingsStart(dispatch)(data)
+  updateCameraGimbal: data => appOperations.updateCameraGimbalSettingsLocal(dispatch)(data)
 })
 
 export default connect(null, mapDispatchToProps)(App)
