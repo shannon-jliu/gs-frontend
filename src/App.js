@@ -18,23 +18,23 @@ export class App extends Component {
   }
 
   listen(e) {
-    let mode = -1;
-    let modeString = "";
+    let mode = -1
+    let modeString = ''
     if (e.data === 'retract' || e.data === 'fixed') {
-      mode = 0;
+      mode = 0
       modeString = 'Retract'
     } else if (e.data === 'idle') {
-      mode = 1;
+      mode = 1
       modeString = 'Idle'
     } else if (e.data === 'tracking') {
-      mode = 2;
+      mode = 2
       modeString = 'Tracking'
     }
 
     if (mode !== -1) {
-        const modeObj = { timestamp : this.props.cameraGimbalSettings.get('settings').get('timestamp')+1, mode: mode }
-        this.props.updateCameraGimbal(modeObj)
-        SnackbarUtil.render('Camera-Gimbal mode has been changed to: ' + modeString)
+      const modeObj = { timestamp : this.props.cameraGimbalSettings.get('settings').get('timestamp')+1, mode: mode }
+      this.props.updateCameraGimbal(modeObj)
+      SnackbarUtil.render('Camera-Gimbal mode has been changed to: ' + modeString)
     }
   }
 
