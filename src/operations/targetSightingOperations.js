@@ -100,6 +100,41 @@ const TargetSightingOperations = {
     }
   ),
 
+  saveROISighting: dispatch => (
+    sighting => {
+      dispatch(action.startSaveTargetSighting(sighting.get('localId')))
+      const sightingToSend = _.omit(sighting.toJS(), ['localId', 'type'])
+
+      const successCallback = data => {
+        SnackbarUtil.render('Succesfully saved ROI sighting')
+        const receivedSighting = fromJS(data).set('type', 'roi')
+        dispatch(action.succeedSaveTargetSighting(receivedSighting, sighting.get('localId')))
+      }
+
+      const failureCallback = () => {
+        SnackbarUtil.render('Failed to save ROI sighting')
+        dispatch(action.failSaveTargetSighting(sighting.get('localId')))
+      }
+
+      TargetSightingRequests.saveROISighting(sighting.getIn(['assignment', 'id']), sightingToSend, successCallback, failureCallback)
+
+    }
+  ),
+
+  // TODO doesn't exist on backend yet but it will
+  deleteSavedROISighting: dispatch => (
+    sighting => {
+      dispatch(action.deleteTargetSighting(sighting))
+      const failureCallback = () => {
+        // SnackbarUtil.render('Failed to delete target sighting')
+        SnackbarUtil.render('Deleting ROI Sightings not supported!')
+        TargetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
+      }
+
+      // TargetSightingRequests.deleteROISighting(() => {}, failureCallback)
+    }
+  ),
+
   updateTargetSighting: dispatch => (
     (sighting, attribute) => {
       //in the future, this will send specific requests per attribute (but has to be implemented on BE first)

@@ -20,6 +20,19 @@ export const TargetSightingRequests = {
       {method: 'PUT', data: sighting})
       .done(successCallback)
       .fail(failureCallback)
+  },
+
+  // TODO doesn't exist on backend yet
+  // deleteROISighting: function(id, successCallback, failureCallback) {
+  //   $.ajax('/api/v1/roi/sighting/' + id, {method: 'DELETE'})
+  //     .done(successCallback)
+  //     .fail(failureCallback)
+  // },
+
+  saveROISighting: function(assignmentId, sighting, successCallback, failureCallback) {
+    $.post('/api/v1/assignment/' + assignmentId +'/roi', sighting)
+      .done(successCallback)
+      .fail(failureCallback)
   }
 }
 
