@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import EventSource from 'eventsource'
 import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
 import _ from 'lodash'
