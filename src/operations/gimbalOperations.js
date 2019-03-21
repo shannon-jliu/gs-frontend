@@ -16,11 +16,11 @@ const GimbalOperations = {
 
   updateSettingsStart: dispatch => (
     setting => {
-        console.log('OONF')
       dispatch(action.updateSettingsStart(fromJS(setting)))
 
       const successCallback = data => {
         SnackbarUtil.render('Successfully updated gimbal setting')
+        console.log('success')
         dispatch(action.receiveAndUpdateSettings(fromJS(data)))
       }
 

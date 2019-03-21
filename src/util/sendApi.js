@@ -90,6 +90,7 @@ export const SettingsRequest = {
   },
 
   updateGimbalSetting: function(settings, successCallback, failureCallback) {
-    SettingsRequest.updateSetting('/api/v1/settings/camera_gimbal', settings, successCallback, failureCallback)
+    // SettingsRequest.updateSetting('/api/v1/settings/camera_gimbal', settings, successCallback, failureCallback)
+    SettingsRequest.updateSetting('', settings, successCallback, failureCallback)
   }
 }
