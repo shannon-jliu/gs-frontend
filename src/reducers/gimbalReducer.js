@@ -32,7 +32,6 @@ const gimbalReducer = (state = initialState, action) => {
 
 function receiveGimbalSettings(state, action) {
   const settings = action.settings
-  console.log(JSON.stringify(action.settings))
   if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
     return state.set('settings', settings)
   } else {
