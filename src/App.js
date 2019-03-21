@@ -9,7 +9,6 @@ import { AUTH_TOKEN_ID } from './constants/constants'
 import Header from './components/header.js'
 
 import appOperations from './operations/appOperations.js'
-import gimbalOperations from './operations/gimbalOperations.js'
 import gimbalReducer from './reducers/gimbalReducer.js'
 
 export class App extends Component {
@@ -27,7 +26,7 @@ export class App extends Component {
       modeString = 'Retract'
     } else if (dataMode === 'fixed') {
       mode = 1
-      modeString = 'Idle'
+      modeString = 'Fixed'
     } else if (dataMode === 'tracking') {
       mode = 2
       modeString = 'Tracking'
