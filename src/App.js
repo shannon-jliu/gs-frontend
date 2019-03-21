@@ -17,18 +17,23 @@ export class App extends Component {
 
   listen(e) {
     let mode = -1;
-    if (e.data.localeCompare('retract')) {
+    let modeString = "";
+    if (e.data === 'retract' || e.data === 'fixed') {
       mode = 0;
-    } else if (e.data.localeCompare('idle')) {
+      modeString = 'Retract'
+    } else if (e.data === 'idle') {
       mode = 1;
-    } else if (e.data.localeCompare('tracking')) {
+      modeString = 'Idle'
+    } else if (e.data === 'tracking') {
       mode = 2;
+      modeString = 'Tracking'
     }
-    // this.props.updateCameraGimbal(mode)
-    let modeObj = { mode: mode }
-    gimbalOperations.updateSettingsStart(modeObj)
-    // console.log(gimbalOperations)
-    SnackbarUtil.render('Camera-Gimbal mode has been changed')
+
+    if (mode !== -1) {
+        const modeObj = { mode: mode }
+        this.props.updateCameraGimbal(modeObj)
+        SnackbarUtil.render('Camera-Gimbal mode has been changed to: ' + modeString)
+    }
   }
 
   componentWillMount() {
@@ -50,13 +55,8 @@ export class App extends Component {
   }
 }
 
-// const mapDispatchToProps = dispatch => ({
-//   updateCameraGimbal: data => gimbalOperations.updateSettingsStart(dispatch),
-// })
+const mapDispatchToProps = dispatch => ({
+  updateCameraGimbal: data => gimbalOperations.updateSettingsStart(dispatch)(data)
+})
 
-// export default connect(null, mapDispatchToProps)(App)
-
-// export App
-
-export default App
-
+export default connect(null, mapDispatchToProps)(App)
