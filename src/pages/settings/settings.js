@@ -15,10 +15,10 @@ class Settings extends Component {
   componentDidMount() {
     window.addEventListener('load', () => {
       var loadNewestContent = () => {
-        this.props.getCameraCapturing()
-        this.props.getCameraZoom()
-        this.props.getGimbalSettings()
-        this.props.getAirdropSettings()
+        // this.props.getCameraCapturing()
+        // this.props.getCameraZoom()
+        // this.props.getGimbalSettings()
+        // this.props.getAirdropSettings()
         setTimeout(loadNewestContent, 1000)
       }
       loadNewestContent()
