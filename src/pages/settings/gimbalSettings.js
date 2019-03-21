@@ -28,10 +28,12 @@ export class GimbalSettings extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('it updated!')
+    console.log(JSON.stringify(this.props.settings.get('settings')))
     if (prevProps != this.props && (prevProps.settings.get('settings').get('mode') === this.state.mode)) {
       this.state.mode = this.props.settings.get('settings').get('mode')
     }
+    // console.log(this.state.mode, JSON.stringify(this.props.settings.get('settings')))
+    // console.log(this.state.mode, this.props.settings.get('settings'))
   }
 
   getSavedFields() {
@@ -155,6 +157,7 @@ export class GimbalSettings extends Component {
 }
 
 const mapStateToProps = state => ({
+    state: state,
   settings: state.gimbalReducer
 })
 

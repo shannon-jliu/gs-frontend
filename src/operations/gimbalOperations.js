@@ -20,7 +20,6 @@ const GimbalOperations = {
 
       const successCallback = data => {
         SnackbarUtil.render('Successfully updated gimbal setting')
-        console.log('success')
         dispatch(action.receiveAndUpdateSettings(fromJS(data)))
       }
 

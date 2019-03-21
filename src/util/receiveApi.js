@@ -61,6 +61,6 @@ export const SettingsGetRequests = {
 
   getGimbalSetting: function(successCallback, failureCallback) {
     // TODO: Find correct route
-    SettingsGetRequests.getSetting('/api/set-mode', successCallback, failureCallback)
+    SettingsGetRequests.getSetting('/api/v1/settings/camera_gimbal/recent', successCallback, failureCallback)
   }
 }
