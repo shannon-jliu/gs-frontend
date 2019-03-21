@@ -6,7 +6,7 @@ export const ADLC_PAGE_ID = 'ADLC'
 export const SETTINGS_PAGE_ID = 'SETTINGS'
 export const LOGS_PAGE_ID = 'LOGS'
 
-// export const GROUND_SERVER_URL = 'http://192.168.0.22:9000'
+export const GROUND_SERVER_URL = 'http://192.168.0.22:9000'
 
 // for local testing
-export const GROUND_SERVER_URL = 'http://127.0.0.1:9000'
+// export const GROUND_SERVER_URL = 'http://127.0.0.1:9000'
