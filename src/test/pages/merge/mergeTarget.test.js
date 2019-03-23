@@ -140,7 +140,7 @@ describe('MergeTarget', () => {
         description: '',
         longitude: props.target.getIn(['geotag', 'gpsLocation', 'longitude']),
         latitude: props.target.getIn(['geotag', 'gpsLocation', 'latitude']),
-        isTsHovering: false,
+        dragCtr: 0,
         iwidth: -1,
         iheight: -1
       }
@@ -166,7 +166,7 @@ describe('MergeTarget', () => {
         description: '',
         longitude: props.target.getIn(['geotag', 'gpsLocation', 'longitude']),
         latitude: props.target.getIn(['geotag', 'gpsLocation', 'latitude']),
-        isTsHovering: false,
+        dragCtr: 0,
         iwidth: -1,
         iheight: -1
       }
@@ -200,7 +200,7 @@ describe('MergeTarget', () => {
         description: '',
         longitude: props.target.getIn(['geotag', 'gpsLocation', 'longitude']),
         latitude: '41.432432',
-        isTsHovering: false,
+        dragCtr: 0,
         iwidth: -1,
         iheight: -1
       }

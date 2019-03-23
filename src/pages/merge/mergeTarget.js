@@ -28,7 +28,7 @@ export class MergeTarget extends Component {
       description: t.get('description') || '',
       longitude: t.getIn(['geotag', 'gpsLocation', 'longitude']) || '',
       latitude: t.getIn(['geotag', 'gpsLocation', 'latitude']) || '',
-      isTsHovering: false,
+      dragCtr: 0, //counter rather than boolean to allow hovering over child elements
       iwidth: -1,
       iheight: -1
     }
@@ -181,19 +181,19 @@ export class MergeTarget extends Component {
 
   dragEnter(e) {
     this.setState({
-      isTsHovering: true
+      dragCtr: this.state.dragCtr + 1
     })
   }
 
   dragLeave(e) {
     this.setState({
-      isTsHovering: false
+      dragCtr: this.state.dragCtr - 1
     })
   }
 
   drop(e) {
     this.setState({
-      isTsHovering: false
+      dragCtr: 0
     })
     this.props.onTsDrop(this.props.target)
   }
@@ -209,7 +209,7 @@ export class MergeTarget extends Component {
     return (
       <div
         ref='main'
-        className={'target card' + (this.state.isTsHovering ? ' drag-over' : '')}
+        className={'target card' + (this.state.dragCtr > 0 ? ' drag-over' : '')}
         onDragEnter={canHoldTs ? undefined : this.dragEnter}
         onDragLeave={canHoldTs ? undefined : this.dragLeave}
         onDragOver={canHoldTs ? undefined : e => e.preventDefault()}
