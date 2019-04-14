@@ -6,6 +6,7 @@ import {fromJS, Map} from 'immutable'
  *   - contains a timestamp of the latest airdrop settings, -1 if none
  * - pending - (object) object in 'queue' to send to the ground server. If success, this will reset to {}.
 */
+
 const initialState = fromJS({
   settings: {
     timestamp: -1

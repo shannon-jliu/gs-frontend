@@ -81,7 +81,7 @@ export class GimbalSettings extends Component {
   modeChange(e, newLocal) {
     if (e.target.type === 'radio') {
       let value = e.target.value
-      if (value === 'retract') {
+      if (value === 'idle') {
         newLocal.mode = 0
       } else if (value === 'fixed') {
         newLocal.mode = 1
@@ -101,13 +101,11 @@ export class GimbalSettings extends Component {
 
   render() {
     let display = this.getDisplayFields()
-    let retractSelected = display.mode === 0 ? true:false
+    let idleSelected = display.mode === 0 ? true:false
     let groundSelected = display.mode === 1 ? true:false
     let trackingSelected = display.mode === 2 ? true:false
 
     let saveClass = !this.canSave() ? 'waves-light btn grey' : 'waves-light btn'
-
-    let id='g-retract'
 
     return (
       <div className="gimbal">
@@ -118,10 +116,10 @@ export class GimbalSettings extends Component {
               <h6>Mode:</h6>
               <div className="row">
                 <Radio onChange={this.updateSettingsOnInputChange}
-                  id={'g-retract'}
-                  myRef={ref => (this.retractRadio = ref)}
-                  value="retract"
-                  checked={retractSelected}
+                  id={'g-idle'}
+                  myRef={ref => (this.idleRadio = ref)}
+                  value="idle"
+                  checked={idleSelected}
                 />
               </div>
               <div className="row">
@@ -162,4 +160,3 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GimbalSettings)
-

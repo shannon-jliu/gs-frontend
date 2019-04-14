@@ -6,6 +6,7 @@ import {fromJS, Map} from 'immutable'
  *   - contains a timestamp of the latest airdrop settings, -1 if none
  * - pending - (object) object in 'queue' to send to the ground server. If success, this will reset to {}.
 */
+
 const initialState = fromJS({
   settings: {
     timestamp: -1
@@ -19,14 +20,14 @@ const cameraReducer = (state = initialState, action) => {
     // want to set pending to empty AND update camera settings
     state = state.set('pending', Map())
     var settings = action.settings
-    if (state.getIn(['settings', 'timestamp']) < settings.timestamp) {
+    if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
       return state.set('settings', settings)
     } else {
       return state
     }
   case 'RECEIVE_CAMERA_SETTINGS':
     settings = action.settings
-    if (state.getIn(['settings', 'timestamp']) < settings.timestamp) {
+    if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
       return state.set('settings', settings)
     } else {
       return state
