@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
+
+import AuthUtil from '../util/authUtil'
 
 import {
   LOGIN_PAGE_ID,
@@ -10,12 +13,12 @@ import {
 } from '../constants/links.js'
 
 const LINKS = Object.freeze({
-  'Login': {name: 'Login', key: LOGIN_PAGE_ID, href: '/login'},
-  'Tag': {name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag'},
-  'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '/merge'},
-  'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#'},
-  'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings'},
-  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs'},
+  'Login': {name: 'Login', key: LOGIN_PAGE_ID, href: '/login', 'admin': false},
+  'Tag': {name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag', 'admin': false},
+  'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'admin': true},
+  'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'admin': true},
+  'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'admin': true},
+  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'admin': true},
 })
 
 
@@ -24,9 +27,11 @@ class Header extends Component {
   constructor(props) {
     super(props)
     this.props = props
+    this.admin = AuthUtil.admin() && window.location.pathname !== '/login'
   }
 
   render() {
+    const linksToShow = _.filter(Object.keys(LINKS), key => !LINKS[key].admin || this.admin)
     return (
       <div>
         <nav>
@@ -36,7 +41,7 @@ class Header extends Component {
             </div>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
               {
-                Object.keys(LINKS).map((key) => {
+                _.map(linksToShow, key => {
                   const link = LINKS[key]
                   return (
                     <li className={window.location.pathname === link.href ? 'active' : ''} key={link.key}>
