@@ -32,13 +32,14 @@ describe('ConfSelect tests', () => {
   })
 
   it('renders the default value correctly', () => {
-    const select = wrapper.find('select').first()
-    expect(select.prop('defaultValue')).toContain('HIGH')
+    const option = wrapper.find('option').first()
+    expect(option.text()).toEqual('Confidence')
+    expect(option.prop('disabled')).toBe(true)
   })
 
-  it('renders label correctly', () => {
-    const label = wrapper.find('label').first()
-    expect(label.text()).toContain('Confidence')
+  it('renders the value correctly', () => {
+    const select = wrapper.find('select')
+    expect(select.prop('value')).toEqual('HIGH')
   })
 
   it('calls onChange properly', () => {
@@ -48,7 +49,7 @@ describe('ConfSelect tests', () => {
   })
 })
 
-describe('TypeSelect tests without default value', () => {
+describe('ConfSelect tests without default value', () => {
   it('renders without default value correctly', () => {
     const props = {
       onChange: jest.fn(() => 'onChange'),
@@ -56,6 +57,6 @@ describe('TypeSelect tests without default value', () => {
     }
     const wrapper = mount(<ConfSelect {...props} />)
     const select = wrapper.find('select').first()
-    expect(select.prop('defaultValue')).toBeUndefined()
+    expect(select.prop('value')).toEqual('')
   })
 })

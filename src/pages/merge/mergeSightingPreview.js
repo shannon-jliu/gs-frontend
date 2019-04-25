@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import PropTypes from 'prop-types'
 
+import { GROUND_SERVER_URL } from '../../constants/links'
+
 class MergeSightingPreview extends Component {
   constructor(props) {
     super(props)
@@ -11,6 +13,7 @@ class MergeSightingPreview extends Component {
     }
 
     this.loadImage = this.loadImage.bind(this)
+    this.getStyle = this.getStyle.bind(this)
   }
 
   loadImage(imageUrl) {
@@ -21,7 +24,7 @@ class MergeSightingPreview extends Component {
         iheight: i.height
       })
     }
-    i.src = imageUrl
+    i.src = GROUND_SERVER_URL + imageUrl
   }
 
   componentDidMount() {
@@ -30,6 +33,9 @@ class MergeSightingPreview extends Component {
 
   //testWidth and testHeight should only be passed in when testing
   getStyle(testWidth, testHeight) {
+    if (testWidth === undefined && this.state.iwidth === -1) {
+      return {}
+    }
     const imageUrl = this.props.sighting.getIn(['assignment', 'image', 'imageUrl'])
     const imgscale = 100 / this.props.sighting.get('width')
     const iwidth = testWidth === undefined ? this.state.iwidth : testWidth
@@ -38,7 +44,7 @@ class MergeSightingPreview extends Component {
     const x = 50 - this.props.sighting.get('pixelX') * imgscale
     const y = 50 - this.props.sighting.get('pixelY') * imgscale
     let style = {
-      backgroundImage: 'url(' + imageUrl + ')',
+      backgroundImage: 'url(' + GROUND_SERVER_URL + imageUrl + ')',
       backgroundSize: bgSize,
       backgroundPosition: x + 'px ' + y + 'px'
     }
@@ -55,7 +61,8 @@ class MergeSightingPreview extends Component {
         className={
           'image' +
           (this.props.isMerged ? ' merged-ts' : '') +
-          (this.props.isThumbnail ? ' t-thumb' : '')
+          (this.props.isThumbnail ? ' t-thumb' : '') +
+          (this.state.iwidth === -1 || this.state.iheight === -1 ? ' red lighten-3' : '')
         }
         onClick={this.props.onClick}
         onDragStart={this.props.onDragStart}

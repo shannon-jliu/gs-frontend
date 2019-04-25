@@ -33,13 +33,14 @@ describe('colorSelect.js tests', () => {
   })
 
   it('renders the default value correctly', () => {
-    const select = wrapper.find('select').first()
-    expect(select.prop('defaultValue')).toContain('gray')
+    const option = wrapper.find('option').first()
+    expect(option.text()).toEqual('Color')
+    expect(option.prop('disabled')).toBe(true)
   })
 
-  it('renders label correctly', () => {
-    const label = wrapper.find('label').first()
-    expect(label.text()).toContain('Color')
+  it('renders the value correctly', () => {
+    const select = wrapper.find('select')
+    expect(select.prop('value')).toEqual('gray')
   })
 
   it('calls onChange properly', () => {
@@ -49,7 +50,7 @@ describe('colorSelect.js tests', () => {
   })
 })
 
-describe('TypeSelect tests without default value', () => {
+describe('ColorSelect tests without default value', () => {
   it('renders without default value correctly', () => {
     const props = {
       onChange: jest.fn(() => 'onChange'),
@@ -57,6 +58,6 @@ describe('TypeSelect tests without default value', () => {
     }
     const wrapper = mount(<ColorSelect {...props} />)
     const select = wrapper.find('select').first()
-    expect(select.prop('defaultValue')).toBeUndefined()
+    expect(select.prop('value')).toEqual('')
   })
 })

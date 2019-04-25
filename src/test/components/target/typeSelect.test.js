@@ -33,13 +33,14 @@ describe('TypeSelect tests with default value', () => {
   })
 
   it('renders the default value correctly', () => {
-    const select = wrapper.find('select').first()
-    expect(select.prop('defaultValue')).toContain('emergent')
+    const option = wrapper.find('option').first()
+    expect(option.text()).toEqual('Type')
+    expect(option.prop('disabled')).toBe(true)
   })
 
-  it('renders label correctly', () => {
-    const label = wrapper.find('label').first()
-    expect(label.text()).toContain('Type')
+  it('renders the value correctly', () => {
+    const select = wrapper.find('select')
+    expect(select.prop('value')).toEqual('emergent')
   })
 
   it('calls onChange properly', () => {
@@ -57,6 +58,6 @@ describe('TypeSelect tests without default value', () => {
     }
     const wrapper = mount(<TypeSelect {...props} />)
     const select = wrapper.find('select').first()
-    expect(select.prop('defaultValue')).toBeUndefined()
+    expect(select.prop('value')).toEqual('')
   })
 })

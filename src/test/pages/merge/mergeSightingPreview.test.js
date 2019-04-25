@@ -5,6 +5,7 @@ import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
 import MergeSightingPreview from '../../../pages/merge/mergeSightingPreview.js'
+import { GROUND_SERVER_URL } from '../../../constants/links'
 
 Enzyme.configure({ adapter: new Adapter() })
 
@@ -25,7 +26,7 @@ describe('MergeSightingPreview', () => {
       width: 20,
       assignment: {
         image: {
-          imageUrl: '../../../../img/cuair_default.png'
+          imageUrl: '/cuair_default.png'
         }
       }
     }),
@@ -49,10 +50,10 @@ describe('MergeSightingPreview', () => {
     const wrapper = shallow(<MergeSightingPreview {...props} />)
     const instance = wrapper.instance()
 
-    expect(instance.getStyle().backgroundImage).toEqual('url(../../../../img/cuair_default.png)')
+    expect(instance.getStyle(1080, 1800).backgroundImage).toEqual('url(' + GROUND_SERVER_URL + '/cuair_default.png)')
     expect(instance.getStyle(1080, 1800).backgroundSize).toEqual('5400px 9000px')
-    expect(instance.getStyle().backgroundPosition).toEqual('-4850px -2585px')
-    expect(instance.getStyle().opacity).toBeUndefined()
+    expect(instance.getStyle(1080, 1800).backgroundPosition).toEqual('-4850px -2585px')
+    expect(instance.getStyle(1080, 1800).opacity).toBeUndefined()
   })
 
   it('gets style when dragging', () => {
@@ -65,9 +66,9 @@ describe('MergeSightingPreview', () => {
     const wrapper = shallow(<MergeSightingPreview {...newProps} />)
     const instance = wrapper.instance()
 
-    expect(instance.getStyle().backgroundImage).toEqual('url(../../../../img/cuair_default.png)')
+    expect(instance.getStyle(1080, 1800).backgroundImage).toEqual('url(' + GROUND_SERVER_URL + '/cuair_default.png)')
     expect(instance.getStyle(1080, 1800).backgroundSize).toEqual('5400px 9000px')
-    expect(instance.getStyle().backgroundPosition).toEqual('-4850px -2585px')
-    expect(instance.getStyle().opacity).toEqual(0.15)
+    expect(instance.getStyle(1080, 1800).backgroundPosition).toEqual('-4850px -2585px')
+    expect(instance.getStyle(1080, 1800).opacity).toEqual(0.15)
   })
 })

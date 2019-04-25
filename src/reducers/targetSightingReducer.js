@@ -80,7 +80,7 @@ function failSaveTargetSighting(state, localId) {
 function startUpdateTargetSighting(state, sighting, attribute) {
   return state.update('saved', s => s.map(ts => {
     if (ts.get('id') == sighting.get('id') && ts.get('type') == sighting.get('type')) {
-      if (ts.get('pending') == undefined) {
+      if (!ts.has('pending')) {
         return ts.set('pending', attribute)
       } else {
         //overwrite is fine because save should never be called for attribute currently pending save

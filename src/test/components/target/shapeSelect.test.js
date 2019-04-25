@@ -32,13 +32,14 @@ describe('ShapeSelect tests', () => {
   })
 
   it('renders the default value correctly', () => {
-    const select = wrapper.find('select').first()
-    expect(select.prop('defaultValue')).toContain('square')
+    const option = wrapper.find('option').first()
+    expect(option.text()).toEqual('Shape')
+    expect(option.prop('disabled')).toBe(true)
   })
 
-  it('renders label correctly', () => {
-    const label = wrapper.find('label').first()
-    expect(label.text()).toContain('Shape')
+  it('renders the value correctly', () => {
+    const select = wrapper.find('select')
+    expect(select.prop('value')).toEqual('square')
   })
 
   it('calls onChange properly', () => {
@@ -48,7 +49,7 @@ describe('ShapeSelect tests', () => {
   })
 })
 
-describe('TypeSelect tests without default value', () => {
+describe('ShapeSelect tests without default value', () => {
   it('renders without default value correctly', () => {
     const props = {
       onChange: jest.fn(() => 'onChange'),
@@ -56,6 +57,6 @@ describe('TypeSelect tests without default value', () => {
     }
     const wrapper = mount(<ShapeSelect {...props} />)
     const select = wrapper.find('select').first()
-    expect(select.prop('defaultValue')).toBeUndefined()
+    expect(select.prop('value')).toEqual('')
   })
 })

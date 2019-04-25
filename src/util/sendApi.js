@@ -33,7 +33,7 @@ export const targetRequests = {
 
   saveTarget: function(target, successCallback, failureCallback) {
     //no option for emergent bc it shouldn't be created here
-    $.post('/api/v1/alphanum_target/', target)
+    $.post('/api/v1/alphanum_target', target)
       .done(successCallback)
       .fail(failureCallback)
   },

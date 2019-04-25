@@ -2,6 +2,7 @@ import 'jest-localstorage-mock'
 import { fromJS, List } from 'immutable'
 
 import { targetRequests } from '../../util/sendApi.js'
+import { TargetGetRequests as GetRequests } from '../../util/receiveApi.js'
 import TargetOperations from '../../operations/targetOperations.js'
 import TargetSightingOperations from '../../operations/targetSightingOperations.js'
 import * as action from '../../actions/targetActionCreator.js'
@@ -61,6 +62,58 @@ describe('TargetOperations', () => {
   beforeEach(() => {
     dispatch = jest.fn()
     SnackbarUtil.render = jest.fn()
+  })
+
+  describe('getAllTargets', () => {
+    const t = fromJS({
+      id: 2,
+      shape: 'trapezoid',
+      shapeColor: 'red',
+      alpha: 'r',
+      alphaColor: 'blue',
+      offaxis: false
+    })
+
+    const emergent = fromJS({
+      id: 3,
+      type: 'emergent',
+      description: 'lol'
+    })
+
+    it('gets all targets correctly', () => {
+      // these requests should return a list of JS targets
+      GetRequests.getAlphanumTargets = jest.fn((succ, fail) => succ([t.toJS()]))
+      GetRequests.getEmergentTargets = jest.fn((succ, fail) => succ([emergent.toJS()]))
+      TargetOperations.getAllTargets(dispatch)()
+
+      const expectedCombinedTargets = fromJS([t.set('type', 'alphanum'), emergent.set('type', 'emergent')])
+      expect(dispatch).toHaveBeenCalledWith(action.addTargetsFromServer(expectedCombinedTargets))
+      expect(dispatch).toHaveBeenCalledTimes(1)
+    })
+
+    it('fails to retrieve alphanum targets', () => {
+      // these requests should return a list of JS targets
+      GetRequests.getAlphanumTargets = jest.fn((succ, fail) => fail())
+      GetRequests.getEmergentTargets = jest.fn((succ, fail) => succ([emergent.toJS()]))
+      TargetOperations.getAllTargets(dispatch)()
+
+      expect(GetRequests.getEmergentTargets).toHaveBeenCalledTimes(0)
+      expect(dispatch).toHaveBeenCalledTimes(0)
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Failed to get alphanumeric targets')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
+    })
+
+    it('fails to retrieve emergent targets', () => {
+      // these requests should return a list of JS targets
+      GetRequests.getAlphanumTargets = jest.fn((succ, fail) => succ([t.toJS()]))
+      GetRequests.getEmergentTargets = jest.fn((succ, fail) => fail())
+      TargetOperations.getAllTargets(dispatch)()
+
+      expect(GetRequests.getAlphanumTargets).toHaveBeenCalledTimes(1)
+      expect(dispatch).toHaveBeenCalledTimes(0)
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Failed to get emergent targets')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
+    })
   })
 
   it('adds target', () => {

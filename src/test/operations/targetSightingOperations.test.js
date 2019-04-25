@@ -233,7 +233,7 @@ describe('TargetSightingOperations', () => {
       const savedTs = ts.set('localTargetId', '23:63:2048').set('creator', 'MDLC')
       const sentTs = ts.set('color', 'green').delete('type').delete('geotag').delete('id').set('target', tgt)
       const returned = ts.set('color', 'green').delete('type').set('creator', 'MDLC').set('target', tgt)
-      const final = returned.set('type', ts.get('type'))
+      const final = returned.set('type', ts.get('type')).update('target', t => t.set('type', ts.get('type')))
 
       TargetSightingRequests.updateTargetSighting = jest.fn((isAlphanum, id, sighting, successCallback, failureCallback) => successCallback(returned.toJS()))
 

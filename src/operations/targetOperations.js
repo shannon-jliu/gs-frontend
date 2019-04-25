@@ -4,10 +4,39 @@ import _ from 'lodash'
 import * as action from '../actions/targetActionCreator.js'
 import * as tsAction from '../actions/targetSightingActionCreator.js'
 import { targetRequests } from '../util/sendApi.js'
+import { TargetGetRequests as GetRequests } from '../util/receiveApi.js'
 import SnackbarUtil from '../util/snackbarUtil.js'
 import TargetSightingOperations from './targetSightingOperations.js'
 
 const TargetOperations = {
+  getAllTargets: dispatch => (
+    () => {
+      const emergentSuccess = alphanumTgts => (
+        data => {
+          const emergentTgts = _.map(data, tgt => {
+            tgt.type = 'emergent'
+            return tgt
+          })
+          const allTgts = fromJS(_.concat(alphanumTgts, emergentTgts))
+          dispatch(action.addTargetsFromServer(allTgts))
+        }
+      )
+
+      const alphanumSuccess = data => {
+        const alphanumTgts = _.map(data, tgt => {
+          tgt.type = 'alphanum'
+          return tgt
+        })
+        GetRequests.getEmergentTargets(emergentSuccess(alphanumTgts), emergentFail)
+      }
+
+      const alphanumFail = () => SnackbarUtil.render('Failed to get alphanumeric targets')
+      const emergentFail = () => SnackbarUtil.render('Failed to get emergent targets')
+
+      GetRequests.getAlphanumTargets(alphanumSuccess, alphanumFail)
+    }
+  ),
+
   addTarget: dispatch => (
     target => {
       dispatch(action.addTarget(target))

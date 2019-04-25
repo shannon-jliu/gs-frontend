@@ -83,6 +83,15 @@
   -webkit-user-select: none;
 }
 
+.merge .input-field {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.merge .row {
+  margin-top: 5px;
+}
+
 .merge .hidden {
   display: none;
 }

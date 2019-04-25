@@ -106,15 +106,18 @@ const TargetSightingOperations = {
       dispatch(action.startUpdateTargetSighting(sighting, attribute))
 
       let sightingToSend = _.assign(
-        _.omit(sighting.toJS(), ['type', 'localTargetId', 'id', 'creator', 'geotag']),
-        attribute.toJS())
+        _.omit(sighting.toJS(), ['type', 'localTargetId', 'id', 'creator', 'geotag', 'target.type']),
+        _.omit(attribute.toJS(), ['target.type']))
       if (sighting.get('type') == 'emergent' || sighting.get('offaxis')) {
-        sightingToSend = _.omit(sightingToSend, ['target'])
+        delete sightingToSend.target
       }
 
       const successCallback = data => {
         SnackbarUtil.render('Succesfully updated target sighting')
         let receivedSighting = fromJS(data).set('type', sighting.get('type'))
+        if (receivedSighting.get('target') != null) {
+          receivedSighting = receivedSighting.update('target', t => t.set('type', sighting.get('type')))
+        }
         if (!_.has(data, 'target') && sighting.has('localTargetId')) {
           receivedSighting = receivedSighting.set('localTargetId', sighting.get('localTargetId'))
         }

@@ -268,7 +268,7 @@ export class MergeTarget extends Component {
                 t.get('type') === 'emergent' || t.get('offaxis')
                   ? undefined : this.props.onTsDragEnd
               }
-              dragging={t.get('id') === this.props.dragId}
+              dragging={t.get('type') == 'alphanum' && ts.get('id') === this.props.dragId}
             />
           )).toJSON() /*toJSON is a shallow conversion while toJS is deep */}
         </div>

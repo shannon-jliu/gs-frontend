@@ -4,6 +4,20 @@ import _ from 'lodash'
 
 import { AUTH_TOKEN_ID } from '../constants/constants'
 
+export const TargetGetRequests = {
+  getAlphanumTargets: function(successCallback, failureCallback) {
+    $.get('/api/v1/alphanum_target')
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+
+  getEmergentTargets: function(successCallback, failureCallback) {
+    $.get('/api/v1/emergent_target')
+      .done(successCallback)
+      .fail(failureCallback)
+  }
+}
+
 export const TargetSightingGetRequests = {
   getAlphanumSightings: function(successCallback, failureCallback) {
     $.get('/api/v1/alphanum_target_sighting')
