@@ -6,7 +6,6 @@ import {fromJS, Map} from 'immutable'
  *   - contains a timestamp of the latest gimbal settings, -1 if none
  * - pending - (object) object in 'queue' to send to the ground server. If success, this will reset to {}.
 */
-
 const initialState = fromJS({
   settings: fromJS({
     timestamp: -1
@@ -14,24 +13,24 @@ const initialState = fromJS({
   pending: {}
 })
 
-const gimbalReducer = (state = initialState, action) => {
+const cameraGimbalReducer = (state = initialState, action) => {
   switch (action.type) {
-  case 'UPDATE_GIMBAL_SETTINGS_SUCCESS':
+  case 'UPDATE_CAMERA_GIMBAL_SETTINGS_SUCCESS':
     // want to set pending to empty AND update gimbal settings
     state = state.set('pending', Map())
-    return receiveGimbalSettings(state, action)
-  case 'RECEIVE_GIMBAL_SETTINGS':
-    return receiveGimbalSettings(state, action)
-  case 'UPDATE_GIMBAL_SETTINGS_STARTED':
+    return receiveCameraGimbalSettings(state, action)
+  case 'RECEIVE_CAMERA_GIMBAL_SETTINGS':
+    return receiveCameraGimbalSettings(state, action)
+  case 'UPDATE_CAMERA_GIMBAL_SETTINGS_STARTED':
     return state.set('pending', action.settings)
-  case 'UPDATE_GIMBAL_SETTINGS_FAILED':
+  case 'UPDATE_CAMERA_GIMBAL_SETTINGS_FAILED':
     return state.set('pending', Map())
   default:
     return state
   }
 }
 
-function receiveGimbalSettings(state, action) {
+function receiveCameraGimbalSettings(state, action) {
   const settings = action.settings
   if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
     return state.set('settings', settings)
@@ -40,4 +39,4 @@ function receiveGimbalSettings(state, action) {
   }
 }
 
-export default gimbalReducer
+export default cameraGimbalReducer

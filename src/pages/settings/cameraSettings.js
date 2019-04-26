@@ -30,9 +30,9 @@ export class CameraSettings extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps != this.props && (
-      prevProps.settings.get('settings').get('capturing') === this.state.capturing &&
-      prevProps.settings.get('settings').get('zoom') === this.state.zoom
+    if (!_.isEqual(prevProps, this.props) && (
+      this.props.settings.get('settings').get('capturing') !== this.state.capturing &&
+      this.props.settings.get('settings').get('zoom') !== this.state.zoom
     )) {
       this.state.capturing = this.props.settings.get('settings').get('capturing')
       this.state.zoom = this.props.settings.get('settings').get('zoom')
@@ -42,7 +42,7 @@ export class CameraSettings extends Component {
   getSavedFields() {
     let newLocal = this.props.settings.get('settings')
     
-    if (typeof newLocal.get('capturing') == 'undefined') {
+    if (newLocal.get('capturing') === undefined) {
       return {
         capturing: null,
         zoom: null

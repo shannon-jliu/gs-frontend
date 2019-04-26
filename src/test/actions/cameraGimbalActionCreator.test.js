@@ -4,7 +4,7 @@ import {
   receiveAndUpdateSettings,
   updateSettingsStart,
   updateSettingsFailed
-} from '../../actions/gimbalActionCreator.js'
+} from '../../actions/cameraGimbalActionCreator.js'
 
 
 const settings = fromJS({
@@ -16,7 +16,7 @@ const settings = fromJS({
 it('should create an action when it receives gimbal settings', () => {
 
   const expectedAction = {
-    type: 'RECEIVE_GIMBAL_SETTINGS',
+    type: 'RECEIVE_CAMERA_GIMBAL_SETTINGS',
     settings
   }
   expect(receiveSettings(settings)).toEqual(expectedAction)
@@ -24,7 +24,7 @@ it('should create an action when it receives gimbal settings', () => {
 
 it('should create an action when it starts updating gimbal settings', () => {
   const expectedAction = {
-    type: 'UPDATE_GIMBAL_SETTINGS_STARTED',
+    type: 'UPDATE_CAMERA_GIMBAL_SETTINGS_STARTED',
     settings
   }
   expect(updateSettingsStart(settings)).toEqual(expectedAction)
@@ -32,14 +32,14 @@ it('should create an action when it starts updating gimbal settings', () => {
 
 it('should create an action when it fails updating gimbal settings', () => {
   const expectedAction = {
-    type: 'UPDATE_GIMBAL_SETTINGS_FAILED'
+    type: 'UPDATE_CAMERA_GIMBAL_SETTINGS_FAILED'
   }
   expect(updateSettingsFailed()).toEqual(expectedAction)
 })
 
 it('should create an action when it succeeds updating gimbal settings', () => {
   const expectedAction = {
-    type: 'UPDATE_GIMBAL_SETTINGS_SUCCESS',
+    type: 'UPDATE_CAMERA_GIMBAL_SETTINGS_SUCCESS',
     settings
   }
   expect(receiveAndUpdateSettings(settings)).toEqual(expectedAction)

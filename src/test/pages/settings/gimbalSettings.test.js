@@ -7,12 +7,14 @@ import { fromJS, Map } from 'immutable'
 
 import * as matchers from 'jest-immutable-matchers'
 
+import Modes from '../../../pages/settings/components/Modes.js'
+
 import {
   receiveSettings,
   receiveAndUpdateSettings,
   updateSettingsStart,
   updateSettingsFailed
-} from '../../../actions/gimbalActionCreator.js'
+} from '../../../actions/gimbalSettingsActionCreator.js'
 
 import { GimbalSettings } from '../../../pages/settings/gimbalSettings.js'
 
@@ -27,13 +29,20 @@ describe('GimbalSettings Component', () => {
     jest.addMatchers(matchers)
 
     const settings = fromJS({
-      mode: 0
+      gps: {
+        latitude: 0,
+        longitude: 0
+      },
+      orientation: {
+        roll: 0,
+        pitch: 0
+      }
     })
 
-    const mappedSettings = new Map(settings)
+    const mappedSettings = fromJS(settings)
     initialState = mappedSettings
 
-    const overMap = new Map({ settings: mappedSettings, pending: Map() })
+    const overMap = new fromJS({ settings: mappedSettings, pending: Map() })
 
     store = mockStore(overMap)
     wrapper = mount(<GimbalSettings settings={overMap} 
@@ -46,136 +55,217 @@ describe('GimbalSettings Component', () => {
 
 
   it('should return the initial state', () => {
-    expect(JSON.stringify(wrapper.props().store.getState().get('settings'))).toEqualImmutable(JSON.stringify(initialState))
+    expect(wrapper.props().store.getState().get('settings')).toEqualImmutable(initialState)
   })
 
   describe('componentDidUpdate', () => {
     it('should not update the local state | old and new props should be the same', () => {
-      const overMap = new Map({ settings: initialState, pending: Map() })
+      const overMap = fromJS({ settings: initialState, pending: Map() })
 
       wrapper.setProps({ settings: overMap })
 
-      expect(JSON.stringify(wrapper.instance().state.mode)).toEqualImmutable(JSON.stringify(wrapper.instance().props.settings.get('settings').get('mode')))
+      expect(wrapper.instance().state.gps).toEqual(wrapper.instance().props.settings.get('settings').get('gps').toJS())
+      expect(wrapper.instance().state.orientation).toEqual(wrapper.instance().props.settings.get('settings').get('orientation').toJS())
     })
 
     it('should update the local state | old and new props should not be the same', () => {
-      initialState = initialState.set('mode', 1)
-      const overMap = new Map({ settings: initialState, pending: Map() })
+      initialState = initialState.set('mode', Modes.FIXED)
+      const overMap = fromJS({ settings: initialState, pending: Map() })
       store = mockStore(overMap)
 
       wrapper.setProps({ settings: overMap })
 
-      expect(JSON.stringify(wrapper.instance().state.mode)).toEqualImmutable(JSON.stringify(wrapper.instance().props.settings.get('settings').get('mode')))
+      expect(wrapper.instance().state.gps).toEqual(wrapper.instance().props.settings.get('settings').get('gps').toJS())
+      expect(wrapper.instance().state.orientation).toEqual(wrapper.instance().props.settings.get('settings').get('orientation').toJS()  )
     })
   })
 
   describe('getSavedFields', () => {
-    it('should return the correct fields based on justSaved and mode | mode = 0', () => {
-      expect(JSON.stringify(wrapper.instance().getSavedFields())).toEqualImmutable(JSON.stringify(
-        { mode: initialState.get('mode') }
-      ))
-    })
-
-    it('should return the correct fields based on justSaved and mode | mode = 1', () => {
-      initialState = initialState.set('mode', 1)
-      const overMap = new Map({ settings: initialState, pending: Map() })
-
-      store = mockStore(overMap)
-      wrapper = mount(<GimbalSettings settings={overMap} store={store}/>)
-
-      expect(JSON.stringify(wrapper.instance().getSavedFields())).toEqualImmutable(JSON.stringify(
-        { mode: initialState.get('mode') }
-      ))
+    it('should return the correct fields based on saved settings and initialState defined at the beginning of this test file', () => {
+      expect(wrapper.instance().getSavedFields()).toEqual(
+        { gps: {
+          latitude: initialState.get('gps').get('latitude'),
+          longitude: initialState.get('gps').get('longitude')
+        }, 
+        orientation: {
+          roll: initialState.get('orientation').get('roll'),
+          pitch: initialState.get('orientation').get('pitch')
+        }
+        }
+      )
     })
   })
 
   describe('getDisplayFields', () => {
     it('should return the input value', () => {
-      expect(JSON.stringify(wrapper.instance().getDisplayFields())).toEqualImmutable(JSON.stringify(
-        { mode: initialState.get('mode') }
-      ))
+      expect(wrapper.instance().getDisplayFields()).toEqual(
+        { gps: {
+          latitude: initialState.get('gps').get('latitude'),
+          longitude: initialState.get('gps').get('longitude')
+        }, 
+        orientation: {
+          roll: initialState.get('orientation').get('roll'),
+          pitch: initialState.get('orientation').get('pitch')
+        }
+        }
+      )
     })
   })
 
   describe('getNewFields', () => {
-    it('should return the correct fields based on getDisplayFields() | mode = 0', () => {
-      expect(JSON.stringify(wrapper.instance().getNewFields())).toEqualImmutable(JSON.stringify(
-        { mode: initialState.get('mode') }
-      ))
+    it('should return the correct fields based on getDisplayFields()', () => {
+      expect(wrapper.instance().getNewFields()).toEqual(
+        { gps: {
+          latitude: initialState.get('gps').get('latitude'),
+          longitude: initialState.get('gps').get('longitude')
+        }, 
+        orientation: {
+          roll: initialState.get('orientation').get('roll'),
+          pitch: initialState.get('orientation').get('pitch')
+        }
+        }
+      )
     })
   })
 
   describe('canSave', () => {
     it('should return true/should be able to save the settings', () => {
-      initialState = initialState.set('mode', 1)
-      const overMap = new Map({ settings: initialState, pending: Map() })
+      initialState = initialState.set('gps', fromJS({ latitude: 1, longitude: 2}))
+      const overMap = fromJS({ settings: initialState, pending: Map() })
+
+      store = mockStore(overMap)
+      wrapper = mount(<GimbalSettings settings={overMap} store={store}/>)
+      wrapper.instance().mode = Modes.FIXED
+
+      expect(wrapper.instance().canSave()).toBe(true)
+    })
+
+    it('should return false/should not be able to save the settings because newFields and savedFields should be the same', () => {
+      wrapper.instance().mode = Modes.FIXED
+      expect(wrapper.instance().canSave()).toBe(false)
+    })
+
+    it('should return false/should not be able to save the settings because mode == -1 (Modes.UNDEFINED)', () => {
+      initialState = initialState.set('gps', fromJS({ latitude: 1, longitude: 2}))
+      const overMap = fromJS({ settings: initialState, pending: Map() })
 
       store = mockStore(overMap)
       wrapper = mount(<GimbalSettings settings={overMap} store={store}/>)
 
-      expect(wrapper.instance().canSave()).toBe(true)
+      expect(wrapper.instance().canSave()).toBe(false)
     })
   })
 
   describe('save', () => {
     it('should update state based on state and getDisplayFields()', () => {
       wrapper.instance().save()
-      expect(JSON.stringify(wrapper.instance().state)).toEqualImmutable(JSON.stringify({ mode: 0 }))
-    })
-  })
-
-  describe('modeChange', () => {
-    it('should set state.mode to 0', () => {
-      let newMode = 'retract'
-
-      const target = { target: { value: newMode, type: 'radio' } }
-      const handler = {}
-      const changeReturn = new Proxy(target, handler)
-
-      var newL = wrapper.instance().state
-      newL = wrapper.instance().modeChange(changeReturn, newL)
-      expect(JSON.stringify(newL.mode)).toEqualImmutable(JSON.stringify(0))
-    })
-
-    it('should set state.mode to 1', () => {
-      let newMode = 'fixed'
-
-      const target = { target: { value: newMode, type: 'radio' } }
-      const handler = {}
-      const changeReturn = new Proxy(target, handler)
-
-      var newL = wrapper.instance().state
-      newL = wrapper.instance().modeChange(changeReturn, newL)
-      expect(JSON.stringify(newL.mode)).toEqualImmutable(JSON.stringify(1))
-    })
-
-    it('should set state.mode to 2', () => {
-      let newMode = 'tracking'
-
-      const target = { target: { value: newMode, type: 'radio' } }
-      const handler = {}
-      const changeReturn = new Proxy(target, handler)
-
-      var newL = wrapper.instance().state
-      newL = wrapper.instance().modeChange(changeReturn, newL)
-      expect(JSON.stringify(newL.mode)).toEqualImmutable(JSON.stringify(2))
+      expect(wrapper.instance().state).toEqual({
+        gps: {
+          latitude: 0,
+          longitude: 0
+        },
+        orientation: {
+          roll: 0,
+          pitch: 0
+        }
+      })
     })
   })
 
   describe('updateSettingsOnInputChange', () => {
-    it('should update state properly', () => {
-      var newL = wrapper.instance().state
-
-      let newMode = 'fixed'
-      const target = { target: { value: newMode, type: 'radio' } }
+    it('should update properties properly | e.target.id == "Latitude"', () => {
+      const target = { target: { value: '3.1', id: 'Latitude' } }
       const handler = {}
       const changeReturn = new Proxy(target, handler)
-      newL = wrapper.instance().modeChange(changeReturn, newL)
-      wrapper.instance().state = newL
-      expect(JSON.stringify(wrapper.instance().state)).toEqualImmutable(JSON.stringify(newL))
-      expect(JSON.stringify(wrapper.instance().state)).toEqualImmutable(JSON.stringify({
-        mode: 1
-      }))
+      wrapper.instance().updateSettingsOnInputChange(changeReturn)
+
+      expect(wrapper.instance().mode).toEqual(Modes.FIXED)
+      expect(wrapper.instance().state).toEqual({
+        gps: {
+          latitude: 3.1,
+          longitude: 0
+        },
+        orientation: {
+          roll: 0,
+          pitch: 0
+        }
+      })
+    })
+    
+    it('should update properties properly | e.target.id == "Longitude"', () => {
+      const target = { target: { value: '3.1', id: 'Longitude' } }
+      const handler = {}
+      const changeReturn = new Proxy(target, handler)
+      wrapper.instance().updateSettingsOnInputChange(changeReturn)
+
+      expect(wrapper.instance().mode).toEqual(Modes.FIXED)
+      expect(wrapper.instance().state).toEqual({
+        gps: {
+          latitude: 0,
+          longitude: 3.1
+        },
+        orientation: {
+          roll: 0,
+          pitch: 0
+        }
+      })
+    })
+
+    it('should update properties properly | e.target.id == "Roll"', () => {
+      const target = { target: { value: '3.1', id: 'Roll' } }
+      const handler = {}
+      const changeReturn = new Proxy(target, handler)
+      wrapper.instance().updateSettingsOnInputChange(changeReturn)
+
+      expect(wrapper.instance().mode).toEqual(Modes.TRACKING)
+      expect(wrapper.instance().state).toEqual({
+        gps: {
+          latitude: 0,
+          longitude: 0
+        },
+        orientation: {
+          roll: 3.1,
+          pitch: 0
+        }
+      })
+    })
+
+    it('should update properties properly | e.target.id == "Pitch"', () => {
+      const target = { target: { value: '3.1', id: 'Pitch' } }
+      const handler = {}
+      const changeReturn = new Proxy(target, handler)
+      wrapper.instance().updateSettingsOnInputChange(changeReturn)
+
+      expect(wrapper.instance().mode).toEqual(Modes.TRACKING)
+      expect(wrapper.instance().state).toEqual({
+        gps: {
+          latitude: 0,
+          longitude: 0
+        },
+        orientation: {
+          roll: 0,
+          pitch: 3.1
+        }
+      })
+    })
+
+    it('should update properties properly | e.target.value is not a float', () => {
+      const target = { target: { value: 'Hello there', id: 'Latitude' } }
+      const handler = {}
+      const changeReturn = new Proxy(target, handler)
+      wrapper.instance().updateSettingsOnInputChange(changeReturn)
+
+      expect(wrapper.instance().mode).toEqual(Modes.UNDEFINED)
+      expect(wrapper.instance().state).toEqual({
+        gps: {
+          latitude: '',
+          longitude: 0
+        },
+        orientation: {
+          roll: 0,
+          pitch: 0
+        }
+      })
     })
   })
 

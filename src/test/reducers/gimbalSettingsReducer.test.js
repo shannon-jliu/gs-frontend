@@ -1,8 +1,8 @@
-import reducer from '../../reducers/gimbalReducer.js'
+import reducer from '../../reducers/gimbalSettingsReducer.js'
 import * as matchers from 'jest-immutable-matchers'
 import {fromJS, Map} from 'immutable'
 
-describe('gimbalReducer', () => {
+describe('cameraGimbalReducer', () => {
   // this enables us to use toEqualImmutable
   beforeEach(function () {
     jest.addMatchers(matchers)
@@ -23,7 +23,14 @@ describe('gimbalReducer', () => {
     const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
-      'mode': 0
+      'gps': {
+        'latitude': 0,
+        'longitude': 0
+      },
+      'orientation': {
+        'roll': 0,
+        'pitch': 0
+      }
     })
 
     it('should handle from the initial state', () => {
@@ -46,7 +53,14 @@ describe('gimbalReducer', () => {
       const sndSettings =  fromJS({
         'id': 1,
         'timestamp': 1443826874919,
-        'mode': 0
+        'gps': {
+          'latitude': 0,
+          'longitude': 0
+        },
+        'orientation': {
+          'roll': 0,
+          'pitch': 0
+        }
       })
 
       const startingState = fromJS({
@@ -66,7 +80,14 @@ describe('gimbalReducer', () => {
           settings: {
             'id': 1,
             'timestamp': 1443826874919,
-            'mode': 0
+            'gps': {
+              'latitude': 0,
+              'longitude': 0
+            },
+            'orientation': {
+              'roll': 0,
+              'pitch': 0
+            }
           },
           pending: {}
         })
@@ -77,7 +98,14 @@ describe('gimbalReducer', () => {
       const sndSettings = fromJS({
         'id': 1,
         'timestamp': 1443826874917,
-        'mode': 0
+        'gps': {
+          'latitude': 0,
+          'longitude': 0
+        },
+        'orientation': {
+          'roll': 0,
+          'pitch': 0
+        }
       })
 
       const startingState = fromJS({
@@ -97,7 +125,14 @@ describe('gimbalReducer', () => {
           settings: {
             'id': 1,
             'timestamp': 1443826874918,
-            'mode': 0
+            'gps': {
+              'latitude': 0,
+              'longitude': 0
+            },
+            'orientation': {
+              'roll': 0,
+              'pitch': 0
+            }
           },
           pending: {}
         })
@@ -109,7 +144,14 @@ describe('gimbalReducer', () => {
     const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
-      'mode': 0
+      'gps': {
+        'latitude': 0,
+        'longitude': 0
+      },
+      'orientation': {
+        'roll': 0,
+        'pitch': 0
+      }
     })
 
     it('should handle from the initial state', () => {
@@ -132,7 +174,14 @@ describe('gimbalReducer', () => {
       const settings = fromJS({
         'id': 1,
         'timestamp': 1443826874919,
-        'mode': 0
+        'gps': {
+          'latitude': 0,
+          'longitude': 0
+        },
+        'orientation': {
+          'roll': 0,
+          'pitch': 0
+        }
       })
 
       const startingState = fromJS({
@@ -154,7 +203,14 @@ describe('gimbalReducer', () => {
           settings: {
             'id': 1,
             'timestamp': 1443826874919,
-            'mode': 0
+            'gps': {
+              'latitude': 0,
+              'longitude': 0
+            },
+            'orientation': {
+              'roll': 0,
+              'pitch': 0
+            }
           },
           pending: {}
         })
@@ -166,7 +222,14 @@ describe('gimbalReducer', () => {
     const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
-      'mode': 0
+      'gps': {
+        'latitude': 0,
+        'longitude': 0
+      },
+      'orientation': {
+        'roll': 0,
+        'pitch': 0
+      }
     })
 
     it('should handle from the initial state', () => {
@@ -185,7 +248,14 @@ describe('gimbalReducer', () => {
           pending: {
             'id': 1,
             'timestamp': 1443826874918,
-            'mode': 0
+            'gps': {
+              'latitude': 0,
+              'longitude': 0
+            },
+            'orientation': {
+              'roll': 0,
+              'pitch': 0
+            }
           }
         })
       )
@@ -195,7 +265,14 @@ describe('gimbalReducer', () => {
       const settings = fromJS({
         'id': 1,
         'timestamp': 1443826874919,
-        'mode': 0
+        'gps': {
+          'latitude': 0,
+          'longitude': 0
+        },
+        'orientation': {
+          'roll': 0,
+          'pitch': 0
+        }
       })
 
       expect(
@@ -204,7 +281,14 @@ describe('gimbalReducer', () => {
             settings: {
               'id': 1,
               'timestamp': 1443826874919,
-              'mode': 0
+              'gps': {
+                'latitude': 0,
+                'longitude': 0
+              },
+              'orientation': {
+                'roll': 0,
+                'pitch': 0
+              }
             },
             pending: settings
           }),
@@ -217,12 +301,26 @@ describe('gimbalReducer', () => {
           settings: {
             'id': 1,
             'timestamp': 1443826874919,
-            'mode': 0
+            'gps': {
+              'latitude': 0,
+              'longitude': 0
+            },
+            'orientation': {
+              'roll': 0,
+              'pitch': 0
+            }
           },
           pending: {
             'id': 1,
             'timestamp': 1443826874919,
-            'mode': 0
+            'gps': {
+              'latitude': 0,
+              'longitude': 0
+            },
+            'orientation': {
+              'roll': 0,
+              'pitch': 0
+            }
           }
         })
       )
@@ -233,7 +331,14 @@ describe('gimbalReducer', () => {
     const settings = fromJS({
       'id': 1,
       'timestamp': 1443826874918,
-      'mode': 0
+      'gps': {
+        'latitude': 0,
+        'longitude': 0
+      },
+      'orientation': {
+        'roll': 0,
+        'pitch': 0
+      }
     })
 
     it('should handle from the initial state', () => {

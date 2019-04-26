@@ -4,18 +4,29 @@ import _ from 'lodash'
 
 import { fromJS, Map } from 'immutable'
 
-import gimbalReducer from '../../reducers/gimbalReducer.js'
-import gimbalOperations from '../../operations/gimbalOperations.js'
+import gimbalSettingsReducer from '../../reducers/gimbalSettingsReducer.js'
+import gimbalSettingsOperations from '../../operations/gimbalSettingsOperations.js'
 
 import Radio from './components/Radio.js'
 import TextField from './components/TextField.js'
+
+import Modes from './components/Modes.js'
 
 export class GimbalSettings extends Component {
   constructor(props){
     super(props)
     this.state = {
-      mode: 0
+      gps: {
+        latitude: 0,
+        longitude: 0
+      },
+      orientation: {
+        roll: 0,
+        pitch: 0
+      }
     }
+
+    this.mode = Modes.UNDEFINED
 
     /* Gimbal functions */
     this.getSavedFields = this.getSavedFields.bind(this)
@@ -23,26 +34,43 @@ export class GimbalSettings extends Component {
     this.getNewFields = this.getNewFields.bind(this)
     this.canSave = this.canSave.bind(this)
     this.save = this.save.bind(this)
-    this.modeChange = this.modeChange.bind(this)
     this.updateSettingsOnInputChange = this.updateSettingsOnInputChange.bind(this)
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps != this.props && (prevProps.settings.get('settings').get('mode') === this.state.mode)) {
-      this.state.mode = this.props.settings.get('settings').get('mode')
+    if (prevProps.settings.get('settings').get('gps') !== undefined && 
+      prevProps.settings.get('settings').get('orientation') !== undefined) {
+      if (!_.isEqual(prevProps, this.props) && (
+        this.props.settings.get('settings').get('gps').get('latitude') !== this.state.gps.latitude && 
+          this.props.settings.get('settings').get('gps').get('longitude') !== this.state.gps.longitude && 
+          this.props.settings.get('settings').get('orientation').get('roll') !== this.state.orientation.roll && 
+          this.props.settings.get('settings').get('orientation').get('pitch') !== this.state.orientation.pitch
+      )) {
+        this.state.gps.latitude = this.props.settings.get('settings').get('gps').get('latitude')
+        this.state.gps.longitude = this.props.settings.get('settings').get('gps').get('longitude')
+        this.state.orientation.roll = this.props.settings.get('settings').get('orientation').get('roll')
+        this.state.orientation.pitch = this.props.settings.get('settings').get('orientation').get('pitch')
+      }
     }
   }
 
   getSavedFields() {
     let newLocal = this.props.settings.get('settings')
     
-    if (typeof newLocal.get('mode') == 'undefined') {
+    if (newLocal.get('gps') === undefined || 
+        newLocal.get('orientation') === undefined) {
       return {
-        mode: null
+        gps: { latitude: null, longitude: null },
+        orientation: { roll: null, pitch: null }
       }
     } else {
+      let latitude = newLocal.get('gps').get('latitude') == null ? 0 : newLocal.get('gps').get('latitude')
+      let longitude = newLocal.get('gps').get('longitude') == null ? 0 : newLocal.get('gps').get('longitude') 
+      let roll = newLocal.get('orientation').get('roll') == null ? 0 : newLocal.get('orientation').get('roll')
+      let pitch = newLocal.get('orientation').get('pitch') == null ? 0 : newLocal.get('orientation').get('pitch') 
       return {
-        mode: newLocal.get('mode'),
+        gps: { latitude: latitude, longitude: longitude },
+        orientation: { roll: roll, pitch: pitch }
       }
     }
   }
@@ -59,11 +87,34 @@ export class GimbalSettings extends Component {
   canSave() {
     let newFields = this.getNewFields()
     let savedFields = this.getSavedFields()
-
+    
+    let isValidInput = true
+    if (this.mode === Modes.FIXED) {
+      let lat = newFields.gps.latitude
+      let lon = newFields.gps.longitude
+      isValidInput =
+        !_.isNaN(lat) &&
+        !_.isNaN(lon) &&
+        lat !== '' &&
+        lon !== '' &&
+        (lat >= -90 && lat <= 90) &&
+        (lon >= -180 && lon <= 180)
+    } else if (this.mode === Modes.TRACKING) {
+      let roll = newFields.orientation.roll
+      let pitch = newFields.orientation.pitch
+      isValidInput =
+        !_.isNaN(roll) &&
+        !_.isNaN(pitch) &&
+        roll !== '' &&
+        pitch !== '' &&
+        (roll >= 0 && roll <= 360) &&
+        (pitch >= 0 && pitch <= 360)
+    }
     return (
-      newFields.mode != undefined &&
+      this.mode != Modes.UNDEFINED &&
       this.props.settings.get('pending').size == 0 &&
-      !_.isEqual(newFields, savedFields)
+      !_.isEqual(newFields, savedFields) &&
+      isValidInput
     )
   }
 
@@ -73,37 +124,49 @@ export class GimbalSettings extends Component {
       this.props.updateSettingsStart(newFields)
 
       this.setState({
-        mode: 0
+        gps: {
+          latitude: 0,
+          longitude: 0
+        },
+        orientation: {
+          roll: 0,
+          pitch: 0
+        }
       })
     }
   }
 
-  modeChange(e, newLocal) {
-    if (e.target.type === 'radio') {
-      let value = e.target.value
-      if (value === 'idle') {
-        newLocal.mode = 0
-      } else if (value === 'fixed') {
-        newLocal.mode = 1
-      } else if (value === 'tracking') {
-        newLocal.mode = 2
-      }
-    }
-    return newLocal
-  }
-
   updateSettingsOnInputChange(e) {
     let newLocal = _.cloneDeep(this.state)
-    newLocal = this.modeChange(e, newLocal)
-
+    // This regex ensures that the input is a float. "Float" in this context also encompasses integers.
+    let val = e.target.value.match(/^[-]?[\d]*\.?[\d]*$/)
+    if (val === null) {
+      val = ''
+    } else {
+      val = parseFloat(val[0])
+      val = isNaN(val) ? '' : val
+    }
+    if (e.target.id === 'Latitude') {
+      newLocal.gps.latitude = val
+      this.mode = Modes.FIXED
+    } else if (e.target.id === 'Longitude') {
+      newLocal.gps.longitude = val
+      this.mode = Modes.FIXED
+    } else if (e.target.id === 'Roll') {
+      newLocal.orientation.roll = val
+      this.mode = Modes.TRACKING
+    } else if (e.target.id === 'Pitch') {
+      newLocal.orientation.pitch = val
+      this.mode = Modes.TRACKING
+    }
+    if (val === '') this.mode = Modes.UNDEFINED
+    
     this.setState(newLocal)
   }
 
   render() {
-    let display = this.getDisplayFields()
-    let idleSelected = display.mode === 0 ? true:false
-    let groundSelected = display.mode === 1 ? true:false
-    let trackingSelected = display.mode === 2 ? true:false
+    let styleGPS = this.mode === Modes.TRACKING ? {} : {display: 'none'}
+    let styleAngle = this.mode === Modes.FIXED ? {display: 'none'} : {}
 
     let saveClass = !this.canSave() ? 'waves-light btn grey' : 'waves-light btn'
 
@@ -111,32 +174,42 @@ export class GimbalSettings extends Component {
       <div className="gimbal">
         <div className="card white">
           <div className="card-content">
-            <h3>Gimbal</h3>
+            <h3>Gimbal Settings</h3>
             <div className="content">
-              <h6>Mode:</h6>
-              <div className="row">
-                <Radio onChange={this.updateSettingsOnInputChange}
-                  id={'g-idle'}
-                  myRef={ref => (this.idleRadio = ref)}
-                  value="idle"
-                  checked={idleSelected}
-                />
+              <h5>Point to:</h5>
+              <div className="row" style={styleGPS}>
+                <h6>GPS</h6>
+                <div>
+                  <TextField myRef={ref => (this.latitudeInput = ref)}
+                    onChange={this.updateSettingsOnInputChange}
+                    value={this.state.gps.latitude}
+                    label={'Latitude'}
+                  />
+                </div>
+                <div>
+                  <TextField myRef={ref => (this.longitudeInput = ref)}
+                    onChange={this.updateSettingsOnInputChange}
+                    value={this.state.gps.longitude}
+                    label={'Longitude'}
+                  />
+                </div>
               </div>
-              <div className="row">
-                <Radio onChange={this.updateSettingsOnInputChange}
-                  id={'g-ground'}
-                  myRef={ref => (this.groundRadio = ref)}
-                  value="fixed"
-                  checked={groundSelected}
-                />
-              </div>
-              <div className="row">
-                <Radio onChange={this.updateSettingsOnInputChange}
-                  id={'g-tracking'}
-                  myRef={ref => (this.trackingRadio = ref)}
-                  value="tracking"
-                  checked={trackingSelected}
-                />
+              <div className="row" style={styleAngle}>
+                <h6>Angle</h6>
+                <div>
+                  <TextField myRef={ref => (this.rollInput = ref)}
+                    onChange={this.updateSettingsOnInputChange}
+                    value={this.state.orientation.roll}
+                    label={'Roll'}
+                  />
+                </div>
+                <div>
+                  <TextField myRef={ref => (this.pitchInput = ref)}
+                    onChange={this.updateSettingsOnInputChange}
+                    value={this.state.orientation.pitch}
+                    label={'Pitch'}
+                  />
+                </div>
               </div>
               <div className="row">
                 <a onClick={this.save} className={saveClass}>
@@ -152,11 +225,11 @@ export class GimbalSettings extends Component {
 }
 
 const mapStateToProps = state => ({
-  settings: state.gimbalReducer
+  settings: state.gimbalSettingsReducer
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateSettingsStart: data => gimbalOperations.updateSettingsStart(dispatch)(fromJS(data))
+  updateSettingsStart: data => gimbalSettingsOperations.updateSettingsStart(dispatch)(fromJS(data))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GimbalSettings)

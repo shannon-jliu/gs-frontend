@@ -76,7 +76,11 @@ export const SettingsRequest = {
     SettingsRequest.updateSetting('/api/v1/settings/camera', settings, successCallback, failureCallback)
   },
 
-  updateGimbalSetting: function(settings, successCallback, failureCallback) {
+  updateCameraGimbalSetting: function(settings, successCallback, failureCallback) {
     SettingsRequest.updateSetting('/api/v1/settings/camera_gimbal', settings, successCallback, failureCallback)
+  },
+
+  updateGimbalSettingsSetting: function(settings, successCallback, failureCallback) {
+    SettingsRequest.updateSetting('/api/v1/settings/gimbal', settings, successCallback, failureCallback)
   }
 }

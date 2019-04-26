@@ -7,7 +7,8 @@ import targetReducer from './targetReducer.js'
 import targetSightingReducer from './targetSightingReducer.js'
 import airdropReducer from './airdropReducer.js'
 import cameraReducer from './cameraReducer.js'
-import gimbalReducer from './gimbalReducer.js'
+import cameraGimbalReducer from './cameraGimbalReducer.js'
+import gimbalSettingsReducer from './gimbalSettingsReducer.js'
 
 export default combineReducers({
   imageReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
   airdropReducer,
   targetReducer,
   cameraReducer,
-  gimbalReducer
+  cameraGimbalReducer,
+  gimbalSettingsReducer
 })

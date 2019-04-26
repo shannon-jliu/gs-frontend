@@ -59,22 +59,22 @@ export const SettingsGetRequests = {
   },
 
   getAirdropSetting: function(successCallback, failureCallback) {
-    // TODO: Find correct route
-    SettingsGetRequests.getSetting('/api/v1/settings/airdrop', successCallback, failureCallback)
+    SettingsGetRequests.getSetting('/api/v1/settings/airdrop/recent', successCallback, failureCallback)
   },
 
   getCameraSettingCapturing: function(successCallback, failureCallback) {
-    // TODO: Find correct route
     SettingsGetRequests.getSetting('/api/continuous-capture', successCallback, failureCallback)
   },
 
   getCameraSettingZoom: function(successCallback, failureCallback) {
-    // TODO: Find correct route
     SettingsGetRequests.getSetting('/api/dev/get-zoom', successCallback, failureCallback)
   },
 
-  getGimbalSetting: function(successCallback, failureCallback) {
-    // TODO: Find correct route
-    SettingsGetRequests.getSetting('/api/set-mode', successCallback, failureCallback)
+  getCameraGimbalSetting: function(successCallback, failureCallback) {
+    SettingsGetRequests.getSetting('/api/v1/settings/camera_gimbal/recent', successCallback, failureCallback)
+  },
+
+  getGimbalSettingsSetting: function(successCallback, failureCallback) {
+    SettingsGetRequests.getSetting('/api/v1/settings/gimbal/recent', successCallback, failureCallback)
   }
 }

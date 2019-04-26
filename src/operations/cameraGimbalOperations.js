@@ -1,17 +1,17 @@
 import { fromJS } from 'immutable'
 import _ from 'lodash'
-import * as action from '../actions/gimbalActionCreator.js'
+import * as action from '../actions/cameraGimbalActionCreator.js'
 import { SettingsRequest } from '../util/sendApi.js'
 import { SettingsGetRequests } from '../util/receiveApi.js'
 import SnackbarUtil from '../util/snackbarUtil.js'
 
-const GimbalOperations = {
+const CameraGimbalOperations = {
   getSetting: dispatch => {
     const successCallback = data => {
       dispatch(action.receiveSettings(fromJS(data)))
     }
 
-    SettingsGetRequests.getGimbalSetting(successCallback, () => {})
+    SettingsGetRequests.getCameraGimbalSetting(successCallback, () => {})
   },
 
   updateSettingsStart: dispatch => (
@@ -28,9 +28,9 @@ const GimbalOperations = {
         dispatch(action.updateSettingsFailed(fromJS(setting)))
       }
 
-      SettingsRequest.updateGimbalSetting(setting, successCallback, failureCallback)
+      SettingsRequest.updateCameraGimbalSetting(setting, successCallback, failureCallback)
     }
   )
 }
 
-export default GimbalOperations
+export default CameraGimbalOperations

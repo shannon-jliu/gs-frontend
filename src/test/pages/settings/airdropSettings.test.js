@@ -54,11 +54,11 @@ describe('AirdropSettings Component', () => {
 
       const wrapperInstance = wrapper.instance()
 
-      expect(wrapperInstance.state.isArmed).toEqualImmutable(wrapper.instance().props.settings.get('settings').get('isArmed'))
-      expect(wrapperInstance.state.commandDropNow).toEqualImmutable(wrapper.instance().props.settings.get('settings').get('commandDropNow'))
-      expect(wrapperInstance.state.gpsTargetLocation.latitude).toEqualImmutable(wrapper.instance().props.settings.get('settings').get('gpsTargetLocation').get('latitude'))
-      expect(wrapperInstance.state.gpsTargetLocation.longitude).toEqualImmutable(wrapper.instance().props.settings.get('settings').get('gpsTargetLocation').get('longitude'))
-      expect(wrapperInstance.state.acceptableThresholdFt).toEqualImmutable(wrapper.instance().props.settings.get('settings').get('acceptableThresholdFt'))
+      expect(wrapperInstance.state.isArmed).toEqual(wrapper.instance().props.settings.get('settings').get('isArmed'))
+      expect(wrapperInstance.state.commandDropNow).toEqual(wrapper.instance().props.settings.get('settings').get('commandDropNow'))
+      expect(wrapperInstance.state.gpsTargetLocation.latitude).toEqual(wrapper.instance().props.settings.get('settings').get('gpsTargetLocation').get('latitude'))
+      expect(wrapperInstance.state.gpsTargetLocation.longitude).toEqual(wrapper.instance().props.settings.get('settings').get('gpsTargetLocation').get('longitude'))
+      expect(wrapperInstance.state.acceptableThresholdFt).toEqual(wrapper.instance().props.settings.get('settings').get('acceptableThresholdFt'))
     })
 
     it('should update the local state | old and new props should not be the same', () => {
@@ -79,11 +79,11 @@ describe('AirdropSettings Component', () => {
 
       const wrapperInstance = wrapper.instance()
 
-      expect(wrapperInstance.state.isArmed).toEqualImmutable(wrapper.instance().props.settings.get('settings').get('isArmed'))
-      expect(wrapperInstance.state.commandDropNow).toEqualImmutable(wrapper.instance().props.settings.get('settings').get('commandDropNow'))
-      expect(wrapperInstance.state.gpsTargetLocation.latitude).toEqualImmutable(wrapper.instance().props.settings.get('settings').get('gpsTargetLocation').get('latitude'))
-      expect(wrapperInstance.state.gpsTargetLocation.longitude).toEqualImmutable(wrapper.instance().props.settings.get('settings').get('gpsTargetLocation').get('longitude'))
-      expect(wrapperInstance.state.acceptableThresholdFt).toEqualImmutable(wrapper.instance().props.settings.get('settings').get('acceptableThresholdFt'))
+      expect(wrapperInstance.state.isArmed).toEqual(wrapper.instance().props.settings.get('settings').get('isArmed'))
+      expect(wrapperInstance.state.commandDropNow).toEqual(wrapper.instance().props.settings.get('settings').get('commandDropNow'))
+      expect(wrapperInstance.state.gpsTargetLocation.latitude).toEqual(wrapper.instance().props.settings.get('settings').get('gpsTargetLocation').get('latitude'))
+      expect(wrapperInstance.state.gpsTargetLocation.longitude).toEqual(wrapper.instance().props.settings.get('settings').get('gpsTargetLocation').get('longitude'))
+      expect(wrapperInstance.state.acceptableThresholdFt).toEqual(wrapper.instance().props.settings.get('settings').get('acceptableThresholdFt'))
     })
   })
 
@@ -194,52 +194,54 @@ describe('AirdropSettings Component', () => {
   })
 
   describe('drop', () => {
-    it('should update the settings on the server | this.state.armed == true', () => {
-      const initAirdropState = {
-        isArmed: false,
-        commandDropNow: false,
+    it('should update the settings on the server | All conditions true', () => {
+      airdropOperations.updateSettingsStart = jest.fn()
+      wrapper.setProps({ updateSettingsStart: airdropOperations.updateSettingsStart })
+
+      const initialStateUpdate = {
+        isArmed: true,
+        commandDropNow: true,
         gpsTargetLocation: {
-          latitude: 0,
-          longitude: 0
+          latitude: 1,
+          longitude: 1
         },
-        acceptableThresholdFt: 0
+        acceptableThresholdFt: 1
       }
 
-      airdropOperations.updateSettingsStart = jest.fn()
-      wrapper.setProps({ updateSettingsStart: airdropOperations.updateSettingsStart })
-
-      initialState = initialState.set('isArmed', true)
-      initialState = initialState.set('commandDropNow', true)
-      initialState = initialState.setIn(['gpsTargetLocation', 'latitude'], 1)
-      initialState = initialState.setIn(['gpsTargetLocation', 'longitude'], 1)
-      initialState = initialState.set('acceptableThresholdFt', 1)
-      const overMap = fromJS({ settings: initialState, pending: Map() })
+      const overMap = fromJS({ settings: initialStateUpdate, pending: Map() })
       store = mockStore(overMap)
-      
+
       wrapper.setProps({ settings: overMap })
+
       wrapper.instance().drop()
 
-      const expected = initialState.delete('timestamp').toJS()
-
       expect(airdropOperations.updateSettingsStart).toHaveBeenCalledTimes(1)
-      expect(wrapper.instance().state).toEqual(expected)
+      expect(wrapper.instance().state).toEqual(initialStateUpdate)
     })
 
-    it('should update the settings on the server | this.props.settings.get("settings").get("isArmed")) && !this.props.settings.get("settings").get("pending")', () => {
+    it('should not update the settings on the server | pending is not empty', () => {
       airdropOperations.updateSettingsStart = jest.fn()
       wrapper.setProps({ updateSettingsStart: airdropOperations.updateSettingsStart })
 
-      initialState = initialState.set('isArmed', true)
-      const overMap = fromJS({ settings: initialState, pending: Map() })
+      const initialStateUpdate = {
+        isArmed: true,
+        commandDropNow: true,
+        gpsTargetLocation: {
+          latitude: 1,
+          longitude: 1
+        },
+        acceptableThresholdFt: 1
+      }
+
+      const overMap = fromJS({ settings: initialStateUpdate, pending: Map({ timestamp: -1 }) })
       store = mockStore(overMap)
 
       wrapper.setProps({ settings: overMap })
       wrapper.instance().drop()
 
-      const expected = initialState.delete('timestamp').toJS()
-
-      expect(airdropOperations.updateSettingsStart).toHaveBeenCalledTimes(1)
-      expect(wrapper.instance().state).toEqual(expected)
+      expect(airdropOperations.updateSettingsStart).toHaveBeenCalledTimes(0)
+      /* It should still update locally b/c of componentDidUpdate(prevProps) */
+      expect(wrapper.instance().state).toEqual(initialStateUpdate)
     })
   })
 

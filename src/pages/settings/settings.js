@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import CameraSettings from './cameraSettings.js'
+import CameraGimbalSettings from './cameraGimbalSettings.js'
 import GimbalSettings from './gimbalSettings.js'
 import AirdropSettings from './airdropSettings.js'
 
 import cameraOperations from '../../operations/cameraOperations.js'
-import gimbalOperations from '../../operations/gimbalOperations.js'
+import cameraGimbalOperations from '../../operations/cameraGimbalOperations.js'
+import gimbalSettingsOperations from '../../operations/gimbalSettingsOperations.js'
 import airdropOperations from '../../operations/airdropOperations.js'
 
 import './settings.css'
@@ -14,10 +16,11 @@ import './settings.css'
 class Settings extends Component {
   componentDidMount() {
     window.addEventListener('load', () => {
-      var loadNewestContent = () => {
+      let loadNewestContent = () => {
         this.props.getCameraCapturing()
         this.props.getCameraZoom()
-        this.props.getGimbalSettings()
+        this.props.getCameraGimbalSettings()
+        this.props.getGimbalSettingSettings()
         this.props.getAirdropSettings()
         setTimeout(loadNewestContent, 1000)
       }
@@ -30,6 +33,7 @@ class Settings extends Component {
       <React.Fragment>
         <div id='container'>
           <CameraSettings/>
+          <CameraGimbalSettings/>
           <GimbalSettings/>
           <AirdropSettings/>
         </div>
@@ -41,7 +45,8 @@ class Settings extends Component {
 const mapDispatchToProps = dispatch => ({
   getCameraCapturing: data => cameraOperations.getCapturing(dispatch),
   getCameraZoom: data => cameraOperations.getZoom(dispatch),
-  getGimbalSettings: data => gimbalOperations.getSetting(dispatch),
+  getCameraGimbalSettings: data => cameraGimbalOperations.getSetting(dispatch),
+  getGimbalSettingSettings: data => gimbalSettingsOperations.getSetting(dispatch),
   getAirdropSettings: data => airdropOperations.getSetting(dispatch)
 })
 

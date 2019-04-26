@@ -34,12 +34,12 @@ export class AirdropSettings extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps != this.props && (
-      prevProps.settings.get('settings').get('isArmed') === this.state.isArmed &&
-      prevProps.settings.get('settings').get('commandDropNow') === this.state.commandDropNow &&
-      prevProps.settings.get('settings').get('gpsTargetLocation').get('latitude') === this.state.gpsTargetLocation.latitude &&
-      prevProps.settings.get('settings').get('gpsTargetLocation').get('longitude') === this.state.gpsTargetLocation.longitude &&
-      prevProps.settings.get('settings').get('acceptableThresholdFt') === this.state.acceptableThresholdFt
+    if (!_.isEqual(prevProps, this.props) && (
+      this.props.settings.get('settings').get('isArmed') !== this.state.isArmed &&
+      this.props.settings.get('settings').get('commandDropNow') !== this.state.commandDropNow &&
+      this.props.settings.get('settings').get('gpsTargetLocation').get('latitude') !== this.state.gpsTargetLocation.latitude &&
+      this.props.settings.get('settings').get('gpsTargetLocation').get('longitude') !== this.state.gpsTargetLocation.longitude &&
+      this.props.settings.get('settings').get('acceptableThresholdFt') !== this.state.acceptableThresholdFt
     )) {
       this.state.isArmed = this.props.settings.get('settings').get('isArmed')
       this.state.commandDropNow = this.props.settings.get('settings').get('commandDropNow')
@@ -52,7 +52,7 @@ export class AirdropSettings extends Component {
   getSavedFields() {
     let newLocal = this.props.settings.get('settings')
 
-    if (typeof newLocal.get('isArmed') == 'undefined') {
+    if (newLocal.get('isArmed') === undefined) {
       return {
         isArmed: null,
         commandDropNow: null,
@@ -141,7 +141,7 @@ export class AirdropSettings extends Component {
   drop() {
     if (
       (this.state.isArmed || this.props.settings.get('settings').get('isArmed')) &&
-      !this.props.settings.get('settings').get('pending')
+      this.props.settings.get('pending').isEmpty()
     ) {
       let saved = this.getSavedFields()
       saved.isArmed = true
@@ -159,7 +159,7 @@ export class AirdropSettings extends Component {
 
   updateSettingsOnInputChange() {
     let newLocal = _.cloneDeep(this.state)
-    // The following regex tests whether the input value is constructed soley of the numerical digits 0-9 or not
+    // The following regex tests whether the input value is constructed solely of the numerical digits 0-9 or not
     if (this.latitudeInput.value === '' || this.latitudeInput.value.match(/^[-]?[\d]*\.?[\d]*$/)) newLocal.gpsTargetLocation.latitude = this.latitudeInput.value
     if (this.longitudeInput.value === '' || this.longitudeInput.value.match(/^[-]?[\d]*\.?[\d]*$/)) newLocal.gpsTargetLocation.longitude = this.longitudeInput.value
     if (this.thresholdInput.value === '' || !_.isNaN(Number.parseInt(this.thresholdInput.value))) newLocal.acceptableThresholdFt = this.thresholdInput.value
@@ -170,18 +170,14 @@ export class AirdropSettings extends Component {
   render() {
     let display = this.getDisplayFields()
 
-    let saveClass = !this.canSave() ? 'waves-light btn grey' : 'waves-light btn'
+    let saveClass = !this.canSave() ? 'btn grey' : 'btn'
 
     let canDrop =
       !this.props.settings.get('settings').get('pending') &&
       display.isArmed &&
       !display.commandDropNow
-    let dropClass = 'waves-effect waves-light btn'
-    if (canDrop) {
-      dropClass += ' blue'
-    } else {
-      dropClass += ' grey'
-    }
+
+    let dropClass = canDrop ? 'btn blue' : 'btn grey'
 
     return (
       <div className="airdrop">

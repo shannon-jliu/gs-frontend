@@ -7,6 +7,7 @@ const TextField = ({myRef, onChange, value, label}) => {
       <input
         ref={myRef}
         type="text"
+        id={label}
         onChange={onChange}
         value={value}
       />
