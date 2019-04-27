@@ -7,6 +7,7 @@ const ImageSighting = ({ heightWidth, imgWidth, imgHeight, imageUrl, sighting })
   const bgSize = imgWidth * imgscale + 'px ' + imgHeight * imgscale + 'px'
   const x = radius - sighting.get('pixelX') * imgscale
   const y = radius - sighting.get('pixelY') * imgscale
+  const drawOrientationLine = sighting.has('radiansFromTop')
   const orientationX = radius + radius * Math.sin(sighting.get('radiansFromTop'))
   const orientationY = heightWidth - (radius + radius * Math.cos(sighting.get('radiansFromTop')))
   return(
@@ -19,17 +20,21 @@ const ImageSighting = ({ heightWidth, imgWidth, imgHeight, imageUrl, sighting })
       }}
     >
       {/* line shows orientation of target sighting */}
+      {/* svg is always required as it gives the div size to display the image */}
       <svg height={heightWidth} width={heightWidth}>
-        <line
-          x1={radius}
-          y1={radius}
-          x2={orientationX}
-          y2={orientationY}
-          style={{
-            stroke: '#f44336',
-            strokeWidth: 2
-          }}
-        />
+        {
+          drawOrientationLine ?
+            <line
+              x1={radius}
+              y1={radius}
+              x2={orientationX}
+              y2={orientationY}
+              style={{
+                stroke: '#f44336',
+                strokeWidth: 2
+              }}
+            /> : null
+        }
         &nbsp;
       </svg>
     </div>

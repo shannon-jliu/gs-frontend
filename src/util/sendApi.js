@@ -20,6 +20,18 @@ export const TargetSightingRequests = {
       {method: 'PUT', data: sighting})
       .done(successCallback)
       .fail(failureCallback)
+  },
+
+  deleteROISighting: function(id, successCallback, failureCallback) {
+    $.ajax('/api/v1/roi/' + id, {method: 'DELETE'})
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+
+  saveROISighting: function(assignmentId, sighting, successCallback, failureCallback) {
+    $.post('/api/v1/assignment/' + assignmentId + '/roi', sighting)
+      .done(successCallback)
+      .fail(failureCallback)
   }
 }
 

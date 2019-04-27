@@ -47,6 +47,7 @@ describe('Base tests with no pending field', () => {
   beforeEach(() => {
     props = {
       sighting: sighting,
+      isTracking: true,
       imageUrl: '../../../img/cuair_default.png',
       cameraTilt: true
     }
@@ -222,11 +223,14 @@ describe.each([
     props = {
       sighting: sightingToUse,
       imageUrl: '../../../img/cuair_default.png',
+      isTracking: true,
       cameraTilt: true,
       saveTargetSighting: saveTargetSighting,
       updateTargetSighting: updateTargetSighting,
       deleteSavedTargetSighting: deleteSavedTargetSighting,
-      deleteUnsavedTargetSighting: deleteUnsavedTargetSighting
+      deleteUnsavedTargetSighting: deleteUnsavedTargetSighting,
+      saveROISighting: jest.fn(),
+      deleteSavedROISighting: jest.fn()
     }
     wrapper = shallow(<TagSighting {...props} />)
     instance = wrapper.instance()
@@ -284,6 +288,51 @@ describe.each([
   })
 })
 
+describe('ROI tests', () => {
+  const saveROISighting = jest.fn()
+  const deleteSavedROISighting = jest.fn()
+  const deleteUnsavedTargetSightingROI = jest.fn()
+  let wrapper, instance
+  beforeEach(() => {
+    let props = {
+      sighting: sighting,
+      imageUrl: '../../../img/cuair_default.png',
+      isTracking: false,
+      cameraTilt: true,
+      deleteUnsavedTargetSighting: deleteUnsavedTargetSightingROI,
+      saveROISighting: saveROISighting,
+      deleteSavedROISighting: deleteSavedROISighting
+    }
+    wrapper = shallow(<TagSighting {...props} />)
+    instance = wrapper.instance()
+  })
+
+  it('renders correctly', () => {
+    expect(wrapper).toBeDefined()
+  })
+
+  it('saves properly', () => {
+    instance.save()
+    expect(saveROISighting).toHaveBeenCalledTimes(1)
+  })
+
+  it('cannot save after saved once', () => {
+    wrapper.setProps({sighting: sighting.set('type', 'roi').set('id', 1)})
+    expect(instance.canSave()).toBe(false)
+  })
+
+  it('deletes when not saved', () => {
+    instance.deleteSighting()
+    expect(deleteUnsavedTargetSightingROI).toHaveBeenCalledTimes(1)
+  })
+
+  it('deletes saved ROI', () => {
+    wrapper.setProps({sighting: sighting.set('id', 1)})
+    instance.deleteSighting()
+    expect(deleteSavedROISighting).toHaveBeenCalledTimes(1)
+  })
+})
+
 describe('pending ts tests', () => {
   let props, wrapper, instance
   beforeEach(() => {
@@ -291,10 +340,12 @@ describe('pending ts tests', () => {
       sighting: pendingSighting,
       imageUrl: '../../../img/cuair_default.png',
       cameraTilt: true,
+      isTracking: true,
       updateTargetSighting: jest.fn(),
       saveTargetSighting: jest.fn(),
       deleteSavedTargetSighting: jest.fn(),
       deleteUnsavedTargetSighting: jest.fn(),
+      saveROISighting: jest.fn(),
     }
     wrapper = shallow(<TagSighting {...props} />)
     instance = wrapper.instance()

@@ -5,9 +5,8 @@ import { fromJS } from 'immutable'
 import M from 'materialize-css'
 import _ from 'lodash'
 
-import SnackbarUtil from '../../util/snackbarUtil.js'
 import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting } from './components'
-import { ColorSelect, ShapeSelect, TypeSelect, ConfSelect } from '../../components/target'
+import { TypeSelect, ConfSelect } from '../../components/target'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 
 export class TagSighting extends Component {
@@ -15,7 +14,7 @@ export class TagSighting extends Component {
     super(props)
     const sighting = this.props.sighting.merge(this.props.sighting.get('pending'))
     this.state = {
-      type: sighting.get('type') || 'alphanum',
+      type: sighting.get('type') || (this.props.isTracking ? 'alphanum' : 'roi'),
       description: sighting.get('description') || '',
       shape: sighting.get('shape') || '',
       shapeColor: sighting.get('shapeColor') || '',
@@ -54,15 +53,19 @@ export class TagSighting extends Component {
   }
 
   canSave() {
+    const sighting = this.props.sighting
+    // if ROI, no option to update
+    if (sighting.get('type') === 'roi' && sighting.has('id')) return false
     // make sure the pending field is not set, otherwise it is saving/updating
     if (this.actionable()) {
       const s = this.state
+      if (s.type === 'roi') return true
       if (s.type == 'emergent') {
         return (s.description.length > 0 &&
         s.mdlcClassConf.length > 0 &&
         !_.isEqual(
           _.pick(s, ['description', 'mdlcClassConf']),
-          _.pick(this.props.sighting.toJS(), ['description', 'mdlcClassConf'])
+          _.pick(sighting.toJS(), ['description', 'mdlcClassConf'])
         ))
       }
       if (s.type == 'alphanum') {
@@ -81,7 +84,7 @@ export class TagSighting extends Component {
               'offaxis',
               'mdlcClassConf'
             ]),
-            _.pick(this.props.sighting.toJS(), [
+            _.pick(sighting.toJS(), [
               'shape',
               'shapeColor',
               'alpha',
@@ -100,19 +103,20 @@ export class TagSighting extends Component {
     // required for selectors.
     // See: https://materializecss.com/select.html#initialization
     let elems = document.querySelectorAll('select')
-    let instances = M.FormSelect.init(elems, {})
+    M.FormSelect.init(elems, {})
 
     this.loadImage(this.props.imageUrl)
   }
 
   componentWillReceiveProps(nextProps) {
     const sighting = nextProps.sighting.merge(nextProps.sighting.get('pending'))
+    const prevType = this.state.type ? this.state.type : 'alphanum'
     this.setState({
       shape: sighting.get('shape') || '',
       shapeColor: sighting.get('shapeColor') || '',
       alpha: sighting.get('alpha') || '',
       alphaColor: sighting.get('alphaColor') || '',
-      type: sighting.get('type') || 'alphanum',
+      type: sighting.get('type') || prevType,
       description: sighting.get('description') || '',
       mdlcClassConf: sighting.get('mdlcClassConf') || '',
       offaxis: sighting.get('offaxis') || false
@@ -155,47 +159,52 @@ export class TagSighting extends Component {
   save() {
     const s = this.state
     if (this.canSave()) {
-      // adds fields listed and saves the target sighting
-      let newSighting, attr
-      if (s.type == 'emergent') {
-        newSighting = this.props.sighting.merge({
-          type: s.type,
-          description: s.description,
-          mdlcClassConf: s.mdlcClassConf
-        })
-        attr = this.findDifference(['description', 'mdlcClassConf'])
-      } else if (s.type == 'alphanum') {
-        newSighting = this.props.sighting.merge({
-          type: s.type,
-          shape: s.shape,
-          shapeColor: s.shapeColor,
-          alpha: s.alpha,
-          alphaColor: s.alphaColor,
-          offaxis: s.offaxis,
-          mdlcClassConf: s.mdlcClassConf
-        })
-        attr = this.findDifference([
-          'shape',
-          'shapeColor',
-          'alpha',
-          'alphaColor',
-          'offaxis',
-          'mdlcClassConf'
-        ])
-      }
-      if (this.props.sighting.has('id')) {
-        // if it has an id, then it has been saved and needs to be updated
-        this.props.updateTargetSighting(this.props.sighting, attr)
+      if (s.type === 'roi') {
+        this.props.saveROISighting(this.props.sighting)
       } else {
-        this.props.saveTargetSighting(newSighting)
+        // adds fields listed and saves the target sighting
+        let newSighting, attr
+        if (s.type == 'emergent') {
+          newSighting = this.props.sighting.merge({
+            type: s.type,
+            description: s.description,
+            mdlcClassConf: s.mdlcClassConf
+          })
+          attr = this.findDifference(['description', 'mdlcClassConf'])
+        } else if (s.type == 'alphanum') {
+          newSighting = this.props.sighting.merge({
+            type: s.type,
+            shape: s.shape,
+            shapeColor: s.shapeColor,
+            alpha: s.alpha,
+            alphaColor: s.alphaColor,
+            offaxis: s.offaxis,
+            mdlcClassConf: s.mdlcClassConf
+          })
+          attr = this.findDifference([
+            'shape',
+            'shapeColor',
+            'alpha',
+            'alphaColor',
+            'offaxis',
+            'mdlcClassConf'
+          ])
+        }
+        if (this.props.sighting.has('id')) {
+          // if it has an id, then it has been saved and needs to be updated
+          this.props.updateTargetSighting(this.props.sighting, attr)
+        } else {
+          this.props.saveTargetSighting(newSighting)
+        }
       }
     }
   }
 
   deleteSighting() {
-    if(this.actionable()) {
+    if (this.actionable()) {
       if (this.props.sighting.has('id')) {
-        this.props.deleteSavedTargetSighting(this.props.sighting)
+        if (this.state.type === 'roi') this.props.deleteSavedROISighting(this.props.sighting)
+        else this.props.deleteSavedTargetSighting(this.props.sighting)
       } else {
         this.props.deleteUnsavedTargetSighting(this.props.sighting)
       }
@@ -242,7 +251,7 @@ export class TagSighting extends Component {
           />
         </div>
 
-        <div className={this.state.type != '' ? 'row' : 'hidden'}>
+        <div className={['alphanum', 'emergent'].includes(this.state.type) ? 'row' : 'hidden'}>
           <ConfSelect
             className='obj col s12'
             onChange={this.getHandler('mdlcClassConf')}
@@ -251,6 +260,7 @@ export class TagSighting extends Component {
           />
         </div>
 
+        {/* TypeSelect still allows users to select no type, so this line is still rqeuired */}
         <div className={this.state.type != '' ? 'row' : 'hidden'}>
           <ButtonRow
             type={this.state.type}
@@ -269,6 +279,7 @@ export class TagSighting extends Component {
 TagSighting.propTypes = {
   sighting: PropTypes.object.isRequired,
   imageUrl: PropTypes.string.isRequired,
+  isTracking: PropTypes.bool.isRequired, // if true, then target, else ROI
   cameraTilt: PropTypes.bool.isRequired,
 }
 
@@ -276,7 +287,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   saveTargetSighting: TargetSightingOperations.saveTargetSighting(dispatch),
   updateTargetSighting: TargetSightingOperations.updateTargetSighting(dispatch),
   deleteUnsavedTargetSighting: TargetSightingOperations.deleteUnsavedTargetSighting(dispatch),
-  deleteSavedTargetSighting: TargetSightingOperations.deleteSavedTargetSighting(dispatch)
+  deleteSavedTargetSighting: TargetSightingOperations.deleteSavedTargetSighting(dispatch),
+  saveROISighting: TargetSightingOperations.saveROISighting(dispatch),
+  deleteSavedROISighting: TargetSightingOperations.deleteSavedROISighting(dispatch)
 })
 
 export default connect(null, mapDispatchToProps)(TagSighting)

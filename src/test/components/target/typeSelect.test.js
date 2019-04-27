@@ -29,7 +29,7 @@ describe('TypeSelect tests with default value', () => {
   })
 
   it('renders all the options correctly', () => {
-    expect(wrapper.find('option')).toHaveLength(3)
+    expect(wrapper.find('option')).toHaveLength(4)
   })
 
   it('renders the default value correctly', () => {

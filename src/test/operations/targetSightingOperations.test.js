@@ -272,4 +272,102 @@ describe('TargetSightingOperations', () => {
       expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
     })
   })
+
+  describe('saveROISighting', () => {
+    const localPixelTs = fromJS({
+      localId: '12:23:4213',
+      shape: 'trapezoid',
+      shapeColor: 'red',
+      alpha: 'r',
+      alphaColor: 'blue',
+      type: 'alphanum',
+      offaxis: false,
+      mdlcClassConf: 'low',
+      height: 100,
+      width: 100,
+      pixelX: 123,
+      pixelY: 321,
+      assignment: assignment
+    })
+
+    const expectedToSend = fromJS({
+      pixelX: 123,
+      pixelY: 321,
+      assignment: assignment,
+      creator: 'MDLC'
+    })
+
+    it('saves successfully correctly', () => {
+      const returned = expectedToSend.set('id', 2)
+      const toSave = returned.set('type', 'roi')
+        .set('height', localPixelTs.get('height'))
+        .set('width', localPixelTs.get('width'))
+
+      TargetSightingRequests.saveROISighting = jest.fn((assignmentId, sighting, successCallback, failureCallback) => successCallback(returned.toJS()))
+
+      TargetSightingOperations.saveROISighting(dispatch)(localPixelTs)
+
+      expect(dispatch).toHaveBeenCalledWith(action.startSaveTargetSighting(localTs.get('localId')))
+      expect(dispatch).toHaveBeenCalledWith(action.succeedSaveTargetSighting(toSave, localTs.get('localId')))
+      expect(dispatch).toHaveBeenCalledTimes(2)
+
+      expect(TargetSightingRequests.saveROISighting.mock.calls[0][0]).toBe(11)
+      expect(TargetSightingRequests.saveROISighting.mock.calls[0][1]).toEqual(expectedToSend.toJS())
+      expect(TargetSightingRequests.saveROISighting).toHaveBeenCalledTimes(1)
+
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Succesfully saved ROI sighting')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
+    })
+
+    it('fails to save correctly', () => {
+      TargetSightingRequests.saveROISighting = jest.fn((assignmentId, sighting, successCallback, failureCallback) => failureCallback())
+
+      TargetSightingOperations.saveROISighting(dispatch)(localPixelTs)
+
+      expect(dispatch).toHaveBeenCalledWith(action.startSaveTargetSighting(localTs.get('localId')))
+      expect(dispatch).toHaveBeenCalledWith(action.failSaveTargetSighting(localTs.get('localId')))
+      expect(dispatch).toHaveBeenCalledTimes(2)
+
+      expect(TargetSightingRequests.saveROISighting.mock.calls[0][0]).toBe(11)
+      expect(TargetSightingRequests.saveROISighting.mock.calls[0][1]).toEqual(expectedToSend.toJS())
+      expect(TargetSightingRequests.saveROISighting).toHaveBeenCalledTimes(1)
+
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Failed to save ROI sighting')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('deleteSavedROISighting', () => {
+    it('deletes when delete succeeds', () => {
+      TargetSightingRequests.deleteROISighting = jest.fn((id, successCallback, failureCallback) => successCallback())
+
+      TargetSightingOperations.deleteSavedROISighting(dispatch)(ts)
+
+      expect(dispatch).toHaveBeenCalledWith(action.deleteTargetSighting(ts))
+      expect(dispatch).toHaveBeenCalledTimes(1)
+
+      //checks, for 0th call, the 0th argument
+      expect(TargetSightingRequests.deleteROISighting.mock.calls[0][0]).toBe(2)
+      expect(TargetSightingRequests.deleteROISighting).toHaveBeenCalledTimes(1)
+
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
+    })
+
+
+    it('re-adds when delete fails', () => {
+      TargetSightingRequests.deleteROISighting = jest.fn((id, successCallback, failureCallback) => failureCallback())
+
+      TargetSightingOperations.deleteSavedROISighting(dispatch)(ts)
+
+      expect(dispatch).toHaveBeenCalledWith(action.deleteTargetSighting(ts))
+      expect(dispatch).toHaveBeenCalledWith(action.addTargetSighting(ts, assignment))
+      expect(dispatch).toHaveBeenCalledTimes(2)
+
+      expect(TargetSightingRequests.deleteROISighting.mock.calls[0][0]).toBe(2)
+      expect(TargetSightingRequests.deleteROISighting).toHaveBeenCalledTimes(1)
+
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Failed to delete target sighting')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
+    })
+  })
 })

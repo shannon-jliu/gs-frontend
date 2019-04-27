@@ -238,6 +238,7 @@ class ImageViewer extends Component {
 
   // loads the given image into the state
   loadImage(imageUrl) {
+    if (imageUrl === undefined) imageUrl = DEFAULT_IMG
     var i = new Image()
     i.onload = () => {
       this.setState({

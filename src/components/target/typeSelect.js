@@ -5,7 +5,8 @@ import Selector from './selector'
 
 const types = {
   alphanum: 'Alphanumeric',
-  emergent: 'Emergent'
+  emergent: 'Emergent',
+  roi: 'ROI'
 }
 
 const TypeSelect = ({ className, onChange, value, title }) => (

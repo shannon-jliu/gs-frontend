@@ -100,6 +100,42 @@ const TargetSightingOperations = {
     }
   ),
 
+  saveROISighting: dispatch => (
+    sighting => {
+      dispatch(action.startSaveTargetSighting(sighting.get('localId')))
+      const sightingToSend = _.assign(
+        _.pick(sighting.toJS(), ['pixelX', 'pixelY', 'assignment']),
+        { creator: 'MDLC' })
+
+      const successCallback = data => {
+        SnackbarUtil.render('Succesfully saved ROI sighting')
+
+        // need to add back in height and width fields for ImageSighting component
+        const sightingToSave = fromJS(data).merge({type: 'roi', height: sighting.get('height'), width: sighting.get('width')})
+        dispatch(action.succeedSaveTargetSighting(sightingToSave, sighting.get('localId')))
+      }
+
+      const failureCallback = () => {
+        SnackbarUtil.render('Failed to save ROI sighting')
+        dispatch(action.failSaveTargetSighting(sighting.get('localId')))
+      }
+
+      TargetSightingRequests.saveROISighting(sighting.getIn(['assignment', 'id']), sightingToSend, successCallback, failureCallback)
+    }
+  ),
+
+  deleteSavedROISighting: dispatch => (
+    sighting => {
+      dispatch(action.deleteTargetSighting(sighting))
+      const failureCallback = () => {
+        SnackbarUtil.render('Failed to delete target sighting')
+        TargetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
+      }
+
+      TargetSightingRequests.deleteROISighting(sighting.get('id'), () => {}, failureCallback)
+    }
+  ),
+
   updateTargetSighting: dispatch => (
     (sighting, attribute) => {
       //in the future, this will send specific requests per attribute (but has to be implemented on BE first)

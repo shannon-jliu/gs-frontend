@@ -6,6 +6,8 @@ import Adapter from 'enzyme-adapter-react-16'
 import { fromJS, List } from 'immutable'
 import _ from 'lodash'
 
+import * as config from '../../../util/config'
+
 import Tag, { Tag as TagClass } from '../../../pages/tag/tag'
 
 Enzyme.configure({ adapter: new Adapter() })
@@ -24,7 +26,7 @@ const sighting = fromJS({
     image: {
       id: 1,
       timestamp: 5,
-      imageUrl: '/api/v1/image/file/5.jpeg',
+      imageUrl: '/api/v1/image/file/5.jpeg'
     },
     assignee: 'MDLC',
     done: true,
@@ -41,6 +43,7 @@ const mappedAssignment = fromJS({
       id: 1,
       imageUrl: 'image.png',
       timestamp: 1,
+      camGimMode: 'tracking'
     }
   },
   currentIndex: 0,
@@ -105,8 +108,9 @@ describe('Basic tests with sightings', () => {
     expect(wrapper).toBeDefined()
   })
 
-  it('render the sighting', () => {
-    expect(wrapper.find('TagSighting')).toBeDefined()
+  it('renders the TagSighting', () => {
+    expect(wrapper.find('Connect(TagSighting)')).toHaveLength(1)
+    expect(wrapper.find('.name').text().includes('TARGET')).toBe(true)
   })
 
   it('ensures prev button is not disabled', () => {
@@ -117,6 +121,31 @@ describe('Basic tests with sightings', () => {
   it('ensures next button is disabled', () => {
     const nextButton = wrapper.find('button').at(1)
     expect(nextButton.hasClass('disabled')).toBe(true)
+  })
+})
+
+describe('Basic tests with ROI images', () => {
+  let wrapper
+  const props = {
+    assignment: mappedAssignment.set('loading', true)
+      .set('currentIndex', 1)
+      .setIn(['assignment', 'image', 'camGimMode'], 'fixed'),
+    sightings: fromJS([sighting])
+  }
+
+  it('renders the TagSighting with ROI label', () => {
+    // need to manually set TWO_PASS_MODE here since default is false
+    config.TWO_PASS_MODE = true
+    wrapper = shallow(<TagClass {...props} />)
+    expect(wrapper.find('Connect(TagSighting)')).toHaveLength(1)
+    expect(wrapper.find('.name').text().includes('ROI')).toBe(true)
+  })
+
+  it('renders the TagSighting with Target label if TWO_PASS_MODE false', () => {
+    config.TWO_PASS_MODE = false
+    wrapper = shallow(<TagClass {...props} />)
+    expect(wrapper.find('Connect(TagSighting)')).toHaveLength(1)
+    expect(wrapper.find('.name').text().includes('TARGET')).toBe(true)
   })
 })
 

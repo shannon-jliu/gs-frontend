@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import {TypeSelect, ShapeSelect, ColorSelect} from '../../../components/target'
+import {ShapeSelect, ColorSelect} from '../../../components/target'
 
 const AlphanumFields = ({ shape, shapeColor, alpha, alphaColor, cameraTilt, isOffAxis, getHandler }) => (
   <div>

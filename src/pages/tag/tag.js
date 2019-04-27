@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
-import _ from 'lodash'
 
-import SnackbarUtil from '../../util/snackbarUtil'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import AssignmentOperations from '../../operations/assignmentOperations'
 import ImageViewer from '../../components/imageViewer'
 import TagSighting from './tagSighting'
 
 import { GROUND_SERVER_URL } from '../../constants/links'
+import { TWO_PASS_MODE } from '../../util/config'
 import './tag.css'
 
 export class Tag extends Component {
@@ -40,15 +39,15 @@ export class Tag extends Component {
     }
   }
 
-  renderSighting(s) {
+  renderSighting(s, isTracking) {
     const imageUrl = this.props.assignment.getIn(['assignment', 'image', 'imageUrl'])
-
     // TODO once gimbal settings is set in stone do this
     const showOffaxis = /* mode === 'angle' || mode === undefined || mode === null*/ true
     return (
       <TagSighting
         key={s.get('id') + s.get('type') || s.get('localId')}
         sighting={s}
+        isTracking={isTracking}
         imageUrl={GROUND_SERVER_URL + imageUrl}
         cameraTilt={showOffaxis}
       />
@@ -64,12 +63,14 @@ export class Tag extends Component {
     )
     const imageUrl = assignment.getIn(['assignment', 'image', 'imageUrl'])
 
+    // extract the gimbalMode to determine if it is an ROI image (if fixed) or regular (tracking)
+    const gimbalMode = assignment.getIn(['assignment', 'image', 'camGimMode'])
+    const isTracking = (gimbalMode && gimbalMode === 'tracking') || !TWO_PASS_MODE
     const name = imageUrl ? imageUrl.substring(
       imageUrl.lastIndexOf('/') + 1,
       imageUrl.lastIndexOf('.')
-    ) : 'none'
+    ) + (isTracking ? ' (TARGET)' : ' (ROI)')  : ' none'
     const count = (assignment.get('currentIndex') + 1) + '/' + assignment.get('total')
-
     const btnClass = 'btn-floating btn-large red'
     const backClass = 'prev ' + btnClass + (assignment.get('currentIndex') <= 0 ? ' disabled' : '')
     const nextClass = 'next ' + btnClass + (assignment.get('loading') ? ' disabled' : '')
@@ -77,7 +78,7 @@ export class Tag extends Component {
       <div className='tag'>
         <div className='tag-image card'>
           <ImageViewer
-            imageUrl={GROUND_SERVER_URL + imageUrl}
+            imageUrl={imageUrl ? GROUND_SERVER_URL + imageUrl : undefined}
             taggable={true}
             onTag={this.onTag}
           />
@@ -91,7 +92,7 @@ export class Tag extends Component {
           <i className='material-icons'>arrow_forward</i>
         </button>
         <div className='sightings'>
-          {mdlcSightings.map(s => this.renderSighting(s))}
+          {mdlcSightings.map(s => this.renderSighting(s, isTracking))}
         </div>
       </div>
     )
