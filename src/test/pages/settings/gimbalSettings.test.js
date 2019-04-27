@@ -17,6 +17,7 @@ import {
 } from '../../../actions/gimbalSettingsActionCreator.js'
 
 import { GimbalSettings } from '../../../pages/settings/gimbalSettings.js'
+import { Settings } from '../../../pages/settings/settings.js'
 
 configure({ adapter: new Adapter() })
 // Create mock store
@@ -46,7 +47,9 @@ describe('GimbalSettings Component', () => {
 
     store = mockStore(overMap)
     wrapper = mount(<GimbalSettings settings={overMap} 
-      store={store} receiveSettings={receiveSettings} 
+      store={store} 
+      cameraGimbalMode={Modes.IDLE}
+      receiveSettings={receiveSettings} 
       receiveAndUpdateSettings={receiveAndUpdateSettings} 
       updateSettingsStart={updateSettingsStart} 
       updateSettingsFailed={updateSettingsFailed}/>
@@ -266,6 +269,29 @@ describe('GimbalSettings Component', () => {
           pitch: 0
         }
       })
+    })
+  })
+
+  describe('render', () => {
+    it('should change the Gimbal Settings panel according to locally-set mode | mode == Modes.IDLE', () => {
+      wrapper.setProps({cameraGimbalMode: Modes.IDLE})
+
+      expect(wrapper.find('#gpsRow').prop('style')).toEqual({})
+      expect(wrapper.find('#angleRow').prop('style')).toEqual({})
+    })
+
+    it('should change the Gimbal Settings panel according to locally-set mode | mode == Modes.FIXED', () => {
+      wrapper.setProps({cameraGimbalMode: Modes.FIXED})
+
+      expect(wrapper.find('#gpsRow').prop('style')).toEqual({})
+      expect(wrapper.find('#angleRow').prop('style')).toEqual({display: 'none'})
+    })
+
+    it('should change the Gimbal Settings panel according to locally-set mode | mode == Modes.TRACKING', () => {
+      wrapper.setProps({cameraGimbalMode: Modes.TRACKING})
+
+      expect(wrapper.find('#gpsRow').prop('style')).toEqual({display: 'none'})
+      expect(wrapper.find('#angleRow').prop('style')).toEqual({})
     })
   })
 

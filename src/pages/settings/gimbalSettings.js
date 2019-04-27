@@ -165,8 +165,8 @@ export class GimbalSettings extends Component {
   }
 
   render() {
-    let styleGPS = this.mode === Modes.TRACKING ? {} : {display: 'none'}
-    let styleAngle = this.mode === Modes.FIXED ? {display: 'none'} : {}
+    let styleGPS = this.props.cameraGimbalMode === Modes.TRACKING ? {display: 'none'} : {}
+    let styleAngle = this.props.cameraGimbalMode === Modes.FIXED ? {display: 'none'} : {}
 
     let saveClass = !this.canSave() ? 'waves-light btn grey' : 'waves-light btn'
 
@@ -177,7 +177,7 @@ export class GimbalSettings extends Component {
             <h3>Gimbal Settings</h3>
             <div className="content">
               <h5>Point to:</h5>
-              <div className="row" style={styleGPS}>
+              <div className="row" id="gpsRow" style={styleGPS}>
                 <h6>GPS</h6>
                 <div>
                   <TextField myRef={ref => (this.latitudeInput = ref)}
@@ -194,7 +194,7 @@ export class GimbalSettings extends Component {
                   />
                 </div>
               </div>
-              <div className="row" style={styleAngle}>
+              <div className="row" id="angleRow" style={styleAngle}>
                 <h6>Angle</h6>
                 <div>
                   <TextField myRef={ref => (this.rollInput = ref)}

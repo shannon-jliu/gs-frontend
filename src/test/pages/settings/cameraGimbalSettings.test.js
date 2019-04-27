@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { configure, mount } from 'enzyme'
+import { configure, mount, shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import configureMockStore from 'redux-mock-store'
 import { fromJS, Map } from 'immutable'
@@ -17,13 +17,14 @@ import {
 } from '../../../actions/cameraGimbalActionCreator.js'
 
 import { CameraGimbalSettings } from '../../../pages/settings/cameraGimbalSettings.js'
+import { Settings } from '../../../pages/settings/settings.js'
 
 configure({ adapter: new Adapter() })
 // Create mock store
 const mockStore = configureMockStore()
 
 describe('CameraGimbalSettings Component', () => {
-  let wrapper, store, initialState
+  let wrapper, store, initialState, settingsProps, settingsWrapper
 
   beforeEach(() => {
     jest.addMatchers(matchers)
@@ -37,8 +38,14 @@ describe('CameraGimbalSettings Component', () => {
 
     const overMap = fromJS({ settings: mappedSettings, pending: Map() })
 
+    settingsProps = {
+      changeCameraGimbalMode: jest.fn((newCameraGimbalMode) => newCameraGimbalMode)
+    }
+    settingsWrapper = shallow(<Settings {...settingsProps} />)
+
     store = mockStore(overMap)
-    wrapper = mount(<CameraGimbalSettings settings={overMap} 
+    wrapper = mount(<CameraGimbalSettings changeCameraGimbalMode={settingsWrapper.instance().changeCameraGimbalMode}
+      settings={overMap} 
       store={store} receiveSettings={receiveSettings} 
       receiveAndUpdateSettings={receiveAndUpdateSettings} 
       updateSettingsStart={updateSettingsStart} 

@@ -11,9 +11,20 @@ import cameraGimbalOperations from '../../operations/cameraGimbalOperations.js'
 import gimbalSettingsOperations from '../../operations/gimbalSettingsOperations.js'
 import airdropOperations from '../../operations/airdropOperations.js'
 
+import Modes from './components/Modes.js'
+
 import './settings.css'
 
-class Settings extends Component {
+export class Settings extends Component {
+  constructor() {
+    super()
+    this.state = {
+      cameraGimbalMode: Modes.IDLE
+    }
+
+    this.changeCameraGimbalMode = this.changeCameraGimbalMode.bind(this)
+  }
+
   componentDidMount() {
     window.addEventListener('load', () => {
       let loadNewestContent = () => {
@@ -28,13 +39,17 @@ class Settings extends Component {
     })
   }
 
+  changeCameraGimbalMode(newCameraGimbalMode) {
+    this.setState({cameraGimbalMode: newCameraGimbalMode})
+  }
+
   render() {
     return (
       <React.Fragment>
         <div id='container'>
           <CameraSettings/>
-          <CameraGimbalSettings/>
-          <GimbalSettings/>
+          <CameraGimbalSettings changeCameraGimbalMode={this.changeCameraGimbalMode}/>
+          <GimbalSettings cameraGimbalMode={this.state.cameraGimbalMode}/>
           <AirdropSettings/>
         </div>
       </React.Fragment>

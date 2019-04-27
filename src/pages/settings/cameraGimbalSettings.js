@@ -83,13 +83,15 @@ export class CameraGimbalSettings extends Component {
     if (e.target.type === 'radio') {
       let value = e.target.value
       if (value === 'idle') {
-        newLocal.mode = 0
+        newLocal.mode = Modes.IDLE
       } else if (value === 'fixed') {
-        newLocal.mode = 1
+        newLocal.mode = Modes.FIXED
       } else if (value === 'tracking') {
-        newLocal.mode = 2
+        newLocal.mode = Modes.TRACKING
       }
     }
+    
+    this.props.changeCameraGimbalMode(newLocal.mode)
     return newLocal
   }
 
