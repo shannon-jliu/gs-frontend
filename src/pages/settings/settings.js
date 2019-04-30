@@ -12,6 +12,7 @@ import gimbalSettingsOperations from '../../operations/gimbalSettingsOperations.
 import airdropOperations from '../../operations/airdropOperations.js'
 
 import Modes from './components/Modes.js'
+import { GET_SETTINGS } from '../../util/config.js'
 
 import './settings.css'
 
@@ -26,17 +27,19 @@ export class Settings extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('load', () => {
-      let loadNewestContent = () => {
-        this.props.getCameraCapturing()
-        this.props.getCameraZoom()
-        this.props.getCameraGimbalSettings()
-        this.props.getGimbalSettingSettings()
-        this.props.getAirdropSettings()
-        setTimeout(loadNewestContent, 1000)
-      }
-      loadNewestContent()
-    })
+    if (GET_SETTINGS) {
+      window.addEventListener('load', () => {
+        let loadNewestContent = () => {
+          this.props.getCameraCapturing()
+          this.props.getCameraZoom()
+          this.props.getCameraGimbalSettings()
+          this.props.getGimbalSettingSettings()
+          this.props.getAirdropSettings()
+          setTimeout(loadNewestContent, 1000)
+        }
+        loadNewestContent()
+      })
+    }
   }
 
   changeCameraGimbalMode(newCameraGimbalMode) {
