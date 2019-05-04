@@ -138,13 +138,11 @@ describe('GimbalSettings Component', () => {
 
       store = mockStore(overMap)
       wrapper = mount(<GimbalSettings settings={overMap} store={store}/>)
-      wrapper.instance().mode = Modes.FIXED
 
       expect(wrapper.instance().canSave()).toBe(true)
     })
 
     it('should return false/should not be able to save the settings because newFields and savedFields should be the same', () => {
-      wrapper.instance().mode = Modes.FIXED
       expect(wrapper.instance().canSave()).toBe(false)
     })
 
@@ -153,7 +151,7 @@ describe('GimbalSettings Component', () => {
       const overMap = fromJS({ settings: initialState, pending: Map() })
 
       store = mockStore(overMap)
-      wrapper = mount(<GimbalSettings settings={overMap} store={store}/>)
+      wrapper = mount(<GimbalSettings settings={overMap} store={store} cameraGimbalMode={Modes.UNDEFINED}/>)
 
       expect(wrapper.instance().canSave()).toBe(false)
     })
@@ -182,7 +180,6 @@ describe('GimbalSettings Component', () => {
       const changeReturn = new Proxy(target, handler)
       wrapper.instance().updateSettingsOnInputChange(changeReturn)
 
-      expect(wrapper.instance().mode).toEqual(Modes.FIXED)
       expect(wrapper.instance().state).toEqual({
         gps: {
           latitude: 3.1,
@@ -201,7 +198,6 @@ describe('GimbalSettings Component', () => {
       const changeReturn = new Proxy(target, handler)
       wrapper.instance().updateSettingsOnInputChange(changeReturn)
 
-      expect(wrapper.instance().mode).toEqual(Modes.FIXED)
       expect(wrapper.instance().state).toEqual({
         gps: {
           latitude: 0,
@@ -220,7 +216,6 @@ describe('GimbalSettings Component', () => {
       const changeReturn = new Proxy(target, handler)
       wrapper.instance().updateSettingsOnInputChange(changeReturn)
 
-      expect(wrapper.instance().mode).toEqual(Modes.TRACKING)
       expect(wrapper.instance().state).toEqual({
         gps: {
           latitude: 0,
@@ -239,7 +234,6 @@ describe('GimbalSettings Component', () => {
       const changeReturn = new Proxy(target, handler)
       wrapper.instance().updateSettingsOnInputChange(changeReturn)
 
-      expect(wrapper.instance().mode).toEqual(Modes.TRACKING)
       expect(wrapper.instance().state).toEqual({
         gps: {
           latitude: 0,
@@ -258,7 +252,6 @@ describe('GimbalSettings Component', () => {
       const changeReturn = new Proxy(target, handler)
       wrapper.instance().updateSettingsOnInputChange(changeReturn)
 
-      expect(wrapper.instance().mode).toEqual(Modes.UNDEFINED)
       expect(wrapper.instance().state).toEqual({
         gps: {
           latitude: '',

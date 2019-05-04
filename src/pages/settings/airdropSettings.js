@@ -170,14 +170,14 @@ export class AirdropSettings extends Component {
   render() {
     let display = this.getDisplayFields()
 
-    let saveClass = !this.canSave() ? 'btn grey' : 'btn'
+    let saveClass = !this.canSave() ? 'waves-effect waves-light btn grey' : 'waves-effect waves-light btn'
 
     let canDrop =
       !this.props.settings.get('settings').get('pending') &&
       display.isArmed &&
       !display.commandDropNow
 
-    let dropClass = canDrop ? 'btn blue' : 'btn grey'
+    let dropClass = canDrop ? 'waves-effect waves-light btn blue' : 'waves-effect waves-light btn grey'
 
     return (
       <div className="airdrop">

@@ -116,7 +116,7 @@ export class CameraSettings extends Component {
     let min_zoomSelected = display.zoom === 0 ? true:false
     let max_zoomSelected = display.zoom === 1 ? true:false
 
-    let saveClass = !this.canSave() ? 'waves-light btn grey' : 'waves-light btn'
+    let saveClass = !this.canSave() ? 'waves-effect waves-light btn grey' : 'waves-effect waves-light btn'
 
     return (
       <div className="camera">

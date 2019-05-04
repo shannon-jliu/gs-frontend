@@ -108,7 +108,7 @@ export class CameraGimbalSettings extends Component {
     let groundSelected = display.mode === Modes.FIXED
     let trackingSelected = display.mode === Modes.TRACKING
 
-    let saveClassInitial = 'waves-light btn'
+    let saveClassInitial = 'waves-effect waves-light btn'
     let saveClass = saveClassInitial
     if (!this.canSave()) {
       saveClass += ' grey'

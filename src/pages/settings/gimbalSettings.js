@@ -26,8 +26,6 @@ export class GimbalSettings extends Component {
       }
     }
 
-    this.mode = Modes.UNDEFINED
-
     /* Gimbal functions */
     this.getSavedFields = this.getSavedFields.bind(this)
     this.getDisplayFields = this.getDisplayFields.bind(this)
@@ -89,7 +87,7 @@ export class GimbalSettings extends Component {
     let savedFields = this.getSavedFields()
     
     let isValidInput = true
-    if (this.mode === Modes.FIXED) {
+    if (this.props.cameraGimbalMode === Modes.FIXED) {
       let lat = newFields.gps.latitude
       let lon = newFields.gps.longitude
       isValidInput =
@@ -99,7 +97,7 @@ export class GimbalSettings extends Component {
         lon !== '' &&
         (lat >= -90 && lat <= 90) &&
         (lon >= -180 && lon <= 180)
-    } else if (this.mode === Modes.TRACKING) {
+    } else if (this.props.cameraGimbalMode === Modes.TRACKING) {
       let roll = newFields.orientation.roll
       let pitch = newFields.orientation.pitch
       isValidInput =
@@ -110,8 +108,9 @@ export class GimbalSettings extends Component {
         (roll >= 0 && roll <= 360) &&
         (pitch >= 0 && pitch <= 360)
     }
+    
     return (
-      this.mode != Modes.UNDEFINED &&
+      this.props.cameraGimbalMode != Modes.UNDEFINED &&
       this.props.settings.get('pending').size == 0 &&
       !_.isEqual(newFields, savedFields) &&
       isValidInput
@@ -148,18 +147,13 @@ export class GimbalSettings extends Component {
     }
     if (e.target.id === 'Latitude') {
       newLocal.gps.latitude = val
-      this.mode = Modes.FIXED
     } else if (e.target.id === 'Longitude') {
       newLocal.gps.longitude = val
-      this.mode = Modes.FIXED
     } else if (e.target.id === 'Roll') {
       newLocal.orientation.roll = val
-      this.mode = Modes.TRACKING
     } else if (e.target.id === 'Pitch') {
       newLocal.orientation.pitch = val
-      this.mode = Modes.TRACKING
     }
-    if (val === '') this.mode = Modes.UNDEFINED
     
     this.setState(newLocal)
   }
@@ -168,7 +162,7 @@ export class GimbalSettings extends Component {
     let styleGPS = this.props.cameraGimbalMode === Modes.TRACKING ? {display: 'none'} : {}
     let styleAngle = this.props.cameraGimbalMode === Modes.FIXED ? {display: 'none'} : {}
 
-    let saveClass = !this.canSave() ? 'waves-light btn grey' : 'waves-light btn'
+    let saveClass = !this.canSave() ? 'waves-effect waves-light btn grey' : 'waves-effect waves-light btn'
 
     return (
       <div className="gimbal">

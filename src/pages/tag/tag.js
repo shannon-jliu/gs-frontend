@@ -71,7 +71,7 @@ export class Tag extends Component {
       imageUrl.lastIndexOf('.')
     ) + (isTracking ? ' (TARGET)' : ' (ROI)')  : ' none'
     const count = (assignment.get('currentIndex') + 1) + '/' + assignment.get('total')
-    const btnClass = 'btn-floating btn-large red'
+    const btnClass = 'waves-effect waves-light btn-floating btn-large red'
     const backClass = 'prev ' + btnClass + (assignment.get('currentIndex') <= 0 ? ' disabled' : '')
     const nextClass = 'next ' + btnClass + (assignment.get('loading') ? ' disabled' : '')
     return (
