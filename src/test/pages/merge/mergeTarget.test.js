@@ -3,6 +3,7 @@ import renderer from 'react-test-renderer'
 import { fromJS } from 'immutable'
 import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
+import SnackbarUtil from '../../../util/snackbarUtil.js'
 
 import { MergeTarget } from '../../../pages/merge/mergeTarget.js'
 
@@ -21,8 +22,8 @@ describe('MergeTarget', () => {
       offaxis: false,
       geotag:{
         gpsLocation: {
-          latitude: '42.447833',
-          longitude: '-76.612096'
+          latitude: '38.2948294',
+          longitude: '-76.4296673'
         }
       }
     }),
@@ -78,8 +79,8 @@ describe('MergeTarget', () => {
       thumbnailTSId: 11,
       geotag: {
         gpsLocation: {
-          latitude: '42.447833',
-          longitude: '-76.612096'
+          latitude: '38.284920',
+          longitude: '-76.374932'
         }
       }
     }),
@@ -178,7 +179,7 @@ describe('MergeTarget', () => {
     it('has correct componentWillReceiveProps', () => {
       wrapper = shallow(<MergeTarget {...props} />)
       wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-      wrapper.instance().getHandler('latitude')({target: {value: '41.432432'}})
+      wrapper.instance().getHandler('latitude')({target: {value: '38.26012'}})
       wrapper.instance().getHandler('shape')({target: {value: 'trapezoid'}})
       wrapper.instance().getHandler('shape')({target: {value: props.target.get('shape')}})
 
@@ -199,7 +200,7 @@ describe('MergeTarget', () => {
         thumbnailTSId: 12,
         description: '',
         longitude: props.target.getIn(['geotag', 'gpsLocation', 'longitude']),
-        latitude: '41.432432',
+        latitude: '38.26012',
         dragCtr: 0,
         iwidth: -1,
         iheight: -1
@@ -209,6 +210,10 @@ describe('MergeTarget', () => {
   })
 
   describe('canDelete', () => {
+    beforeEach(() => {
+      SnackbarUtil.render = jest.fn()
+    })
+
     it('cannot delete when updating', () => {
       const newProps = {
         target: props.target.set('pending', {shape: 'square', alpha: 'd'}),
@@ -219,22 +224,38 @@ describe('MergeTarget', () => {
       }
       wrapper = shallow(<MergeTarget {...newProps} />)
 
-      expect(wrapper.instance().canDelete()).toEqual(false)
+      expect(wrapper.instance().canDelete(true)).toEqual(false)
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot delete target: target is currently saving')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
     })
 
     it('can delete when not updating', () => {
       wrapper = shallow(<MergeTarget {...props} />)
 
-      expect(wrapper.instance().canDelete()).toEqual(true)
+      expect(wrapper.instance().canDelete(true)).toEqual(true)
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
     })
   })
 
   describe('canSave', () => {
+    beforeEach(() => {
+      SnackbarUtil.render = jest.fn()
+    })
+
     it('can save when alpha field changes', () => {
       wrapper = shallow(<MergeTarget {...props} />)
       wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
 
+      expect(wrapper.instance().canSave(true)).toEqual(true)
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
+    })
+
+    it('runs correctly when called with no args', () => {
+      wrapper = shallow(<MergeTarget {...props} />)
+      wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
+
       expect(wrapper.instance().canSave()).toEqual(true)
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
     })
 
     it('cannot save when updating', () => {
@@ -248,22 +269,27 @@ describe('MergeTarget', () => {
       wrapper = shallow(<MergeTarget {...newProps} />)
       wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
 
-      expect(wrapper.instance().canSave()).toEqual(false)
+      expect(wrapper.instance().canSave(true)).toEqual(false)
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: target is currently saving')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
     })
 
-    it('cannot save with empty alpha field', () => {
+    it('cannot save with empty shape field', () => {
       wrapper = shallow(<MergeTarget {...props} />)
       wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
       wrapper.instance().getHandler('shape')({target: {value: ''}})
 
-      expect(wrapper.instance().canSave()).toEqual(false)
+      expect(wrapper.instance().canSave(true)).toEqual(false)
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: shape field is not set')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
     })
 
     it('can save when description changes', () => {
       wrapper = shallow(<MergeTarget {...eProps} />)
       wrapper.instance().getHandler('description')({target: {value: 'a cat in a trapeze'}})
 
-      expect(wrapper.instance().canSave()).toEqual(true)
+      expect(wrapper.instance().canSave(true)).toEqual(true)
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
     })
 
     it('cannot save with empty description', () => {
@@ -271,22 +297,46 @@ describe('MergeTarget', () => {
       wrapper.instance().selectThumb(12)
       wrapper.instance().getHandler('description')({target: {value: ''}})
 
-      expect(wrapper.instance().canSave()).toEqual(false)
+      expect(wrapper.instance().canSave(true)).toEqual(false)
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: description is empty')
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
     })
 
     it('can save when thumbnail changes', () => {
       wrapper = shallow(<MergeTarget {...props} />)
       wrapper.instance().selectThumb(12)
 
-      expect(wrapper.instance().canSave()).toEqual(true)
+      expect(wrapper.instance().canSave(true)).toEqual(true)
+      expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
     })
 
     describe('geotag', () => {
+      const neno = ['42.448888', '-76.612200']
+      const pax = ['38.146828', '-76.428769']
+
+      it('does save because latitude is changed', () => {
+        wrapper = shallow(<MergeTarget {...props} />)
+        wrapper.instance().getHandler('latitude')({target: {value: pax[0]}})
+
+        expect(wrapper.instance().canSave(true)).toEqual(true)
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
+      })
+
+      it('does save because longitude is changed', () => {
+        wrapper = shallow(<MergeTarget {...props} />)
+        wrapper.instance().getHandler('longitude')({target: {value: pax[1]}})
+
+        expect(wrapper.instance().canSave(true)).toEqual(true)
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
+      })
+
       it('does save because geotag is changed', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('longitude')({target: {value: '121.0432'}})
+        wrapper.instance().getHandler('longitude')({target: {value: pax[1]}})
+        wrapper.instance().getHandler('latitude')({target: {value: pax[0]}})
 
-        expect(wrapper.instance().canSave()).toEqual(true)
+        expect(wrapper.instance().canSave(true)).toEqual(true)
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
       })
 
       it('can save when geotag is empty', () => {
@@ -295,7 +345,8 @@ describe('MergeTarget', () => {
         wrapper.instance().getHandler('latitude')({target: {value: ''}})
         wrapper.instance().getHandler('longitude')({target: {value: ''}})
 
-        expect(wrapper.instance().canSave()).toEqual(true)
+        expect(wrapper.instance().canSave(true)).toEqual(true)
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
       })
 
       it('does not save because geotag is empty', () => {
@@ -303,7 +354,9 @@ describe('MergeTarget', () => {
         wrapper.instance().getHandler('latitude')({target: {value: ''}})
         wrapper.instance().getHandler('longitude')({target: {value: ''}})
 
-        expect(wrapper.instance().canSave()).toEqual(false)
+        expect(wrapper.instance().canSave(true)).toEqual(false)
+        expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: no field/thumbnail/geotag changes to save')
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
       })
 
       it('cannot save when longitude is NaN', () => {
@@ -311,7 +364,9 @@ describe('MergeTarget', () => {
         wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
         wrapper.instance().getHandler('longitude')({target: {value: 'blah'}})
 
-        expect(wrapper.instance().canSave()).toEqual(false)
+        expect(wrapper.instance().canSave(true)).toEqual(false)
+        expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: longitude is not a number')
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
       })
 
       it('cannot save when latitude is NaN', () => {
@@ -319,7 +374,9 @@ describe('MergeTarget', () => {
         wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
         wrapper.instance().getHandler('latitude')({target: {value: 'blah'}})
 
-        expect(wrapper.instance().canSave()).toEqual(false)
+        expect(wrapper.instance().canSave(true)).toEqual(false)
+        expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: latitude is not a number')
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
       })
 
       it('cannot save when just longitude is empty', () => {
@@ -327,7 +384,9 @@ describe('MergeTarget', () => {
         wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
         wrapper.instance().getHandler('longitude')({target: {value: ''}})
 
-        expect(wrapper.instance().canSave()).toEqual(false)
+        expect(wrapper.instance().canSave(true)).toEqual(false)
+        expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: only one lat/long field is set (both can be empty)')
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
       })
 
       it('cannot save when just latitude is empty', () => {
@@ -335,23 +394,41 @@ describe('MergeTarget', () => {
         wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
         wrapper.instance().getHandler('latitude')({target: {value: ''}})
 
-        expect(wrapper.instance().canSave()).toEqual(false)
+        expect(wrapper.instance().canSave(true)).toEqual(false)
+        expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: only one lat/long field is set (both can be empty)')
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
       })
 
-      it('cannot save when longitude is invalid', () => {
+      it('cannot save when not near PAX or neno', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('alphaColor')({target: {value: '180.05'}})
-        wrapper.instance().getHandler('longitude')({target: {value: ''}})
+        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
+        wrapper.instance().getHandler('latitude')({target: {value: '-76.6'}})
+        wrapper.instance().getHandler('longitude')({target: {value: '42.5'}})
 
-        expect(wrapper.instance().canSave()).toEqual(false)
+        expect(wrapper.instance().canSave(true)).toEqual(false)
+        expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: geotag not near PAX (lat: 38.145, long: ' + 
+          '-76.43) or Neno (lat: 42.448, long: -76.61)')
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
       })
 
-      it('cannot save when latitude is invalid', () => {
+      it('can save when at Neno', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('alphaColor')({target: {value: '-90.05'}})
-        wrapper.instance().getHandler('latitude')({target: {value: ''}})
+        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
+        wrapper.instance().getHandler('latitude')({target: {value: neno[0]}})
+        wrapper.instance().getHandler('longitude')({target: {value: neno[1]}})
 
-        expect(wrapper.instance().canSave()).toEqual(false)
+        expect(wrapper.instance().canSave(true)).toEqual(true)
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
+      })
+
+      it('can save when at PAX', () => {
+        wrapper = shallow(<MergeTarget {...props} />)
+        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
+        wrapper.instance().getHandler('latitude')({target: {value: pax[0]}})
+        wrapper.instance().getHandler('longitude')({target: {value: pax[1]}})
+
+        expect(wrapper.instance().canSave(true)).toEqual(true)
+        expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
       })
     })
   })
@@ -488,7 +565,7 @@ describe('MergeTarget', () => {
 
       it('includes geotag in update when changed', () => {
         wrapper.instance().getHandler('shape')({target: {value: 'triangle'}})
-        wrapper.instance().getHandler('latitude')({target: {value: '31.23214'}})
+        wrapper.instance().getHandler('latitude')({target: {value: '38.314252'}})
 
         wrapper.instance().save()
 
@@ -500,7 +577,7 @@ describe('MergeTarget', () => {
           shape: 'triangle',
           geotag: {
             gpsLocation: {
-              latitude: '31.23214',
+              latitude: '38.314252',
               longitude: props.target.getIn(['geotag', 'gpsLocation', 'longitude'])
             }
           }
@@ -509,7 +586,7 @@ describe('MergeTarget', () => {
       })
 
       it('updates when only geotag changed', () => {
-        wrapper.instance().getHandler('longitude')({target: {value: '31.23214'}})
+        wrapper.instance().getHandler('longitude')({target: {value: '-76.41241'}})
 
         wrapper.instance().save()
 
@@ -520,7 +597,7 @@ describe('MergeTarget', () => {
         expect(updateTarget).toHaveBeenCalledWith(props.target, fromJS({
           geotag: {
             gpsLocation: {
-              longitude: '31.23214',
+              longitude: '-76.41241',
               latitude: props.target.getIn(['geotag', 'gpsLocation', 'latitude'])
             }
           }
@@ -588,8 +665,8 @@ describe('MergeTarget', () => {
         wrapper.instance().getHandler('shape')({target: {value: 'triangle'}})
         wrapper.instance().getHandler('shapeColor')({target: {value: 'green'}})
         wrapper.instance().getHandler('thumbnailTSId')({target: {value: 12}})
-        wrapper.instance().getHandler('latitude')({target: {value: '31.23214'}})
-        wrapper.instance().getHandler('longitude')({target: {value: '-12.34235'}})
+        wrapper.instance().getHandler('latitude')({target: {value: '38.314252'}})
+        wrapper.instance().getHandler('longitude')({target: {value: '-76.41241'}})
 
         wrapper.instance().save()
 
@@ -605,8 +682,8 @@ describe('MergeTarget', () => {
           thumbnailTSId: 12,
           geotag: {
             gpsLocation: {
-              latitude: '31.23214',
-              longitude: '-12.34235'
+              latitude: '38.314252',
+              longitude: '-76.41241'
             }
           },
           type: 'alphanum',
@@ -750,8 +827,8 @@ describe('MergeTarget', () => {
       const geoDiv = wrapper.find('.facts div').at(2)
       expect(geoDiv.prop('className')).toEqual('row')
       const geoFields = geoDiv.find('TargetGeotagFields')
-      expect(geoFields.prop('latitude')).toEqual('42.447833')
-      expect(geoFields.prop('longitude')).toEqual('-76.612096')
+      expect(geoFields.prop('latitude')).toEqual('38.2948294')
+      expect(geoFields.prop('longitude')).toEqual('-76.4296673')
       expect(geoFields.prop('getHandler')).toBe(wrapper.instance().getHandler)
     })
 
@@ -769,8 +846,8 @@ describe('MergeTarget', () => {
       const geoDiv = wrapper.find('.facts div').at(2)
       expect(geoDiv.prop('className')).toEqual('row')
       const geoFields = geoDiv.find('TargetGeotagFields')
-      expect(geoFields.prop('latitude')).toEqual('42.447833')
-      expect(geoFields.prop('longitude')).toEqual('-76.612096')
+      expect(geoFields.prop('latitude')).toEqual('38.284920')
+      expect(geoFields.prop('longitude')).toEqual('-76.374932')
       expect(geoFields.prop('getHandler')).toBe(wrapper.instance().getHandler)
     })
 
@@ -803,7 +880,7 @@ describe('MergeTarget', () => {
     it('has correct attributes after update', () => {
       wrapper = shallow(<MergeTarget {...props} />)
       wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-      wrapper.instance().getHandler('longitude')({target: {value: '13.423522'}})
+      wrapper.instance().getHandler('longitude')({target: {value: '-76.4138419'}})
 
       const alphaDiv = wrapper.find('.facts div').first()
       expect(alphaDiv.prop('className')).toEqual('row')
@@ -820,8 +897,8 @@ describe('MergeTarget', () => {
       const geoDiv = wrapper.find('.facts div').at(2)
       expect(geoDiv.prop('className')).toEqual('row')
       const geoFields = geoDiv.find('TargetGeotagFields')
-      expect(geoFields.prop('latitude')).toEqual('42.447833')
-      expect(geoFields.prop('longitude')).toEqual('13.423522')
+      expect(geoFields.prop('latitude')).toEqual('38.2948294')
+      expect(geoFields.prop('longitude')).toEqual('-76.4138419')
       expect(geoFields.prop('getHandler')).toBe(wrapper.instance().getHandler)
     })
   })

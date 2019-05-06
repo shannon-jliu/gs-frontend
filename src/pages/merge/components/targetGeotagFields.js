@@ -3,15 +3,6 @@ import PropTypes from 'prop-types'
 
 const TargetGeotagFields = ({ latitude, longitude, getHandler }) => (
   <div className='row'>
-    {/*Longitude. Restricted to be a number, bounds should be checked when saving */}
-    <div className='obj input-field col s6'>
-      <input
-        onChange={getHandler('longitude')}
-        type='number'
-        value={longitude}
-      />
-      <label htmlFor='longitude'>Longitude (-180–180)</label>
-    </div>
     {/*Latitude. Restricted to be a number, bounds should be checked when saving */}
     <div className='obj input-field col s6'>
       <input
@@ -20,6 +11,15 @@ const TargetGeotagFields = ({ latitude, longitude, getHandler }) => (
         value={latitude}
       />
       <label htmlFor="latitude">Latitude (-90–90)</label>
+    </div>
+    {/*Longitude. Restricted to be a number, bounds should be checked when saving */}
+    <div className='obj input-field col s6'>
+      <input
+        onChange={getHandler('longitude')}
+        type='number'
+        value={longitude}
+      />
+      <label htmlFor='longitude'>Longitude (-180–180)</label>
     </div>
   </div>
 )
