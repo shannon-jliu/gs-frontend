@@ -254,7 +254,11 @@ export class MergeTarget extends Component {
   render() {
     const t = this.props.target
 
+    //both for whether ts can be dragged in and whether it has title
     const canHoldTs = t.get('type') === 'emergent' || t.get('offaxis') || !t.has('id')
+    const title = t.get('type') === 'emergent' ? 'Emergent' :
+      (t.get('offaxis') ? 'Off-axis' : 'Unsaved')
+
     return (
       <div
         ref='main'
@@ -264,6 +268,10 @@ export class MergeTarget extends Component {
         onDragOver={canHoldTs ? undefined : e => e.preventDefault()}
         onDrop={canHoldTs ? undefined : this.drop}
       >
+        <div className={'type' + (canHoldTs ? '' : ' hidden')}>
+          {title}
+          <div className='border'></div>
+        </div>
         <div className='facts'>
           <div className={t.get('type') === 'alphanum' ? 'row' : 'hidden'}> 
             <TargetAlphanumFields

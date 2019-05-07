@@ -777,6 +777,8 @@ describe('MergeTarget', () => {
       expect(mainDiv.prop('onDragLeave')).toBe(wrapper.instance().dragLeave)
       expect(mainDiv.prop('onDragOver')).toBeDefined() //can't check anon. func, but the only option in the ternary is undefined so this works
       expect(mainDiv.prop('onDrop')).toBe(wrapper.instance().drop)
+
+      expect(mainDiv.children().first().hasClass('hidden')).toBe(true)
     })
 
     it('has correct fields in main div for emergent', () => {
@@ -788,6 +790,9 @@ describe('MergeTarget', () => {
       expect(mainDiv.prop('onDragLeave')).toBeUndefined()
       expect(mainDiv.prop('onDragOver')).toBeUndefined()
       expect(mainDiv.prop('onDrop')).toBeUndefined()
+
+      expect(mainDiv.children().first().hasClass('hidden')).toBe(false)
+      expect(mainDiv.children().first().text()).toBe('Emergent')
     })
 
     it('has correct fields in main div for offaxis', () => {
@@ -806,6 +811,30 @@ describe('MergeTarget', () => {
       expect(mainDiv.prop('onDragLeave')).toBeUndefined()
       expect(mainDiv.prop('onDragOver')).toBeUndefined()
       expect(mainDiv.prop('onDrop')).toBeUndefined()
+
+      expect(mainDiv.children().first().hasClass('hidden')).toBe(false)
+      expect(mainDiv.children().first().text()).toBe('Off-axis')
+    })
+
+    it('has correct fields in main div for local', () => {
+      const newProps = {
+        target: props.target.delete('id').set('localId', 'testLocalId'),
+        sightings: fromJS([]),
+        onTsDragStart: props.onTsDragStart,
+        onTsDragEnd: props.onTsDragEnd,
+        onTsDrop: props.onTsDrop
+      }
+      wrapper = shallow(<MergeTarget {...newProps} />)
+      const mainDiv = wrapper.find('div').first()
+
+      expect(mainDiv.prop('className')).toEqual('target card')
+      expect(mainDiv.prop('onDragEnter')).toBeUndefined()
+      expect(mainDiv.prop('onDragLeave')).toBeUndefined()
+      expect(mainDiv.prop('onDragOver')).toBeUndefined()
+      expect(mainDiv.prop('onDrop')).toBeUndefined()
+
+      expect(mainDiv.children().first().hasClass('hidden')).toBe(false)
+      expect(mainDiv.children().first().text()).toBe('Unsaved')
     })
   })
 
