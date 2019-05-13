@@ -27,19 +27,17 @@ export class Settings extends Component {
   }
 
   componentDidMount() {
-    if (GET_SETTINGS) {
-      window.addEventListener('load', () => {
-        let loadNewestContent = () => {
-          this.props.getCameraCapturing()
-          this.props.getCameraZoom()
-          this.props.getCameraGimbalSettings()
-          this.props.getGimbalSettingSettings()
-          this.props.getAirdropSettings()
-          setTimeout(loadNewestContent, 1000)
-        }
-        loadNewestContent()
-      })
-    }
+    window.addEventListener('load', () => {
+      let loadNewestContent = () => {
+        this.props.getCameraCapturing()
+        this.props.getCameraZoom()
+        this.props.getCameraGimbalSettings()
+        this.props.getGimbalSettingSettings()
+        this.props.getAirdropSettings()
+        setTimeout(loadNewestContent, 1000)
+      }
+      loadNewestContent()
+    })
   }
 
   changeCameraGimbalMode(newCameraGimbalMode) {

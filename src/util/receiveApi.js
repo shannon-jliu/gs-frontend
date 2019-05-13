@@ -4,6 +4,9 @@ import _ from 'lodash'
 
 import { AUTH_TOKEN_ID } from '../constants/constants'
 
+import Modes from '../pages/settings/components/Modes.js'
+import { GET_SETTINGS } from './config.js'
+
 export const TargetGetRequests = {
   getAlphanumTargets: function(successCallback, failureCallback) {
     $.get('/api/v1/alphanum_target')
@@ -53,9 +56,7 @@ export const AssignmentGetRequests = {
 
 export const SettingsGetRequests = {
   getSetting: function(route, successCallback, failureCallback) {
-    $.get(route)
-      .done(successCallback)
-      .fail(failureCallback)
+    if (GET_SETTINGS) $.get(route).done(successCallback).fail(failureCallback)
   },
 
   getAirdropSetting: function(successCallback, failureCallback) {

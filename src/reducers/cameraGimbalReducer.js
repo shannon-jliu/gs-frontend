@@ -1,4 +1,5 @@
 import {fromJS, Map} from 'immutable'
+import Modes from '../pages/settings/components/Modes.js'
 
 /**
  * Notes on state representation:
@@ -8,12 +9,35 @@ import {fromJS, Map} from 'immutable'
 */
 const initialState = fromJS({
   settings: fromJS({
-    timestamp: -1
+    timestamp: -1,
+    mode: Modes.IDLE
   }),
   pending: {}
 })
 
 const cameraGimbalReducer = (state = initialState, action) => {
+  if (action.settings !== undefined) {
+    let mode = action.settings.get('mode')
+    if (isNaN(mode)) {
+      let newMode
+      switch(mode) {
+      case 'idle':
+        newMode = Modes.IDLE
+        break
+      case 'fixed':
+        newMode = Modes.FIXED
+        break
+      case 'tracking':
+        newMode = Modes.TRACKING
+        break
+      default:
+        newMode = Modes.UNDEFINED
+      }
+      
+      action.settings = action.settings.set('mode', newMode)
+    }
+  }
+
   switch (action.type) {
   case 'UPDATE_CAMERA_GIMBAL_SETTINGS_SUCCESS':
     // want to set pending to empty AND update gimbal settings

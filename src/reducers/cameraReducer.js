@@ -9,7 +9,9 @@ import {fromJS, Map} from 'immutable'
 
 const initialState = fromJS({
   settings: {
-    timestamp: -1
+    timestamp: -1,
+    capturing: false,
+    zoom: 0
   },
   pending: {}
 })

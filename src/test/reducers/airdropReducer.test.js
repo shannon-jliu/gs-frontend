@@ -1,6 +1,6 @@
 import reducer from '../../reducers/airdropReducer.js'
 import * as matchers from 'jest-immutable-matchers'
-import {fromJS} from 'immutable'
+import { fromJS } from 'immutable'
 
 describe('airdropReducer', () => {
   // this enables us to use toEqualImmutable
@@ -10,7 +10,14 @@ describe('airdropReducer', () => {
 
   const initState = fromJS({
     settings: {
-      timestamp: -1
+      timestamp: -1,
+      isArmed: false,
+      commandDropNow: false,
+      gpsTargetLocation: {
+        latitude: 0,
+        longitude: 0
+      },
+      acceptableThresholdFt: 0
     },
     pending: {}
   })
@@ -234,7 +241,14 @@ describe('airdropReducer', () => {
       ).toEqualImmutable(
         fromJS({
           settings:{
-            timestamp: -1
+            timestamp: -1,
+            isArmed: false,
+            commandDropNow: false,
+            gpsTargetLocation: {
+              latitude: 0,
+              longitude: 0
+            },
+            acceptableThresholdFt: 0
           },
           pending: {
             'id': 1,
@@ -337,7 +351,14 @@ describe('airdropReducer', () => {
       ).toEqualImmutable(
         fromJS({
           settings:{
-            timestamp: -1
+            timestamp: -1,
+            isArmed: false,
+            commandDropNow: false,
+            gpsTargetLocation: {
+              latitude: 0,
+              longitude: 0
+            },
+            acceptableThresholdFt: 0
           },
           pending: {}
         })

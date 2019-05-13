@@ -68,7 +68,7 @@ export class AirdropSettings extends Component {
         commandDropNow: newLocal.get('commandDropNow'),
         gpsTargetLocation: {
           latitude: newLocal.get('gpsTargetLocation').get('latitude'),
-          longitude: newLocal.get('gpsTargetLocation').get('latitude')
+          longitude: newLocal.get('gpsTargetLocation').get('longitude')
         },
         acceptableThresholdFt: newLocal.get('acceptableThresholdFt')
       }
