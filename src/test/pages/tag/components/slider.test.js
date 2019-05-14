@@ -11,7 +11,7 @@ describe('Basic tests no sightings', () => {
   let wrapper, instance
   const getHandler = jest.fn((id) => () => id)
   beforeEach(() => {
-    wrapper = shallow(<Slider id='brightness' getHandler={getHandler} />)
+    wrapper = shallow(<Slider id='brightness' getHandler={getHandler} value={100} />)
     instance = wrapper.instance()
   })
 
