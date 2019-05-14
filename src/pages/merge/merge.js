@@ -128,7 +128,7 @@ export class Merge extends Component {
     //for that reason, this uses both loose and strict equality (!= null checks both - x != null is the same as (x !== null && x !== undefined))
     const isAssigned = ts => (ts.get('target') != null && ts.getIn(['pending', 'target']) !== null) || ts.getIn(['pending', 'target']) != null
     const assignedSightings = this.props.sightings.filter(isAssigned)
-    const unassignedSightings = this.props.sightings.filter(ts => !isAssigned(ts))
+    const unassignedSightings = this.props.sightings.filter(ts => ts.get('type') === 'alphanum' && !isAssigned(ts))
 
     const sortedTargets = this.props.savedTargets.sort((target1, target2) => {
       if (target1.get('type') == 'emergent') {
