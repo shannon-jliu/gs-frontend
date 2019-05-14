@@ -41,11 +41,15 @@ export class AirdropSettings extends Component {
       this.props.settings.get('settings').get('gpsTargetLocation').get('longitude') !== this.state.gpsTargetLocation.longitude &&
       this.props.settings.get('settings').get('acceptableThresholdFt') !== this.state.acceptableThresholdFt
     )) {
-      this.state.isArmed = this.props.settings.get('settings').get('isArmed')
-      this.state.commandDropNow = this.props.settings.get('settings').get('commandDropNow')
-      this.state.gpsTargetLocation.latitude = this.props.settings.get('settings').get('gpsTargetLocation').get('latitude')
-      this.state.gpsTargetLocation.longitude = this.props.settings.get('settings').get('gpsTargetLocation').get('longitude')
-      this.state.acceptableThresholdFt = this.props.settings.get('settings').get('acceptableThresholdFt')
+      this.setState({
+        isArmed: this.props.settings.get('settings').get('isArmed'),
+        commandDropNow: this.props.settings.get('settings').get('commandDropNow'),
+        gpsTargetLocation: {
+          latitude: this.props.settings.get('settings').get('gpsTargetLocation').get('latitude'),
+          longitude: this.props.settings.get('settings').get('gpsTargetLocation').get('longitude')
+        },
+        acceptableThresholdFt: this.props.settings.get('settings').get('acceptableThresholdFt')
+      })
     }
   }
 

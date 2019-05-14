@@ -31,7 +31,7 @@ export class CameraGimbalSettings extends Component {
 
   componentDidUpdate(prevProps) {
     if (!_.isEqual(prevProps, this.props) && (this.props.settings.get('settings').get('mode') !== this.state.mode)) {
-      this.state.mode = this.props.settings.get('settings').get('mode')
+      this.setState({ mode: this.props.settings.get('settings').get('mode') })
     }
   }
 

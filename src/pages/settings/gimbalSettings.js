@@ -44,10 +44,16 @@ export class GimbalSettings extends Component {
           this.props.settings.get('settings').get('orientation').get('roll') !== this.state.orientation.roll && 
           this.props.settings.get('settings').get('orientation').get('pitch') !== this.state.orientation.pitch
       )) {
-        this.state.gps.latitude = this.props.settings.get('settings').get('gps').get('latitude')
-        this.state.gps.longitude = this.props.settings.get('settings').get('gps').get('longitude')
-        this.state.orientation.roll = this.props.settings.get('settings').get('orientation').get('roll')
-        this.state.orientation.pitch = this.props.settings.get('settings').get('orientation').get('pitch')
+        this.setState({
+          gps: {
+            latitude: this.props.settings.get('settings').get('gps').get('latitude'),
+            longitude: this.props.settings.get('settings').get('gps').get('longitude')
+          },
+          orientation: {
+            roll: this.props.settings.get('settings').get('orientation').get('roll'),
+            pitch: this.props.settings.get('settings').get('orientation').get('pitch')
+          }
+        })
       }
     }
   }
