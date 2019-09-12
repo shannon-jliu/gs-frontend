@@ -37,7 +37,7 @@ export class CameraGimbalSettings extends Component {
 
   getSavedFields() {
     let newLocal = this.props.settings.get('settings')
-    
+
     if (newLocal.get('mode') === undefined) {
       return {
         mode: null
@@ -89,8 +89,9 @@ export class CameraGimbalSettings extends Component {
         newLocal.mode = Modes.TRACKING
       }
     }
-    
-    this.props.changeCameraGimbalMode(newLocal.mode)
+
+    // TODO: Remove below from master!
+    // this.props.changeCameraGimbalMode(newLocal.mode)
     return newLocal
   }
 
@@ -168,4 +169,3 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CameraGimbalSettings)
-

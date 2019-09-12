@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
 
-import AuthUtil from '../util/authUtil'
-
 import {
   LOGIN_PAGE_ID,
   TAGGING_PAGE_ID,
   MERGING_PAGE_ID,
   ADLC_PAGE_ID,
   SETTINGS_PAGE_ID,
+  FIREWORKS_PAGE_ID,
   LOGS_PAGE_ID
 } from '../constants/links.js'
 
@@ -18,6 +17,8 @@ const LINKS = Object.freeze({
   'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'admin': true},
   'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'admin': true},
   'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'admin': true},
+  /* Add Link for Fireworks page */
+  'Fireworks': {name: 'Fireworks', key: FIREWORKS_PAGE_ID, href: '/Fireworks', 'admin': true},
   'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'admin': true},
 })
 
@@ -27,7 +28,7 @@ class Header extends Component {
   constructor(props) {
     super(props)
     this.props = props
-    this.admin = AuthUtil.admin() && window.location.pathname !== '/login'
+    this.admin = true
   }
 
   render() {

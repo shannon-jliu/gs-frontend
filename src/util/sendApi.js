@@ -94,5 +94,10 @@ export const SettingsRequest = {
 
   updateGimbalSettingsSetting: function(settings, successCallback, failureCallback) {
     SettingsRequest.updateSetting('/api/v1/settings/gimbal', settings, successCallback, failureCallback)
-  }
+  },
+
+  /* Implement Fireworks get request here */
+  updateFireworksSetting: function(settings, successCallback, failureCallback) {
+    SettingsRequest.updateSetting('/api/v1/settings/fireworks', settings, successCallback, failureCallback)
+  },
 }

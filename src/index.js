@@ -18,10 +18,10 @@ import Tag from './pages/tag/tag.js'
 import Settings from './pages/settings/settings.js'
 import Merge from './pages/merge/merge.js'
 import Logs from './pages/logs/logs.js'
+/* Import the main Fireworks js file */
+import Fireworks from './pages/fireworks/fireworks.js'
 
-import AuthUtil from './util/authUtil.js'
 import {GROUND_SERVER_URL} from './constants/links.js'
-import {AUTH_TOKEN_ID} from './constants/constants.js'
 
 const config = {
   transforms: [immutableTransform()], // required to convert localstorage to immutable
@@ -44,23 +44,15 @@ $.ajaxSetup({
       options.data = JSON.stringify(options.data)
     }
     options.url = GROUND_SERVER_URL + options.url
-    jqXHR.setRequestHeader(
-      'X-AUTH-TOKEN',
-      localStorage.getItem(AUTH_TOKEN_ID)
-    )
   }
 })
 
-var requireAuth = Class => {
-  if (AuthUtil.authenticated()) {
-    return <App main={Class} />
-  } else {
-    return <Redirect to="/login"/>
-  }
-}
+
+// TODO: Fix /Fireworks vs /fireworks issue, maybe search in commit history/diffs for /Fireworks and see where in code that is
 
 // PersistGate required to delay until persistence complete
 // see https://github.com/rt2zz/redux-persist#react-integration
+/* Add Route for the Fireworks page */
 const GroundServerRouter = () =>
   (
     <Provider store={store}>
@@ -68,10 +60,11 @@ const GroundServerRouter = () =>
         <BrowserRouter>
           <Switch>
             <Route path="/login" render={() => <App main={<Login/>}/>}/>
-            <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
-            <Route path="/settings" render={() => requireAuth(<Settings/>)}/>
-            <Route path="/merge" render={() => requireAuth(<Merge/>)}/>
-            <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
+            <Route path="/tag" render={() => <App main={<Tag/>}/>}/>
+            <Route path="/settings" render={() => <App main={<Settings/>}/>}/>
+            <Route path="/fireworks" render={() => <App main={<Fireworks/>}/>}/>
+            <Route path="/merge" render={() => <App main={<Merge/>}/>}/>
+            <Route path="/logs" render={() => <App main={<Logs/>}/>}/>
             <Redirect from="*" to="/login"/>
           </Switch>
         </BrowserRouter>

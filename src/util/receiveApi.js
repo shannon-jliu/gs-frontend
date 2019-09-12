@@ -76,5 +76,18 @@ export const SettingsGetRequests = {
 
   getGimbalSettingsSetting: function(successCallback, failureCallback) {
     SettingsGetRequests.getSetting('/api/v1/settings/gimbal/recent', successCallback, failureCallback)
+  },
+
+  getGimbalSettingsSetting: function(successCallback, failureCallback) {
+    SettingsGetRequests.getSetting('/api/v1/settings/gimbal/recent', successCallback, failureCallback)
+  },
+
+  /* Implement Fireworks post requests here */
+  getFireworksSettingColor: function(successCallback, failureCallback) {
+    SettingsGetRequests.getSetting('/api/v1/settings/fireworks/recent', successCallback, failureCallback)
+  },
+
+  getFireworksSettingNumber: function(successCallback, failureCallback) {
+    SettingsGetRequests.getSetting('/api/v1/settings/fireworks/recent', successCallback, failureCallback)
   }
 }
