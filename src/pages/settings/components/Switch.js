@@ -9,7 +9,7 @@ const Switch = ({offState, myRef, onChange, id, checked, onState}) => {
           htmlFor={id}
         >
           {offState}
-          <input 
+          <input
             ref={myRef}
             onChange={onChange}
             type="checkbox"

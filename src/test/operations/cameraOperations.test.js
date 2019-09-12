@@ -66,7 +66,7 @@ describe('CameraOperations', () => {
     it('does nothing when fails', () => {
       SettingsGetRequests.getCameraSettingZoom = jest.fn((successCallback, failureCallback) => failureCallback())
       CameraOperations.getZoom(dispatch)
-      
+
       expect(dispatch).toHaveBeenCalledTimes(0)
 
       expect(JSON.stringify(SettingsGetRequests.getCameraSettingZoom.mock.calls[0][0])).toBe(JSON.stringify(CameraOperations.getZoom.successCallback))

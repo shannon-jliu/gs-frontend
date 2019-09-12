@@ -117,7 +117,7 @@ export class MergeTarget extends Component {
 
     //don't need to check isNaN because isGeotagValid() must have already returned true
     const geotagHasChanged = () =>
-      s.latitude !== '' && s.longitude !== '' && 
+      s.latitude !== '' && s.longitude !== '' &&
         (!t.hasIn(['geotag', 'gpsLocation', 'latitude']) ||
         !t.hasIn(['geotag', 'gpsLocation', 'longitude']) ||
         t.getIn(['geotag', 'gpsLocation', 'latitude']) != s.latitude ||
@@ -150,8 +150,8 @@ export class MergeTarget extends Component {
       let newVals = fromJS(_.pick(s, _.concat(validFields, t.get('type') == 'alphanum' ? validAlphanumFields : validEmergentFields)))
         .filter((value, key) => t.get(key) != value)
 
-      if (s.longitude !== '' && s.latitude !== '' && 
-          (t.getIn(['geotag', 'gpsLocation', 'longitude']) !== s.longitude || 
+      if (s.longitude !== '' && s.latitude !== '' &&
+          (t.getIn(['geotag', 'gpsLocation', 'longitude']) !== s.longitude ||
           t.getIn(['geotag', 'gpsLocation', 'latitude']) !== s.latitude)) {
         newVals = newVals.set('geotag', fromJS({
           gpsLocation: {
@@ -216,7 +216,7 @@ export class MergeTarget extends Component {
         onDrop={canHoldTs ? undefined : this.drop}
       >
         <div className='facts'>
-          <div className={t.get('type') === 'alphanum' ? 'row' : 'hidden'}> 
+          <div className={t.get('type') === 'alphanum' ? 'row' : 'hidden'}>
             <TargetAlphanumFields
               shape={this.state.shape}
               shapeColor={this.state.shapeColor}
@@ -226,7 +226,7 @@ export class MergeTarget extends Component {
             />
           </div>
 
-          <div className={t.get('type') === 'emergent' ? 'row' : 'hidden'}> 
+          <div className={t.get('type') === 'emergent' ? 'row' : 'hidden'}>
             <TargetEmergentFields
               description={this.state.description}
               getHandler={this.getHandler}

@@ -33,7 +33,7 @@ describe('CameraSettings Component', () => {
     const overMap = fromJS({ settings: mappedSettings, pending: Map() })
 
     store = mockStore(overMap)
-    wrapper = mount(<CameraSettings settings={overMap} 
+    wrapper = mount(<CameraSettings settings={overMap}
       store={store} updateSettingsStart={cameraOperations.updateSettingsStart}/>
     )
   })
@@ -99,7 +99,7 @@ describe('CameraSettings Component', () => {
         capturing: false,
         zoom: 1
       }
-  
+
       const newMappedSettings = fromJS(newSettings)
       const newOverMap = fromJS({ settings: newMappedSettings, pending: Map() })
 

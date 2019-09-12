@@ -46,12 +46,12 @@ describe('GimbalSettings Component', () => {
     const overMap = new fromJS({ settings: mappedSettings, pending: Map() })
 
     store = mockStore(overMap)
-    wrapper = mount(<GimbalSettings settings={overMap} 
-      store={store} 
+    wrapper = mount(<GimbalSettings settings={overMap}
+      store={store}
       cameraGimbalMode={Modes.IDLE}
-      receiveSettings={receiveSettings} 
-      receiveAndUpdateSettings={receiveAndUpdateSettings} 
-      updateSettingsStart={updateSettingsStart} 
+      receiveSettings={receiveSettings}
+      receiveAndUpdateSettings={receiveAndUpdateSettings}
+      updateSettingsStart={updateSettingsStart}
       updateSettingsFailed={updateSettingsFailed}/>
     )
   })
@@ -89,7 +89,7 @@ describe('GimbalSettings Component', () => {
         { gps: {
           latitude: initialState.get('gps').get('latitude'),
           longitude: initialState.get('gps').get('longitude')
-        }, 
+        },
         orientation: {
           roll: initialState.get('orientation').get('roll'),
           pitch: initialState.get('orientation').get('pitch')
@@ -105,7 +105,7 @@ describe('GimbalSettings Component', () => {
         { gps: {
           latitude: initialState.get('gps').get('latitude'),
           longitude: initialState.get('gps').get('longitude')
-        }, 
+        },
         orientation: {
           roll: initialState.get('orientation').get('roll'),
           pitch: initialState.get('orientation').get('pitch')
@@ -121,7 +121,7 @@ describe('GimbalSettings Component', () => {
         { gps: {
           latitude: initialState.get('gps').get('latitude'),
           longitude: initialState.get('gps').get('longitude')
-        }, 
+        },
         orientation: {
           roll: initialState.get('orientation').get('roll'),
           pitch: initialState.get('orientation').get('pitch')
@@ -191,7 +191,7 @@ describe('GimbalSettings Component', () => {
         }
       })
     })
-    
+
     it('should update properties properly | e.target.id == "Longitude"', () => {
       const target = { target: { value: '3.1', id: 'Longitude' } }
       const handler = {}

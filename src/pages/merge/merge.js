@@ -69,7 +69,7 @@ export class Merge extends Component {
 
   onDrop(target) {
     if (target.has('id')) {
-      const dragTgt = this.state.dragSighting.getIn(['pending', 'target']) === null ? undefined : 
+      const dragTgt = this.state.dragSighting.getIn(['pending', 'target']) === null ? undefined :
         (this.state.dragSighting.getIn(['pending', 'target']) || this.state.dragSighting.get('target'))
       if (dragTgt == undefined || dragTgt.get('id') != target.get('id')) {
         this.props.updateTargetSighting(this.state.dragSighting, fromJS({target}))
@@ -81,7 +81,7 @@ export class Merge extends Component {
   }
 
   renderSighting(sighting) {
-    const isDragging = this.state.dragSighting != null && 
+    const isDragging = this.state.dragSighting != null &&
         sighting.get('id') == this.state.dragSighting.get('id')
 
     return (
@@ -96,7 +96,7 @@ export class Merge extends Component {
   }
 
   renderTarget(target, assignedSightings) {
-    const boundSightings = target.has('id') ? 
+    const boundSightings = target.has('id') ?
       assignedSightings.filter(s => {
         if (s.hasIn(['pending', 'target'])) {
           //if pending.target === null, this will return false

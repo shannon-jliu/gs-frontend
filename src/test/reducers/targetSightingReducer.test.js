@@ -316,7 +316,7 @@ describe('targetSightingReducer', () => {
       const newPopState = populatedState.set('saved', List.of(
         sts1.set('type', 'emergent'),
         sts1.set('pending', fromJS({ shape: 'circle' })),
-        sts2.delete('localTargetId'), 
+        sts2.delete('localTargetId'),
         sts3))
       const newTs = fromJS({
         'id': 14,

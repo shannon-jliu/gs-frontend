@@ -55,7 +55,7 @@ describe('imageReducer', () => {
         'telemetryData': null,
         'gimbalView': null
       })
-      
+
       expect(
         reducer(
           fromJS({

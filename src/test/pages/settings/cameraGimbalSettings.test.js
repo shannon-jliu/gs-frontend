@@ -45,10 +45,10 @@ describe('CameraGimbalSettings Component', () => {
 
     store = mockStore(overMap)
     wrapper = mount(<CameraGimbalSettings changeCameraGimbalMode={settingsWrapper.instance().changeCameraGimbalMode}
-      settings={overMap} 
-      store={store} receiveSettings={receiveSettings} 
-      receiveAndUpdateSettings={receiveAndUpdateSettings} 
-      updateSettingsStart={updateSettingsStart} 
+      settings={overMap}
+      store={store} receiveSettings={receiveSettings}
+      receiveAndUpdateSettings={receiveAndUpdateSettings}
+      updateSettingsStart={updateSettingsStart}
       updateSettingsFailed={updateSettingsFailed}/>
     )
   })
@@ -122,7 +122,7 @@ describe('CameraGimbalSettings Component', () => {
     it('should return the correct fields based on getDisplayFields() | mode = 0 (Modes.IDLE)', () => {
       expect(wrapper.instance().getNewFields()).toEqual(
         { mode: initialState.get('mode') }
-      ) 
+      )
     })
   })
 

@@ -41,7 +41,7 @@ export class CameraSettings extends Component {
 
   getSavedFields() {
     let newLocal = this.props.settings.get('settings')
-    
+
     if (newLocal.get('capturing') === undefined) {
       return {
         capturing: null,
@@ -75,7 +75,7 @@ export class CameraSettings extends Component {
       (zoom >= 0 && zoom <= 2)
 
     return (
-      this.props.settings.get('pending').size == 0 &&  
+      this.props.settings.get('pending').size == 0 &&
       !_.isEqual(newFields, savedFields) &&
       isValidSetting
     )
@@ -110,7 +110,7 @@ export class CameraSettings extends Component {
 
     this.setState(newLocal)
   }
-  
+
   render() {
     let display = this.getDisplayFields()
     let min_zoomSelected = display.zoom === 0 ? true:false
