@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
+import M from 'materialize-css'
 
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import AssignmentOperations from '../../operations/assignmentOperations'
 import ImageViewer from '../../components/imageViewer'
 import TagSighting from './tagSighting'
+import ImageTools from './imageTools'
 
 import { GROUND_SERVER_URL } from '../../constants/links'
 import { TWO_PASS_MODE } from '../../util/config'
@@ -14,9 +16,18 @@ import './tag.css'
 export class Tag extends Component {
   constructor(props){
     super(props)
+
+    this.state = {
+      brightness: 100,
+      contrast: 100,
+      saturation: 100
+    }
+
+    this.reset = this.reset.bind(this)
     this.onTag = this.onTag.bind(this)
     this.onNext = this.onNext.bind(this)
     this.onPrev = this.onPrev.bind(this)
+    this.getHandler = this.getHandler.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
   }
 
@@ -32,7 +43,28 @@ export class Tag extends Component {
     this.props.getPrevAssignment(this.props.assignment)
   }
 
+  getHandler(prop) {
+    return e => {
+      let propToUpdate = {}
+      // for some reason e.target.value is a string so have to cast
+      propToUpdate[prop] = Number(e.target.value)
+      this.setState(propToUpdate)
+    }
+  }
+
+  reset() {
+    this.setState({
+      brightness: 100,
+      contrast: 100,
+      saturation: 100
+    })
+  }
+
   componentDidMount() {
+    // required to render the sliders properly
+    let elems = document.querySelectorAll('input')
+    M.Range.init(elems, {})
+
     if (!this.props.assignment.hasIn(['assignment', 'id'])) {
       this.props.getAllAssignments(this.props.assignment.get('currentIndex'))
       this.props.getAllSightings()
@@ -76,11 +108,21 @@ export class Tag extends Component {
     const nextClass = 'next ' + btnClass + (assignment.get('loading') ? ' disabled' : '')
     return (
       <div className='tag'>
+        <ImageTools
+          getHandler={this.getHandler}
+          reset={this.reset}
+          brightness={this.state.brightness}
+          contrast={this.state.contrast}
+          saturation={this.state.saturation}
+        />
         <div className='tag-image card'>
           <ImageViewer
             imageUrl={imageUrl ? GROUND_SERVER_URL + imageUrl : undefined}
             taggable={true}
             onTag={this.onTag}
+            brightness={this.state.brightness}
+            contrast={this.state.contrast}
+            saturation={this.state.saturation}
           />
         </div>
         <div className='name'> {name} </div>

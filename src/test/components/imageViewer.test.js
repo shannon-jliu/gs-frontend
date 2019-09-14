@@ -1,25 +1,18 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import renderer from 'react-test-renderer'
-import Enzyme, {mount} from 'enzyme'
+import Enzyme, { mount } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import _ from 'lodash'
 
 import ImageViewer from '../../components/imageViewer.js'
-
 import DEFAULT_IMG from '../../img/cuair_default.png'
 
 Enzyme.configure({ adapter: new Adapter() })
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  ReactDOM.render(<ImageViewer/>, div)
-})
 
-var imageViewer = null
-var imgViewerInstance = null
+let imageViewer, imgViewerInstance
 
 beforeEach(() => {
-  imageViewer = mount(<ImageViewer />)
+  imageViewer = mount(<ImageViewer onTag={() => false}/>)
   imgViewerInstance = imageViewer.instance()
   imgViewerInstance.setState({
     img: {
@@ -29,6 +22,10 @@ beforeEach(() => {
     width: 1427,
     height: 906
   })
+})
+
+it('renders properly', () => {
+  expect(imageViewer).toBeDefined()
 })
 
 describe('componentDidMount', () => {
@@ -141,7 +138,7 @@ describe('onClick', () => {
   })
 
   it('turns tag on and sets the center of circle if taggable', () => {
-    imageViewer = mount(<ImageViewer taggable={true} />)
+    imageViewer = mount(<ImageViewer taggable={true} onTag={() => false} />)
     imgViewerInstance = imageViewer.instance()
     imgViewerInstance.setState({
       img: {
@@ -220,7 +217,7 @@ describe('onClick', () => {
   })
 
   it('does not turn tag on or set center of center if it is off the image', () => {
-    imageViewer = mount(<ImageViewer taggable={true} />)
+    imageViewer = mount(<ImageViewer taggable={true} onTag={() => false}/>)
     imgViewerInstance = imageViewer.instance()
     imgViewerInstance.setState({
       img: {
@@ -235,5 +232,51 @@ describe('onClick', () => {
     const stateBeforeClick = imgViewerInstance.state
     imgViewerInstance.onClick()
     expect(imgViewerInstance.state).toEqual(stateBeforeClick)
+  })
+})
+
+describe('rendering with image settings', () => {
+  beforeEach(() => {
+    let props = {
+      brightness: 200,
+      contrast: 120,
+      saturation: 150,
+      onTag: jest.fn()
+    }
+    imageViewer = mount(<ImageViewer {...props}/>)
+    imgViewerInstance = imageViewer.instance()
+    imgViewerInstance.setState({
+      img: {
+        width: 4912,
+        height: 3684
+      },
+      width: 1427,
+      height: 906
+    })
+  })
+
+  it('ignores the filter if all undefined', () => {
+    imageViewer.setProps({
+      brightness: undefined,
+      contrast: undefined,
+      saturation: undefined
+    })
+
+    expect(imageViewer.ref('viewer').style.filter).toBe('')
+  })
+
+  it('ignores the filter if at least one is undefined', () => {
+    imageViewer.setProps({
+      brightness: 100,
+      contrast: 100,
+      saturation: undefined
+    })
+
+    expect(imageViewer.ref('viewer').style.filter).toBe('')
+  })
+
+  it('properly renders the filter', () => {
+    const filterString = 'brightness(200%) contrast(120%) saturate(150%)'
+    expect(imageViewer.ref('viewer').style.filter).toBe(filterString)
   })
 })

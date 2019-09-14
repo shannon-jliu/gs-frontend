@@ -149,6 +149,41 @@ describe('Basic tests with ROI images', () => {
   })
 })
 
+describe('Image manipulation tests', () => {
+  let wrapper, instance
+  beforeEach(() => {
+    const props = {
+      assignment: mappedAssignment.set('loading', true).set('currentIndex', 1),
+      sightings: fromJS([sighting])
+    }
+    wrapper = shallow(<TagClass {...props} />)
+    instance = wrapper.instance()
+  })
+
+  it('renders the imagetools component', () => {
+    const sliders = wrapper.find('ImageTools')
+    expect(sliders).toHaveLength(1)
+  })
+
+  it('resets the image manipulation state correctly', () => {
+    instance.state = {
+      brightness: 101,
+      contrast: 50,
+      saturation: 123,
+    }
+    instance.reset()
+    expect(instance.state.brightness).toBe(100)
+    expect(instance.state.contrast).toBe(100)
+    expect(instance.state.saturation).toBe(100)
+  })
+
+  it('runs gethandler properly', () => {
+    const e = { target: { value: 120 } }
+    instance.getHandler('brightness')(e)
+    expect(instance.state.brightness).toBe(120)
+  })
+})
+
 describe('mapStateToProps', () => {
   const firstAssignment = fromJS({
     id: 1,

@@ -1,6 +1,7 @@
 import reducer from '../../reducers/cameraGimbalReducer.js'
 import * as matchers from 'jest-immutable-matchers'
-import {fromJS, Map} from 'immutable'
+import { fromJS, Map } from 'immutable'
+import Modes from '../../pages/settings/components/Modes.js'
 
 describe('cameraGimbalReducer', () => {
   // this enables us to use toEqualImmutable
@@ -10,7 +11,8 @@ describe('cameraGimbalReducer', () => {
 
   const initState = fromJS({
     settings: fromJS({
-      timestamp: -1
+      timestamp: -1,
+      mode: Modes.IDLE
     }),
     pending: Map()
   })
@@ -180,7 +182,8 @@ describe('cameraGimbalReducer', () => {
       ).toEqualImmutable(
         fromJS({
           settings:{
-            timestamp: -1
+            timestamp: -1,
+            mode: Modes.IDLE
           },
           pending: {
             'id': 1,
@@ -254,7 +257,8 @@ describe('cameraGimbalReducer', () => {
         reducer(
           fromJS({
             settings: {
-              timestamp: -1
+              timestamp: -1,
+              mode: Modes.IDLE
             },
             pending: settings
           }),

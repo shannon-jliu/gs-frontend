@@ -5,13 +5,13 @@ const TargetButtonRow = ({ type, offaxis, isSaved, saveable, save, deletable, de
   <div className='row'>
     {/*Save button */}
     <div className='button-container input-field col s6'>
-      <a onClick={save} className={(saveable ? '' : 'disabled ') + 'waves-effect waves-light btn'}>
+      <a onClick={save} className={(saveable ? '' : 'grey lighten-2 ') + 'waves-effect waves-light btn'}>
         {isSaved ? 'Update' : 'Save'}
       </a>
     </div>
     {/*Delete button */}
     <div className={type == 'emergent' || offaxis ? 'hidden' : 'button-container input-field col s5'}>
-      <a onClick={deleteFn} className={(deletable ? '' : 'disabled ') + 'waves-effect waves-light btn'}>
+      <a onClick={deleteFn} className={(deletable ? '' : 'grey lighten-2 ') + 'waves-effect waves-light btn'}>
         Delete
       </a>
     </div>

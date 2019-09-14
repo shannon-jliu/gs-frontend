@@ -28,7 +28,7 @@ describe('TargetGeotagFields', () => {
   })
 
   it('renders the values correctly', () => {
-    expect(wrapper.find('input').first().props().value).toEqual('-76.612752')
-    expect(wrapper.find('input').at(1).props().value).toEqual('42.448630')
+    expect(wrapper.find('input').first().props().value).toEqual('42.448630')
+    expect(wrapper.find('input').at(1).props().value).toEqual('-76.612752')
   })
 })
