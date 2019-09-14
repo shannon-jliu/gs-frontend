@@ -63,8 +63,7 @@ export class CameraGimbalSettings extends Component {
 
     return (
       newFields.mode != undefined &&
-      this.props.settings.get('pending').size == 0 &&
-      !_.isEqual(newFields, savedFields)
+      this.props.settings.get('pending').size == 0
     )
   }
 
