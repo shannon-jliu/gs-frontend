@@ -31,7 +31,7 @@ export class CameraGimbalSettings extends Component {
 
   componentDidUpdate(prevProps) {
     if (!_.isEqual(prevProps, this.props) && (this.props.settings.get('settings').get('mode') !== this.state.mode)) {
-      this.state.mode = this.props.settings.get('settings').get('mode')
+      this.setState({ mode: this.props.settings.get('settings').get('mode') })
     }
   }
 
@@ -44,7 +44,7 @@ export class CameraGimbalSettings extends Component {
       }
     } else {
       return {
-        mode: newLocal.get('mode'),
+        mode: newLocal.get('mode')
       }
     }
   }
@@ -90,7 +90,7 @@ export class CameraGimbalSettings extends Component {
         newLocal.mode = Modes.TRACKING
       }
     }
-    
+
     this.props.changeCameraGimbalMode(newLocal.mode)
     return newLocal
   }

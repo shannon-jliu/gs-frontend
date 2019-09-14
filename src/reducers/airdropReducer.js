@@ -1,4 +1,4 @@
-import {fromJS, Map} from 'immutable'
+import { fromJS, Map } from 'immutable'
 
 /*
  * Notes on state representation:
@@ -9,7 +9,14 @@ import {fromJS, Map} from 'immutable'
 
 const initialState = fromJS({
   settings: {
-    timestamp: -1
+    timestamp: -1,
+    isArmed: false,
+    commandDropNow: false,
+    gpsTargetLocation: {
+      latitude: 0,
+      longitude: 0
+    },
+    acceptableThresholdFt: 0
   },
   pending: {}
 })

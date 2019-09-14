@@ -9,7 +9,15 @@ import {fromJS, Map} from 'immutable'
 
 const initialState = fromJS({
   settings: fromJS({
-    timestamp: -1
+    timestamp: -1,
+    gps: {
+      latitude: 0,
+      longitude: 0
+    },
+    orientation: {
+      roll: 0,
+      pitch: 0
+    }
   }),
   pending: {}
 })

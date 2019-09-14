@@ -10,6 +10,8 @@ import _ from 'lodash'
 import { TargetAlphanumFields, TargetEmergentFields, TargetGeotagFields, TargetButtonRow } from './components'
 import MergeSightingPreview from './mergeSightingPreview.js'
 import TargetOperations from '../../operations/targetOperations'
+import SnackbarUtil from '../../util/snackbarUtil.js'
+import {NENO_COORDS, PAX_COORDS} from '../../constants/constants.js'
 
 export class MergeTarget extends Component {
   constructor(props) {
@@ -60,34 +62,72 @@ export class MergeTarget extends Component {
     this.setState(changedState)
   }
 
-  canDelete() {
+  canDelete(showReason) {
+    if (showReason && this.props.target.has('pending')) SnackbarUtil.render('Cannot delete target: target is currently saving')
     return !this.props.target.has('pending')
   }
 
-  canSave() {
+  canSave(showReason) {
     const s = this.state
     const t = this.props.target
 
     if (t.has('pending')) {
+      if (showReason) SnackbarUtil.render('Cannot save target: target is currently saving')
       return false
     }
 
     const allValid =
       (t.get('type') === 'alphanum' &&
-        s.shape.length > 0 &&
-        s.shapeColor.length > 0 &&
-        s.alpha.length > 0 &&
-        s.alphaColor.length > 0) ||
+        s.shape &&
+        s.shapeColor &&
+        s.alpha &&
+        s.alphaColor) ||
       (t.get('type') === 'emergent' &&
         s.description.length > 0)
 
-    const isGeotagValid = () =>
-      (s.latitude === '' && s.longitude === '') ||
-      (!_.isNaN(s.latitude) && !_.isNaN(s.longitude) &&
-        Math.abs(parseFloat(s.longitude)) <= 180 &&
-        Math.abs(parseFloat(s.latitude)) <= 90)
+    if (!allValid) {
+      if (showReason) {
+        if (t.get('type') === 'alphanum') {
+          if (!s.shape) {
+            SnackbarUtil.render('Cannot save target: shape field is not set')
+          } else if (!s.shapeColor) {
+            SnackbarUtil.render('Cannot save target: shape color field is not set')
+          } else if (!s.alpha) {
+            SnackbarUtil.render('Cannot save target: alpha field is empty')
+          } else if (!s.alphaColor) {
+            SnackbarUtil.render('Cannot save target: alpha color field is not set')
+          }
+        } else {
+          SnackbarUtil.render('Cannot save target: description is empty')
+        }
+      }
+      return false
+    }
 
-    const fieldsHaveChanged = () =>
+    //0.5 degrees of latitude is longitude is 25-35 miles -- should be used as a sanity check, not a guarantee within bounds
+    const isGeotagValid =
+      s.latitude === '' && s.longitude === '' ||
+      !_.isNaN(parseFloat(s.latitude)) && !_.isNaN(parseFloat(s.longitude)) &&
+        (Math.abs(parseFloat(s.latitude) - PAX_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - PAX_COORDS[1]) < 0.5 ||
+          Math.abs(parseFloat(s.latitude) - NENO_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - NENO_COORDS[1]) < 0.5)
+
+    if (!isGeotagValid) {
+      if (showReason) {
+        if (s.latitude === '' || s.longitude === '') {
+          SnackbarUtil.render('Cannot save target: only one lat/long field is set (both can be empty)')
+        } else if (_.isNaN(parseFloat(s.latitude))) {
+          SnackbarUtil.render('Cannot save target: latitude is not a number')
+        } else if (_.isNaN(parseFloat(s.longitude))) {
+          SnackbarUtil.render('Cannot save target: longitude is not a number')
+        } else {
+          SnackbarUtil.render('Cannot save target: geotag not near PAX (lat: ' + PAX_COORDS[0] +
+              ', long: ' + PAX_COORDS[1] + ') or Neno (lat: ' + NENO_COORDS[0] + ', long: ' + NENO_COORDS[1] + ')')
+        }
+      }
+      return false
+    }
+
+    const fieldsHaveChanged =
       (t.get('type') === 'alphanum' &&
         !_.isEqual(
           _.pick(s, [
@@ -115,15 +155,24 @@ export class MergeTarget extends Component {
             'thumbnailTSId'
           ])))
 
-    //don't need to check isNaN because isGeotagValid() must have already returned true
-    const geotagHasChanged = () =>
+    if (fieldsHaveChanged) return true
+
+    //don't need to check isNaN because isGeotagValid must have already be true
+    const geotagHasChanged =
       s.latitude !== '' && s.longitude !== '' && 
         (!t.hasIn(['geotag', 'gpsLocation', 'latitude']) ||
         !t.hasIn(['geotag', 'gpsLocation', 'longitude']) ||
         t.getIn(['geotag', 'gpsLocation', 'latitude']) != s.latitude ||
         t.getIn(['geotag', 'gpsLocation', 'longitude']) != s.longitude)
 
-    return allValid && isGeotagValid() && (fieldsHaveChanged() || geotagHasChanged())
+    if (geotagHasChanged) return true
+
+    if (showReason) {
+      if (t.get('type') === 'alphanum') SnackbarUtil.render('Cannot save target: no field/thumbnail/geotag changes to save')
+      else SnackbarUtil.render('Cannot save target: no description/thumbnail/geotag changes to save')
+    }
+
+    return false
   }
 
   getHandler(prop) {
@@ -139,7 +188,7 @@ export class MergeTarget extends Component {
   }
 
   save() {
-    if (this.canSave()) {
+    if (this.canSave(true)) {
       const s = this.state
       const t = this.props.target
 
@@ -170,7 +219,7 @@ export class MergeTarget extends Component {
   }
 
   delete() {
-    if (this.canDelete()) {
+    if (this.canDelete(true)) {
       if (this.props.target.has('id')) {
         this.props.deleteSavedTarget(this.props.target)
       } else {
@@ -205,7 +254,11 @@ export class MergeTarget extends Component {
   render() {
     const t = this.props.target
 
+    //both for whether ts can be dragged in and whether it has title
     const canHoldTs = t.get('type') === 'emergent' || t.get('offaxis') || !t.has('id')
+    const title = t.get('type') === 'emergent' ? 'Emergent' :
+      (t.get('offaxis') ? 'Off-axis' : 'Unsaved')
+
     return (
       <div
         ref='main'
@@ -215,6 +268,10 @@ export class MergeTarget extends Component {
         onDragOver={canHoldTs ? undefined : e => e.preventDefault()}
         onDrop={canHoldTs ? undefined : this.drop}
       >
+        <div className={'type' + (canHoldTs ? '' : ' hidden')}>
+          {title}
+          <div className='border'></div>
+        </div>
         <div className='facts'>
           <div className={t.get('type') === 'alphanum' ? 'row' : 'hidden'}> 
             <TargetAlphanumFields

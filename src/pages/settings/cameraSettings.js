@@ -34,8 +34,10 @@ export class CameraSettings extends Component {
       this.props.settings.get('settings').get('capturing') !== this.state.capturing &&
       this.props.settings.get('settings').get('zoom') !== this.state.zoom
     )) {
-      this.state.capturing = this.props.settings.get('settings').get('capturing')
-      this.state.zoom = this.props.settings.get('settings').get('zoom')
+      this.setState({
+        capturing: this.props.settings.get('settings').get('capturing'),
+        zoom: this.props.settings.get('settings').get('zoom')
+      })
     }
   }
 

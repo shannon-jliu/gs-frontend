@@ -88,6 +88,25 @@
   margin-bottom: 0.25rem;
 }
 
+.merge .type {
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+  text-align: center;
+  /* left/right and top/bottom are flipped because of the transform */
+  padding-top: 30px;
+  margin-left: -5px;
+  margin-right: 10px;
+  letter-spacing: 2px;
+  color: gray;
+}
+
+.merge .border {
+  height: 80%;
+  margin: auto;
+  border-right: 1px solid gray;
+  margin-right: 5px;
+}
+
 .merge .row {
   margin-top: 5px;
 }

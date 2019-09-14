@@ -10,7 +10,15 @@ describe('cameraGimbalReducer', () => {
 
   const initState = fromJS({
     settings: fromJS({
-      timestamp: -1
+      timestamp: -1,
+      gps: {
+        latitude: 0,
+        longitude: 0
+      },
+      orientation: {
+        roll: 0,
+        pitch: 0
+      }
     }),
     pending: Map()
   })
@@ -243,7 +251,15 @@ describe('cameraGimbalReducer', () => {
       ).toEqualImmutable(
         fromJS({
           settings:{
-            timestamp: -1
+            timestamp: -1,
+            gps: {
+              latitude: 0,
+              longitude: 0
+            },
+            orientation: {
+              roll: 0,
+              pitch: 0
+            }
           },
           pending: {
             'id': 1,
@@ -359,7 +375,15 @@ describe('cameraGimbalReducer', () => {
         reducer(
           fromJS({
             settings: {
-              timestamp: -1
+              timestamp: -1,
+              gps: {
+                latitude: 0,
+                longitude: 0
+              },
+              orientation: {
+                roll: 0,
+                pitch: 0
+              }
             },
             pending: settings
           }),

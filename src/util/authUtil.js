@@ -39,6 +39,8 @@ const AuthUtil = {
     })
   },
   storeToken: function(token) {
+    // clear previous storage as the token is overwritten
+    sessionStorage.clear()
     localStorage.setItem(AUTH_TOKEN_ID, token)
   },
   // determine if the user is already authenticated

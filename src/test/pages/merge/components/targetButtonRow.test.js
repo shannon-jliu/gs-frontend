@@ -46,13 +46,13 @@ describe('TargetButtonRow', () => {
       const wrapper = shallow(<TargetButtonRow {...props.toJS()} />)
 
       const saveButton = wrapper.find('a').first()
-      expect(saveButton.hasClass('disabled')).toBeFalsy()
+      expect(saveButton.hasClass('disabled')).toBe(false)
       expect(saveButton.text()).toEqual('Update')
 
-      expect(wrapper.find('div').at(2).hasClass('hidden')).toBeFalsy()
+      expect(wrapper.find('div').at(2).hasClass('hidden')).toBe(false)
 
       const deleteButton = wrapper.find('a').at(1)
-      expect(deleteButton.hasClass('disabled')).toBeFalsy()
+      expect(deleteButton.hasClass('grey')).toBe(false)
 
       saveButton.simulate('click')
       expect(save).toHaveBeenCalledTimes(1)
@@ -69,10 +69,10 @@ describe('TargetButtonRow', () => {
       const wrapper = shallow(<TargetButtonRow {...newProps.toJS()} />)
 
       const saveButton = wrapper.find('a').first()
-      expect(saveButton.hasClass('disabled')).toBeFalsy()
+      expect(saveButton.hasClass('grey')).toBe(false)
       expect(saveButton.text()).toEqual('Update')
 
-      expect(wrapper.find('div').at(2).hasClass('hidden')).toBeTruthy()
+      expect(wrapper.find('div').at(2).hasClass('hidden')).toBe(true)
     })
 
     it('is correct for offaxis', () => {
@@ -80,10 +80,10 @@ describe('TargetButtonRow', () => {
       const wrapper = shallow(<TargetButtonRow {...newProps.toJS()} />)
 
       const saveButton = wrapper.find('a').first()
-      expect(saveButton.hasClass('disabled')).toBeFalsy()
+      expect(saveButton.hasClass('grey')).toBe(false)
       expect(saveButton.text()).toEqual('Update')
 
-      expect(wrapper.find('div').at(2).hasClass('hidden')).toBeTruthy()
+      expect(wrapper.find('div').at(2).hasClass('hidden')).toBe(true)
     })
 
     it('is correct for not saveable', () => {
@@ -91,13 +91,13 @@ describe('TargetButtonRow', () => {
       const wrapper = shallow(<TargetButtonRow {...newProps.toJS()} />)
 
       const saveButton = wrapper.find('a').first()
-      expect(saveButton.hasClass('disabled')).toBeTruthy()
+      expect(saveButton.hasClass('grey')).toBe(true)
       expect(saveButton.text()).toEqual('Update')
 
-      expect(wrapper.find('div').at(2).hasClass('hidden')).toBeFalsy()
+      expect(wrapper.find('div').at(2).hasClass('hidden')).toBe(false)
 
       const deleteButton = wrapper.find('a').at(1)
-      expect(deleteButton.hasClass('disabled')).toBeFalsy()
+      expect(deleteButton.hasClass('grey')).toBe(false)
     })
 
     it('is correct for not deletable', () => {
@@ -105,13 +105,13 @@ describe('TargetButtonRow', () => {
       const wrapper = shallow(<TargetButtonRow {...newProps.toJS()} />)
 
       const saveButton = wrapper.find('a').first()
-      expect(saveButton.hasClass('disabled')).toBeFalsy()
+      expect(saveButton.hasClass('grey')).toBe(false)
       expect(saveButton.text()).toEqual('Update')
 
-      expect(wrapper.find('div').at(2).hasClass('hidden')).toBeFalsy()
+      expect(wrapper.find('div').at(2).hasClass('hidden')).toBe(false)
 
       const deleteButton = wrapper.find('a').at(1)
-      expect(deleteButton.hasClass('disabled')).toBeTruthy()
+      expect(deleteButton.hasClass('grey')).toBe(true)
     })
 
     it('is correct for false isSaved', () => {
@@ -119,13 +119,13 @@ describe('TargetButtonRow', () => {
       const wrapper = shallow(<TargetButtonRow {...newProps.toJS()} />)
 
       const saveButton = wrapper.find('a').first()
-      expect(saveButton.hasClass('disabled')).toBeFalsy()
+      expect(saveButton.hasClass('grey')).toBe(false)
       expect(saveButton.text()).toEqual('Save')
 
-      expect(wrapper.find('div').at(2).hasClass('hidden')).toBeFalsy()
+      expect(wrapper.find('div').at(2).hasClass('hidden')).toBe(false)
 
       const deleteButton = wrapper.find('a').at(1)
-      expect(deleteButton.hasClass('disabled')).toBeFalsy()
+      expect(deleteButton.hasClass('grey')).toBe(false)
     })
   })
 })

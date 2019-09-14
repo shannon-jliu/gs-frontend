@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import $ from 'jquery'
 import _ from 'lodash'
 
@@ -81,20 +82,20 @@ class ImageViewer extends Component {
   onWheel(event) {
     event.stopPropagation()
     event.preventDefault()
-    var s = this.state
-    var hmin = Math.min(s.height, s.width * s.img.height / s.img.width)
-    var maxScale = s.img.height / hmin
-    var newScale = Math.min(
+    const s = this.state
+    let hmin = Math.min(s.height, s.width * s.img.height / s.img.width)
+    let maxScale = s.img.height / hmin
+    let newScale = Math.min(
       Math.max(1, s.view.scale - 0.001 * event.deltaY),
       maxScale
     )
     // calculate the dx/dy of the scaling operation
-    var dx =
+    let dx =
       (s.mx - s.width / 2) * (maxScale / newScale - maxScale / s.view.scale)
-    var dy =
+    let dy =
       (s.my - s.height / 2) * (maxScale / newScale - maxScale / s.view.scale)
-    var maxTransX = s.img.width * (1 - 1 / newScale) / 2
-    var maxTransY = s.img.height * (1 - 1 / newScale) / 2
+    let maxTransX = s.img.width * (1 - 1 / newScale) / 2
+    let maxTransY = s.img.height * (1 - 1 / newScale) / 2
     this.setState({
       view: {
         x: Math.min(Math.max(-maxTransX, s.view.x + dx), maxTransX),
@@ -126,16 +127,16 @@ class ImageViewer extends Component {
   }
 
   onClick() {
-    var s = this.state
+    const s = this.state
     // if this is an imageviewer to tag on
     if (this.props.taggable) {
       // if currently selecting a tag
       if (s.tag.on) {
-        var n = this.pointOnImage(s.mx, s.my)
-        var dx = n.x - s.tag.cx
-        var dy = n.y - s.tag.cy
-        var r = Math.sqrt(dx * dx + dy * dy)
-        var rad = (Math.atan2(dy, dx) + 5 * Math.PI / 2) % (2 * Math.PI)
+        let n = this.pointOnImage(s.mx, s.my)
+        let dx = n.x - s.tag.cx
+        let dy = n.y - s.tag.cy
+        let r = Math.sqrt(dx * dx + dy * dy)
+        let rad = (Math.atan2(dy, dx) + 5 * Math.PI / 2) % (2 * Math.PI)
         //record tag
         this.props.onTag({
           pixelX: Math.round(s.tag.cx),
@@ -154,7 +155,7 @@ class ImageViewer extends Component {
           }
         })
       } else {
-        var c = this.pointOnImage(s.mx, s.my)
+        let c = this.pointOnImage(s.mx, s.my)
         if (c.x > 0 && c.y > 0) {
           // only try to tag if the center is on the image
           this.setState({
@@ -171,22 +172,22 @@ class ImageViewer extends Component {
 
   // keeps track of the mouse's location and saves it to state
   onMouseMove(event) {
-    var s = this.state
-    var x = s.view.x
-    var y = s.view.y
+    const s = this.state
+    let x = s.view.x
+    let y = s.view.y
     // event.clientX and Y is the mouse's position in the whole window
     // however we offset it from the location of the imageviewer itself, pos
-    var pos = $(this.refs.viewer).offset()
-    var newMX = event.clientX - pos.left
-    var newMY = event.clientY - pos.top
+    let pos = $(this.refs.viewer).offset()
+    let newMX = event.clientX - pos.left
+    let newMY = event.clientY - pos.top
 
     if (s.dragging) {
       // if the mouse is currently being pressed down, moving the mouse will also
       // shift the image
       // yeah i also wish this math was documented lmao
-      var maxTransX = s.img.width * (1 - 1 / s.view.scale) / 2
-      var maxTransY = s.img.height * (1 - 1 / s.view.scale) / 2
-      var maxScale =
+      let maxTransX = s.img.width * (1 - 1 / s.view.scale) / 2
+      let maxTransY = s.img.height * (1 - 1 / s.view.scale) / 2
+      let maxScale =
         s.img.height / Math.min(s.height, s.width * s.img.height / s.img.width)
       x = Math.min(
         Math.max(-maxTransX, x + (newMX - s.mx) * (maxScale / s.view.scale)),
@@ -210,19 +211,19 @@ class ImageViewer extends Component {
 
   // resizes the imageviewer div
   resize() {
-    var w = this.refs.viewer.offsetWidth
-    var h = this.refs.viewer.offsetHeight
+    let w = this.refs.viewer.offsetWidth
+    let h = this.refs.viewer.offsetHeight
     if (h < 300) {
       // keep attempting to resize it until the height is at least 300
       // could be that the image hasn't loaded yet
       setTimeout(this.resize, 10)
     } else {
-      var s = this.state
+      const s = this.state
       if (w !== s.width || h !== s.height) {
         // update the width/height in the state
         // maintain aspect ratio to the image
-        var hmin = Math.min(s.height, s.width * s.img.height / s.img.width)
-        var maxScale = s.img.height / hmin // maxScale for the image when zoomed
+        let hmin = Math.min(s.height, s.width * s.img.height / s.img.width)
+        let maxScale = s.img.height / hmin // maxScale for the image when zoomed
         this.setState({
           width: w,
           height: h,
@@ -239,7 +240,7 @@ class ImageViewer extends Component {
   // loads the given image into the state
   loadImage(imageUrl) {
     if (imageUrl === undefined) imageUrl = DEFAULT_IMG
-    var i = new Image()
+    let i = new Image()
     i.onload = () => {
       this.setState({
         loaded: true,
@@ -321,10 +322,14 @@ class ImageViewer extends Component {
   }
 
   render() {
-    var style = {
-      backgroundImage: 'url("' + this.props.imageUrl + '")',
-      filter:
-        'brightness(' +
+    const p = this.props
+    let style = {
+      backgroundImage: 'url("' + p.imageUrl + '")'
+    }
+    if (!_.isUndefined(p.brightness) &&
+      !_.isUndefined(p.contrast) &&
+      !_.isUndefined(p.saturation)) {
+      style.filter = 'brightness(' +
         this.props.brightness +
         '%) contrast(' +
         this.props.contrast +
@@ -332,18 +337,18 @@ class ImageViewer extends Component {
         this.props.saturation +
         '%)'
     }
-    var s = this.state
-    var tagger = null
+    const s = this.state
+    let tagger = null
     if (s.loaded) {
       // calculations for the image itself
       // calculate width/height of the image according to scale
       // do min here to because it fits the image to scale within the imageviewer
-      var wmin = Math.min(s.width, s.height * s.img.width / s.img.height)
-      var hmin = Math.min(s.height, s.width * s.img.height / s.img.width)
-      var w = wmin * s.view.scale
-      var h = hmin * s.view.scale
-      var x = (s.width - w) / 2 + s.view.x * w / s.img.width
-      var y = (s.height - h) / 2 + s.view.y * h / s.img.height
+      let wmin = Math.min(s.width, s.height * s.img.width / s.img.height)
+      let hmin = Math.min(s.height, s.width * s.img.height / s.img.width)
+      let w = wmin * s.view.scale
+      let h = hmin * s.view.scale
+      let x = (s.width - w) / 2 + s.view.x * w / s.img.width
+      let y = (s.height - h) / 2 + s.view.y * h / s.img.height
       _.assign(style, {
         backgroundSize: w + 'px ' + h + 'px',
         backgroundPosition: x + 'px ' + y + 'px'
@@ -351,12 +356,12 @@ class ImageViewer extends Component {
 
       if (s.tag.on) {
         // if tagging is enabled (draw the red circle)
-        var tx = x + s.tag.cx * (w / s.img.width)
-        var ty = y + s.tag.cy * (h / s.img.height)
-        var dx = tx - s.mx
-        var dy = ty - s.my
-        var tr = Math.sqrt(dx * dx + dy * dy)
-        var rad = (Math.atan2(dy, dx) + 3 * Math.PI / 2) % (2 * Math.PI)
+        let tx = x + s.tag.cx * (w / s.img.width)
+        let ty = y + s.tag.cy * (h / s.img.height)
+        let dx = tx - s.mx
+        let dy = ty - s.my
+        let tr = Math.sqrt(dx * dx + dy * dy)
+        let rad = (Math.atan2(dy, dx) + 3 * Math.PI / 2) % (2 * Math.PI)
         tagger = (
           <div
             className="tagger"
@@ -402,6 +407,15 @@ class ImageViewer extends Component {
 ImageViewer.defaultProps = {
   imageUrl: DEFAULT_IMG,
   taggable: false
+}
+
+ImageViewer.propTypes = {
+  imageUrl: PropTypes.string,
+  taggable: PropTypes.bool.isRequired,
+  onTag: PropTypes.func.isRequired,
+  brightness: PropTypes.number,
+  saturation: PropTypes.number,
+  contrast: PropTypes.number
 }
 
 export default ImageViewer
