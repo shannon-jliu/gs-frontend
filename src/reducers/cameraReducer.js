@@ -2,7 +2,7 @@ import {fromJS, Map} from 'immutable'
 
 /*
  * Notes on state representation:
- * - settings - (object) the current airdrop settings from the server. See API for reference.
+ * - settings - (object) the current camera settings from the server. See API for reference.
  *   - contains a timestamp of the latest camera settings, -1 if none
  * - pending - (object) object in 'queue' to send to the ground server. If success, this will reset to {}.
 */
