@@ -244,8 +244,7 @@ us to start the process of saving a Fireworks setting to the plane (updateSettin
 currently-saved Fireworks setting from the plane (getFireworksColor and getFireworksNumber) */
 const mapDispatchToProps = dispatch => ({
   updateSettingsStart: data => fireworksOperations.updateSettingsStart(dispatch)(fromJS(data)),
-  getFireworksColor: data => fireworksOperations.getColor(dispatch),
-  getFireworksNumber: data => fireworksOperations.getNumber(dispatch),
+  getFireworksSetting: data => fireworksOperations.getSetting(dispatch)
 })
 
 // This basically lets other files access this file/the Fireworks component in general

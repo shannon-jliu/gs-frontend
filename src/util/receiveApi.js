@@ -76,18 +76,20 @@ export const SettingsGetRequests = {
 
   getGimbalSettingsSetting: function(successCallback, failureCallback) {
     SettingsGetRequests.getSetting('/api/v1/settings/gimbal/recent', successCallback, failureCallback)
+  }
+}
+
+export const FireworksGetRequests = {
+  getSetting: function(route, successCallback, failureCallback) {
+    $.get(route)
+      .done(successCallback)
+      .fail(failureCallback)
   },
 
-  getGimbalSettingsSetting: function(successCallback, failureCallback) {
-    SettingsGetRequests.getSetting('/api/v1/settings/gimbal/recent', successCallback, failureCallback)
-  },
+  /* Finish implementing the Fireworks get request here. It should be almost identical to the get settings functions in the
+  const SettingsGetRequests above. The only difference is the route, which for the fireworks get requests should be
+  /api/v1/settings/fireworks/recent */
+  getFireworksSetting: function(successCallback, failureCallback) {
 
-  /* Implement Fireworks post requests here */
-  getFireworksSettingColor: function(successCallback, failureCallback) {
-    SettingsGetRequests.getSetting('/api/v1/settings/fireworks/recent', successCallback, failureCallback)
-  },
-
-  getFireworksSettingNumber: function(successCallback, failureCallback) {
-    SettingsGetRequests.getSetting('/api/v1/settings/fireworks/recent', successCallback, failureCallback)
   }
 }

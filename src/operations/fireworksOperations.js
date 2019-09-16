@@ -6,20 +6,12 @@ import { SettingsGetRequests } from '../util/receiveApi.js'
 import SnackbarUtil from '../util/snackbarUtil.js'
 
 const FireworksOperations = {
-  getColor: dispatch => {
+  getSetting: dispatch => {
     const successCallback = data => {
       dispatch(action.receiveSettings(fromJS(data)))
     }
 
-    SettingsGetRequests.getFireworksSettingColor(successCallback, () => {})
-  },
-
-  getNumber: dispatch => {
-    const successCallback = data => {
-      dispatch(action.receiveSettings(fromJS(data)))
-    }
-
-    SettingsGetRequests.getFireworksSettingNumber(successCallback, () => {})
+    SettingsGetRequests.getFireworksSetting(successCallback, () => {})
   },
 
   updateSettingsStart: dispatch => (

@@ -94,10 +94,14 @@ export const SettingsRequest = {
 
   updateGimbalSettingsSetting: function(settings, successCallback, failureCallback) {
     SettingsRequest.updateSetting('/api/v1/settings/gimbal', settings, successCallback, failureCallback)
-  },
+  }
+}
 
-  /* Implement Fireworks get request here */
+export const FireworksPostRequests = {
+  /* Finish implementing the Fireworks post request here. It should be very similar to the updateSetting function in the
+  const SettingsRequest above. The only difference is that instead of passing in route as a parameter, the
+  updateFireworksSetting function should have the route hard-coded in: /api/v1/settings/fireworks */
   updateFireworksSetting: function(settings, successCallback, failureCallback) {
-    SettingsRequest.updateSetting('/api/v1/settings/fireworks', settings, successCallback, failureCallback)
-  },
+    
+  }
 }
