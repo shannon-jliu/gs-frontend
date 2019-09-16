@@ -9,10 +9,10 @@ import airdropReducer from './airdropReducer.js'
 import cameraReducer from './cameraReducer.js'
 import cameraGimbalReducer from './cameraGimbalReducer.js'
 import gimbalSettingsReducer from './gimbalSettingsReducer.js'
-/* Import the Fireworks reducer */
-import fireworksReducer from './fireworksReducer.js'
+/* TODO: Import the Fireworks reducer */
 
-/* Add the Fireworks reducer to the combined reducer */
+
+/* TODO: Add the Fireworks reducer to the combined reducer */
 export default combineReducers({
   imageReducer,
   targetSightingReducer,
@@ -22,5 +22,5 @@ export default combineReducers({
   cameraReducer,
   cameraGimbalReducer,
   gimbalSettingsReducer,
-  fireworksReducer
+
 })

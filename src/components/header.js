@@ -7,7 +7,9 @@ import {
   MERGING_PAGE_ID,
   ADLC_PAGE_ID,
   SETTINGS_PAGE_ID,
-  FIREWORKS_PAGE_ID,
+  /* TODO: Add a FIREWORKS_PAGE_ID to the list. Make sure that there is a comma after it to let the frontend know that
+  there will be another page id after FIREWORKS_PAGE_ID. */
+
   LOGS_PAGE_ID
 } from '../constants/links.js'
 
@@ -17,9 +19,10 @@ const LINKS = Object.freeze({
   'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'admin': true},
   'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'admin': true},
   'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'admin': true},
-  /* Add Link for Fireworks page */
-  'Fireworks': {name: 'Fireworks', key: FIREWORKS_PAGE_ID, href: '/Fireworks', 'admin': true},
-  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'admin': true},
+  /* TODO: Add Link for Fireworks page. It shoulld be a very similar in format to the ones above. I would recommend setting
+  the 'href' field to be '/fireworks'. Again, dont forget the comma after the link. */
+
+  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'admin': true}
 })
 
 

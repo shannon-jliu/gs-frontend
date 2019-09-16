@@ -18,8 +18,8 @@ import Tag from './pages/tag/tag.js'
 import Settings from './pages/settings/settings.js'
 import Merge from './pages/merge/merge.js'
 import Logs from './pages/logs/logs.js'
-/* Import the main Fireworks js file */
-import Fireworks from './pages/fireworks/fireworks.js'
+/* TODO: Import the main Fireworks js file */
+
 
 import {GROUND_SERVER_URL} from './constants/links.js'
 
@@ -47,12 +47,10 @@ $.ajaxSetup({
   }
 })
 
-
-// TODO: Fix /Fireworks vs /fireworks issue, maybe search in commit history/diffs for /Fireworks and see where in code that is
-
 // PersistGate required to delay until persistence complete
 // see https://github.com/rt2zz/redux-persist#react-integration
-/* Add Route for the Fireworks page */
+
+/* TODO: Add Route for the Fireworks page */
 const GroundServerRouter = () =>
   (
     <Provider store={store}>
@@ -62,7 +60,7 @@ const GroundServerRouter = () =>
             <Route path="/login" render={() => <App main={<Login/>}/>}/>
             <Route path="/tag" render={() => <App main={<Tag/>}/>}/>
             <Route path="/settings" render={() => <App main={<Settings/>}/>}/>
-            <Route path="/fireworks" render={() => <App main={<Fireworks/>}/>}/>
+
             <Route path="/merge" render={() => <App main={<Merge/>}/>}/>
             <Route path="/logs" render={() => <App main={<Logs/>}/>}/>
             <Redirect from="*" to="/login"/>

@@ -86,7 +86,7 @@ export const FireworksGetRequests = {
       .fail(failureCallback)
   },
 
-  /* Finish implementing the Fireworks get request here. It should be almost identical to the get settings functions in the
+  /* TODO: Finish implementing the Fireworks get request here. It should be almost identical to the get settings functions in the
   const SettingsGetRequests above. The only difference is the route, which for the fireworks get requests should be
   /api/v1/settings/fireworks/recent */
   getFireworksSetting: function(successCallback, failureCallback) {
