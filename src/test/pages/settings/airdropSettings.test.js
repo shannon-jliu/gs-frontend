@@ -88,7 +88,7 @@ describe('AirdropSettings Component', () => {
   })
 
   describe('getSavedFields', () => {
-    it('should return capturing and zoom from the initial state', () => {
+    it('should return settings from the initial state', () => {
       const expected = {
         isArmed: false,
         commandDropNow: false,
