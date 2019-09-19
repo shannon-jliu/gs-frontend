@@ -4,3 +4,5 @@ node_js:
 before_install:
   - npm i
   - ./node_modules/.bin/eslint src/
+script:
+  - npm test --detectOpenHandles
