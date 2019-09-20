@@ -4,12 +4,15 @@
   left:0;
   right: 0;
   bottom: 0;
-  padding: 0;
-  text-align: right;
-  -webkit-user-select: none;
   display: flex;
-  flex-direction: row;
-  overflow: hidden;
+}
+
+.tag .detect {
+  margin-top: 85px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .tag .tools {
@@ -42,46 +45,54 @@
 }
 
 .tag .tag-image {
-  position: absolute;
-  top: 70px;
-  bottom: 30px;
-  left: 10px;
-  right: 25%;
-  width: auto;
-  height: auto;
+  flex: 1 1 auto;
+  margin: 10px;
+}
+
+.tag .name {
+  flex: 0 1 25px;
+  margin-left: 10px;
+}
+
+.tag .classify {
+  border-style: solid;
+  border-width: 0 0 0 1px;
+  border-color: gray;
 }
 
 .tag .sightings {
-  position: relative;
-  top: 70px;
-  left: 78.25%;
+  padding: 10px;
+  float: right;
   width: 350px;
   height: 85%;
   overflow-x: hidden;
   overflow-y: auto; /* want the imageViewer to stay still while the sightings div can scroll */
-  padding: 0 10px;
 }
 
 .tag .sighting {
   width: 100%;
-  margin: 10px 0;
+  margin-bottom: 10px;
   padding: 0 0 10px 0;
   text-align: center;
   overflow: visible;
   position: static;
 }
 
-.tag .hidden {
-  display: none;
+/* to center off-axis switch */
+.tag .switch-outer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 45px;
 }
 
-.tag .name {
-  position: absolute;
-  bottom: 0px;
-  width: auto;
-  left: 10px;
-  display: block;
-  height: 25px;
+/* for alpha/description input, margins already added by .row */
+.tag .sighting .row .input-field {
+  margin: 0;
+}
+
+.tag .hidden {
+  display: none;
 }
 
 .tag .count {

@@ -8,7 +8,7 @@ const Selector = ({ value, onChange, className, title, options }) => {
       {options[k]}
     </option>
   ))
-  const fullClassName = (_.isUndefined(className) ? '' : className + ' ') + 'input-field'
+  const fullClassName = (_.isUndefined(className) ? '' : className)
   const finalValue = value == undefined ? '' : value
   return (
     <div className={fullClassName}>
