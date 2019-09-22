@@ -27,7 +27,7 @@ describe('login', () => {
     })
   })
 
-  it('should return true and store the token if it succeeds with 200', async () => {
+  it('should return true and store the token if it succeeds with 200', async (done) => {
     const response = {
       status: 200,
       responseText: JSON.stringify({token: 'ecksdee'})
@@ -38,9 +38,10 @@ describe('login', () => {
     await AuthUtil.login('test', 'password', dummyCallback)
     expect(localStorage.getItem(AUTH_TOKEN_ID)).toEqual('ecksdee')
     expect(retVal).toEqual(true)
+    done()
   })
 
-  it('should return false and populate responseText if it fails with non 200', async () => {
+  it('should return false and populate responseText if it fails with non 200', async (done) => {
     const response = {
       status: 400,
       responseText: 'Failed'
@@ -51,6 +52,7 @@ describe('login', () => {
     await AuthUtil.login('test', 'password', dummyCallback)
     expect(localStorage.getItem(AUTH_TOKEN_ID)).toBeNull()
     expect(retVal).toEqual(false)
+    done()
   })
 })
 

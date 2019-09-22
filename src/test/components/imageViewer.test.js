@@ -56,7 +56,7 @@ describe('onMouseMove', () => {
     expect(imgViewerInstance.state.my).toEqual(100)
   })
 
-  it('should drag the image if in dragging mode', async () => {
+  it('should drag the image if in dragging mode', () => {
     const event = {
       clientX: 100,
       clientY: 100

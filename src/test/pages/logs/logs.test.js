@@ -31,7 +31,7 @@ describe('populateLogs', () => {
 })
 
 describe('listen', () => {
-  it('will listen for new logs', async () => {
+  it('will listen for new logs', () => {
     const component = renderer.create(
       <Logs />,
     )
@@ -41,7 +41,7 @@ describe('listen', () => {
     expect(logs.state.elided).toEqual([true])
   })
 
-  it('will align elided array', async () => {
+  it('will align elided array', () => {
     const component = renderer.create(
       <Logs />,
     )
