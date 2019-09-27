@@ -12,7 +12,6 @@ describe('Base tests', () => {
   beforeEach(() => {
     props = {
       description: 'test',
-      confidence: 'HIGH',
       getHandler: jest.fn((x) => () => 'getHandler' + x),
     }
     wrapper = shallow(<EmergentFields {...props} />)
@@ -22,9 +21,8 @@ describe('Base tests', () => {
     expect(wrapper).toBeDefined()
   })
 
-  it('renders all the inputs correctly', () => {
+  it('renders all the selectors correctly', () => {
     expect(wrapper.find('input')).toHaveLength(1)
-    expect(wrapper.find('ConfSelect')).toHaveLength(1)
   })
 
   it('renders the value correctly', () => {

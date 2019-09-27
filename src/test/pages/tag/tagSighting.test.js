@@ -77,7 +77,7 @@ describe('Base tests with no pending field', () => {
   it('renders only alphanum when alphanum selected', () => {
     const typeSelect = wrapper.find('TypeSelect').first()
     typeSelect.simulate('change', { target: { value: 'alphanum'} })
-    expect(wrapper.find('div').at(2).hasClass('hidden')).toBe(false)
+    expect(wrapper.find('div').at(2).hasClass('row')).toBe(true)
     expect(wrapper.find('div').at(3).hasClass('hidden')).toBe(true)
   })
 
@@ -85,7 +85,7 @@ describe('Base tests with no pending field', () => {
     const typeSelect = wrapper.find('TypeSelect').first()
     typeSelect.simulate('change', { target: { value: 'emergent'} })
     expect(wrapper.find('div').at(2).hasClass('hidden')).toBe(true)
-    expect(wrapper.find('div').at(3).hasClass('hidden')).toBe(false)
+    expect(wrapper.find('div').at(3).hasClass('row')).toBe(true)
   })
 
   it('renders conf when a type is selected', () => {
@@ -104,14 +104,14 @@ describe('Base tests with no pending field', () => {
   it('renders button when a type is selected', () => {
     // set no type, so should be hidden
     instance.setState({type: ''})
-    expect(wrapper.find('div').at(4).hasClass('hidden')).toBe(true)
+    expect(wrapper.find('div').at(5).hasClass('hidden')).toBe(true)
 
     const typeSelect = wrapper.find('TypeSelect').first()
     typeSelect.simulate('change', { target: { value: 'alphanum'} })
-    expect(wrapper.find('div').at(4).hasClass('row')).toBe(true)
+    expect(wrapper.find('div').at(5).hasClass('row')).toBe(true)
 
     typeSelect.simulate('change', { target: { value: 'emergent'} })
-    expect(wrapper.find('div').at(4).hasClass('row')).toBe(true)
+    expect(wrapper.find('div').at(5).hasClass('row')).toBe(true)
   })
 
   describe('canSave', () => {

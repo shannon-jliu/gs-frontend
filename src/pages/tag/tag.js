@@ -11,7 +11,6 @@ import ImageTools from './imageTools'
 
 import { GROUND_SERVER_URL } from '../../constants/links'
 import { TWO_PASS_MODE } from '../../util/config'
-
 import './tag.css'
 
 export class Tag extends Component {
@@ -72,10 +71,6 @@ export class Tag extends Component {
     }
   }
 
-  componentDidUpdate() {
-    M.updateTextFields()
-  }
-
   renderSighting(s, isTracking) {
     const imageUrl = this.props.assignment.getIn(['assignment', 'image', 'imageUrl'])
     // TODO once gimbal settings is set in stone do this
@@ -120,24 +115,17 @@ export class Tag extends Component {
           contrast={this.state.contrast}
           saturation={this.state.saturation}
         />
-        <div className='detect'>
-          <div className='tag-image card'>
-            <ImageViewer
-              imageUrl={imageUrl ? GROUND_SERVER_URL + imageUrl : undefined}
-              taggable={true}
-              brightness={this.state.brightness}
-              contrast={this.state.contrast}
-              saturation={this.state.saturation}
-              onTag={this.onTag}
-            />
-          </div>
-          <div className='name'><span> {name} </span></div>
+        <div className='tag-image card'>
+          <ImageViewer
+            imageUrl={imageUrl ? GROUND_SERVER_URL + imageUrl : undefined}
+            taggable={true}
+            onTag={this.onTag}
+            brightness={this.state.brightness}
+            contrast={this.state.contrast}
+            saturation={this.state.saturation}
+          />
         </div>
-        <div className='classify'>
-          <div className='sightings'>
-            {mdlcSightings.map(s => this.renderSighting(s, isTracking))}
-          </div>
-        </div>
+        <div className='name'> {name} </div>
         <div className='count'> {count} </div>
         <button className={backClass} onClick={this.onPrev}>
           <i className='material-icons'>arrow_back</i>
@@ -145,6 +133,9 @@ export class Tag extends Component {
         <button className={nextClass} onClick={this.onNext}>
           <i className='material-icons'>arrow_forward</i>
         </button>
+        <div className='sightings'>
+          {mdlcSightings.map(s => this.renderSighting(s, isTracking))}
+        </div>
       </div>
     )
   }

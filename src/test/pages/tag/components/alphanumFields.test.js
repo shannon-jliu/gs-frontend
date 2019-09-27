@@ -15,7 +15,6 @@ describe('Base tests', () => {
       shapeColor: 'black',
       alpha: 'A',
       alphaColor: 'white',
-      confidence: 'HIGH',
       isOffAxis: true,
       cameraTilt: true,
       handleKeyPress: jest.fn(() => 'handleKeyPress'),
@@ -31,15 +30,12 @@ describe('Base tests', () => {
   it('renders all the selectors correctly', () => {
     expect(wrapper.find('ShapeSelect')).toHaveLength(1)
     expect(wrapper.find('ColorSelect')).toHaveLength(2)
-    expect(wrapper.find('ConfSelect')).toHaveLength(1)
     expect(wrapper.find('input')).toHaveLength(2)
   })
 
   it('off-axis is checked by default', () => {
     const offAxis = wrapper.find('input').at(1)
     expect(offAxis.props().checked).toBe(true)
-    expect(wrapper.find('ConfSelect').hasClass('s6')).toBe(true)
-    expect(wrapper.find('.switch-outer').hasClass('hidden')).toBe(false)
   })
 })
 
@@ -51,7 +47,6 @@ describe('disabled offaxis by default', () => {
       shapeColor: 'black',
       alpha: 'A',
       alphaColor: 'white',
-      confidence: 'HIGH',
       isOffAxis: false,
       cameraTilt: true,
       getHandler: jest.fn((x) => () => 'getHandler' + x),
@@ -66,8 +61,6 @@ describe('disabled offaxis by default', () => {
   it('off-axis is checked by default', () => {
     const offAxis = wrapper.find('input').at(1)
     expect(offAxis.props().checked).toBe(false)
-    expect(wrapper.find('ConfSelect').hasClass('s6')).toBe(true)
-    expect(wrapper.find('.switch-outer').hasClass('hidden')).toBe(false)
   })
 })
 
@@ -79,7 +72,6 @@ describe('No camera tilt', () => {
       shapeColor: 'black',
       alpha: 'A',
       alphaColor: 'white',
-      confidence: 'HIGH',
       isOffAxis: false,
       cameraTilt: false,
       handleKeyPress: jest.fn(() => 'handleKeyPress'),
@@ -93,8 +85,7 @@ describe('No camera tilt', () => {
   })
 
   it('renders all the selectors correctly and not the off-axis switch', () => {
-    const offAxisSwitch = wrapper.find('switch-outer')
-    expect(wrapper.find('ConfSelect').hasClass('s12')).toBe(true)
-    expect(wrapper.find('.switch-outer').hasClass('hidden')).toBe(true)
+    const offAxisSwitch = wrapper.find('div').at(4)
+    expect(offAxisSwitch.hasClass('hidden')).toBe(true)
   })
 })
