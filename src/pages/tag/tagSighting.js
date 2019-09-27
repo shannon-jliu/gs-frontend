@@ -232,7 +232,7 @@ export class TagSighting extends Component {
           />
         </div>
 
-        <div className={this.state.type == 'alphanum' ? 'row' : 'hidden'}>
+        <div className={this.state.type == 'alphanum' ? '' : 'hidden'}>
           <AlphanumFields
             shape={this.state.shape}
             shapeColor={this.state.shapeColor}
@@ -240,23 +240,16 @@ export class TagSighting extends Component {
             alphaColor={this.state.alphaColor}
             cameraTilt={this.props.cameraTilt}
             isOffAxis={this.state.offaxis}
+            confidence={this.state.mdlcClassConf}
             getHandler={this.getHandler}
           />
         </div>
 
-        <div className={this.state.type == 'emergent' ? 'row' : 'hidden'}>
+        <div className={this.state.type == 'emergent' ? '' : 'hidden'}>
           <EmergentFields
             description={this.state.description}
+            confidence={this.state.mdlcClassConf}
             getHandler={this.getHandler}
-          />
-        </div>
-
-        <div className={['alphanum', 'emergent'].includes(this.state.type) ? 'row' : 'hidden'}>
-          <ConfSelect
-            className='obj col s12'
-            onChange={this.getHandler('mdlcClassConf')}
-            title='Confidence'
-            value={this.state.mdlcClassConf}
           />
         </div>
 

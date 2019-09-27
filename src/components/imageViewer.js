@@ -85,6 +85,9 @@ class ImageViewer extends Component {
     const s = this.state
     let hmin = Math.min(s.height, s.width * s.img.height / s.img.width)
     let maxScale = s.img.height / hmin
+    if (maxScale < 1) {
+      return
+    }
     let newScale = Math.min(
       Math.max(1, s.view.scale - 0.001 * event.deltaY),
       maxScale
