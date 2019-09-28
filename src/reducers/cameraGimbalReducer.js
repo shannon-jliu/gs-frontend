@@ -33,7 +33,7 @@ const cameraGimbalReducer = (state = initialState, action) => {
       default:
         newMode = Modes.UNDEFINED
       }
-      
+
       action.settings = action.settings.set('mode', newMode)
     }
   }

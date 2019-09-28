@@ -10,7 +10,7 @@ const AirdropOperations = {
     const successCallback = data => {
       dispatch(action.receiveSettings(fromJS(data)))
     }
-    
+
     SettingsGetRequests.getAirdropSetting(successCallback, () => {})
   },
 

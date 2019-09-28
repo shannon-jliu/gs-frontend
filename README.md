@@ -2,15 +2,15 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [ground-server-site](#ground-server-site)
+- [gs-frontend](#gs-frontend)
   - [Installation](#installation)
-  - [Development guide](#development-guide)
+  - [Development](#development)
   - [Running](#running)
   - [Testing](#testing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# ground-server-site
+# gs-frontend
 
 Welcome to the fully upgraded, WIP `ground-server` frontend. We are now using the latest version of ReactJS and Redux instead of NuclearJS.
 
@@ -18,10 +18,11 @@ Welcome to the fully upgraded, WIP `ground-server` frontend. We are now using th
 
 1. Clone the repo
 2. Run `npm i` to install all the node modules. `gulp` to build the files is coming soon :( More to come!
-3. `pip install pre-commit` and then run `pre-commit install` to run `pre-commit` hooks to ensure your commits are nice and cool 8)
-4. Run `npm run start` and navigate to `localhost:3000` to see if it works!
+3. Run `pip install pre-commit`
+4. Run `pre-commit install` to install `pre-commit` hooks to ensure your commits are nice and cool 8)
+5. Run `npm run start` and navigate to `localhost:3000` to see if it works!
 
-## Development guide
+## Development
 
 This repo was created with `create-react-app`. When creating a new branch, please use the format of `<your-username>/<informative-branch-name>`. Do not commit to master (you shouldn't be able to anyway) and only squash PRs (you also shouldn't be able to do anything else either).
 

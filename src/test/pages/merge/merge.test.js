@@ -415,7 +415,7 @@ describe('dragging and dropping', () => {
     itRendersNormally(wrapper)
     expect(updateTargetSighting).toHaveBeenCalledTimes(0)
   })
-  
+
   it('drops correctly from sidebar', () => {
     const updateTS = jest.fn((sighting, attr) => {
       wrapper.setProps(props.set('sightings', wrapper.instance().props.sightings.map(ts => {
@@ -456,7 +456,7 @@ describe('dragging and dropping', () => {
 
     expectCorrect(sighting1.set('target', tgt1))
   })
-  
+
   it('drops correctly from same target', () => {
     wrapper = shallow(<Merge {...newProps.toJSON()} />)
     wrapper.instance().onDragStart(sighting2)
@@ -467,7 +467,7 @@ describe('dragging and dropping', () => {
     itRendersNormally(wrapper)
     expect(updateTargetSighting).toHaveBeenCalledTimes(0)
   })
-  
+
   it('drops correctly from other target', () => {
     const updateTS = jest.fn((sighting, attr) => {
       wrapper.setProps(props.set('sightings', wrapper.instance().props.sightings.map(ts => {
@@ -513,7 +513,7 @@ describe('dragging and dropping', () => {
 
     expectCorrect(sighting2.set('target', tgt2))
   })
-  
+
   it('fails drop correctly', () => {
     const updateTS = jest.fn((sighting, attr) => {
       wrapper.setProps(props.set('sightings', wrapper.instance().props.sightings.map(ts => {
@@ -529,7 +529,7 @@ describe('dragging and dropping', () => {
 
     itRendersNormally(wrapper)
   })
-  
+
   it('fails release correctly', () => {
     const updateTS = jest.fn((sighting, attr) => {
       wrapper.setProps(props.set('sightings', wrapper.instance().props.sightings.map(ts => {

@@ -36,12 +36,12 @@ export class GimbalSettings extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.settings.get('settings').get('gps') !== undefined && 
+    if (prevProps.settings.get('settings').get('gps') !== undefined &&
       prevProps.settings.get('settings').get('orientation') !== undefined) {
       if (!_.isEqual(prevProps, this.props) && (
-        this.props.settings.get('settings').get('gps').get('latitude') !== this.state.gps.latitude && 
-          this.props.settings.get('settings').get('gps').get('longitude') !== this.state.gps.longitude && 
-          this.props.settings.get('settings').get('orientation').get('roll') !== this.state.orientation.roll && 
+        this.props.settings.get('settings').get('gps').get('latitude') !== this.state.gps.latitude &&
+          this.props.settings.get('settings').get('gps').get('longitude') !== this.state.gps.longitude &&
+          this.props.settings.get('settings').get('orientation').get('roll') !== this.state.orientation.roll &&
           this.props.settings.get('settings').get('orientation').get('pitch') !== this.state.orientation.pitch
       )) {
         this.setState({
@@ -60,8 +60,8 @@ export class GimbalSettings extends Component {
 
   getSavedFields() {
     let newLocal = this.props.settings.get('settings')
-    
-    if (newLocal.get('gps') === undefined || 
+
+    if (newLocal.get('gps') === undefined ||
         newLocal.get('orientation') === undefined) {
       return {
         gps: { latitude: null, longitude: null },
@@ -69,9 +69,9 @@ export class GimbalSettings extends Component {
       }
     } else {
       let latitude = newLocal.get('gps').get('latitude') == null ? 0 : newLocal.get('gps').get('latitude')
-      let longitude = newLocal.get('gps').get('longitude') == null ? 0 : newLocal.get('gps').get('longitude') 
+      let longitude = newLocal.get('gps').get('longitude') == null ? 0 : newLocal.get('gps').get('longitude')
       let roll = newLocal.get('orientation').get('roll') == null ? 0 : newLocal.get('orientation').get('roll')
-      let pitch = newLocal.get('orientation').get('pitch') == null ? 0 : newLocal.get('orientation').get('pitch') 
+      let pitch = newLocal.get('orientation').get('pitch') == null ? 0 : newLocal.get('orientation').get('pitch')
       return {
         gps: { latitude: latitude, longitude: longitude },
         orientation: { roll: roll, pitch: pitch }
@@ -91,7 +91,7 @@ export class GimbalSettings extends Component {
   canSave() {
     let newFields = this.getNewFields()
     let savedFields = this.getSavedFields()
-    
+
     let isValidInput = true
     if (this.props.cameraGimbalMode === Modes.FIXED) {
       let lat = newFields.gps.latitude
@@ -114,7 +114,7 @@ export class GimbalSettings extends Component {
         (roll >= 0 && roll <= 360) &&
         (pitch >= 0 && pitch <= 360)
     }
-    
+
     return (
       this.props.cameraGimbalMode != Modes.UNDEFINED &&
       this.props.settings.get('pending').size == 0 &&
@@ -160,7 +160,7 @@ export class GimbalSettings extends Component {
     } else if (e.target.id === 'Pitch') {
       newLocal.orientation.pitch = val
     }
-    
+
     this.setState(newLocal)
   }
 

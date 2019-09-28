@@ -37,7 +37,7 @@ describe('AirdropSettings Component', () => {
     const overMap = fromJS({ settings: settings, pending: Map() })
 
     store = mockStore(overMap)
-    wrapper = mount(<AirdropSettings settings={overMap} 
+    wrapper = mount(<AirdropSettings settings={overMap}
       store={store} updateSettingsStart={airdropOperations.updateSettingsStart}/>
     )
   })
@@ -165,7 +165,7 @@ describe('AirdropSettings Component', () => {
     it('should return true/should be able to save the settings when the new fields and saved fields are different', () => {
       initialState = initialState.set('acceptableThresholdFt', 1)
       const overMap = fromJS({ settings: initialState, pending: Map() })
-        
+
       store = mockStore(overMap)
       wrapper = mount(<AirdropSettings settings={overMap} store={store}/>)
 

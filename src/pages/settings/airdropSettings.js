@@ -170,7 +170,7 @@ export class AirdropSettings extends Component {
     newLocal.isArmed = this.isArmedInput.checked
     this.setState(newLocal)
   }
-  
+
   render() {
     let display = this.getDisplayFields()
 

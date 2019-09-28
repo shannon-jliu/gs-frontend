@@ -406,7 +406,7 @@ describe('MergeTarget', () => {
         wrapper.instance().getHandler('longitude')({target: {value: '42.5'}})
 
         expect(wrapper.instance().canSave(true)).toEqual(false)
-        expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: geotag not near PAX (lat: 38.145, long: ' + 
+        expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: geotag not near PAX (lat: 38.145, long: ' +
           '-76.43) or Neno (lat: 42.448, long: -76.61)')
         expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
       })
