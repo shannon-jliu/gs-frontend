@@ -9,6 +9,7 @@ import airdropReducer from './airdropReducer.js'
 import cameraReducer from './cameraReducer.js'
 import cameraGimbalReducer from './cameraGimbalReducer.js'
 import gimbalSettingsReducer from './gimbalSettingsReducer.js'
+import fireworksReducer from './fireworksReducer.js'
 /* TODO: Import the Fireworks reducer */
 
 
@@ -22,5 +23,6 @@ export default combineReducers({
   cameraReducer,
   cameraGimbalReducer,
   gimbalSettingsReducer,
+  fireworksReducer,
 
 })

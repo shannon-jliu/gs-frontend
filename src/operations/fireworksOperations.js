@@ -11,11 +11,11 @@ const FireworksOperations = {
     function below is successfully called. (This just means that it ran to completion without any errors.) For reference,
     check out cameraGimbalOperations.js */
     const successCallback = data => {
-      
+      dispatch(action.receiveFirewordSettings(fromJS(data)))
     }
 
     // This requests the current Fireworks setting from the plane
-    SettingsGetRequests.getFireworksSetting(successCallback, () => {})
+    SettingsGetRequests.getFireworksSetting(successCallback, () => { })
   },
 
   updateSettingsStart: dispatch => (
@@ -24,14 +24,16 @@ const FireworksOperations = {
 
       /* TODO: Finish this "success callback" function. For reference check out cameraGimbalOperations.js */
       const successCallback = data => {
-
+        SnackbarUtil.render('Successfully updated firework setting')
+        dispatch(action.receiveAndUpdateFireworkSettings(fromJS(data)))
       }
 
       /* TODO: Finish this "failure callback", a function that will be called when the SettingsGetRequest.updateFireworksSetting
       function below is called unsuccessfully. (This just means that it did not run to completion because it caused an error
       somewhere.) For reference, check out cameraGimbalOperations.js */
       const failureCallback = () => {
-
+        SnackbarUtil.render('Failed to update firework setting')
+        dispatch(action.updateFireworkSettingsFailed(fromJS(setting)))
       }
 
       // This starts the process of updating the Fireworks setting on the plane

@@ -1,4 +1,4 @@
-import {fromJS, Map} from 'immutable'
+import { fromJS, Map } from 'immutable'
 
 /*
  * Notes on state representation:
@@ -20,28 +20,28 @@ const fireworksReducer = (state = initialState, action) => {
   (the ones handled by the cases in the switch statement) will be a bit different ("CAMERA" => "FIREWORKS"). 
   Other than that, no other changes should be necessary. */
   switch (action.type) {
-  case 'UPDATE_FIREWORKS_SETTINGS_SUCCESS':
-    // want to set pending to empty AND update fireworks settings
-    state = state.set('pending', Map())
-    var settings = action.settings
-    if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
-      return state.set('settings', settings)
-    } else {
+    case 'UPDATE_FIREWORKS_SETTINGS_SUCCESS':
+      // want to set pending to empty AND update fireworks settings
+      state = state.set('pending', Map())
+      var settings = action.settings
+      if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
+        return state.set('settings', settings)
+      } else {
+        return state
+      }
+    case 'RECEIVE_FIREWORKS_SETTINGS':
+      settings = action.settings
+      if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
+        return state.set('settings', settings)
+      } else {
+        return state
+      }
+    case 'UPDATE_FIREWORKS_SETTINGS_STARTED':
+      return state.set('pending', action.settings)
+    case 'UPDATE_FIREWORKS_SETTINGS_FAILED':
+      return state.set('pending', Map())
+    default:
       return state
-    }
-  case 'RECEIVE_FIREWORKS_SETTINGS':
-    settings = action.settings
-    if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
-      return state.set('settings', settings)
-    } else {
-      return state
-    }
-  case 'UPDATE_FIREWORKS_SETTINGS_STARTED':
-    return state.set('pending', action.settings)
-  case 'UPDATE_FIREWORKS_SETTINGS_FAILED':
-    return state.set('pending', Map())
-  default:
-    return state
   }
 }
 

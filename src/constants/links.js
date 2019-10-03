@@ -4,6 +4,7 @@ export const TAGGING_PAGE_ID = 'TAGGING'
 export const MERGING_PAGE_ID = 'MERGING'
 export const ADLC_PAGE_ID = 'ADLC'
 export const SETTINGS_PAGE_ID = 'SETTINGS'
+export const FIREWORKS_PAGE_ID = 'FIREWORKS'
 /* TODO: Add export of FIREWORKS_PAGE_ID. The format should be very similar to the exports above. I would recommend setting the id to
 'FIREWORKS'. */
 

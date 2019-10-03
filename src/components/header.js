@@ -7,6 +7,7 @@ import {
   MERGING_PAGE_ID,
   ADLC_PAGE_ID,
   SETTINGS_PAGE_ID,
+  FIREWORDS_PAGE_ID,
   /* TODO: Add a FIREWORKS_PAGE_ID to the list. Make sure that there is a comma after it to let the frontend know that
   there will be another page id after FIREWORKS_PAGE_ID. */
 
@@ -14,15 +15,16 @@ import {
 } from '../constants/links.js'
 
 const LINKS = Object.freeze({
-  'Login': {name: 'Login', key: LOGIN_PAGE_ID, href: '/login', 'admin': false},
-  'Tag': {name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag', 'admin': false},
-  'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'admin': true},
-  'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'admin': true},
-  'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'admin': true},
+  'Login': { name: 'Login', key: LOGIN_PAGE_ID, href: '/login', 'admin': false },
+  'Tag': { name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag', 'admin': false },
+  'Merging': { name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'admin': true },
+  'ADLC': { name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'admin': true },
+  'Settings': { name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'admin': true },
+  'Fireworks': { name: 'Fireworks', key: FIREWORDS_PAGE_ID, href: '/firewords', 'admin': true },
   /* TODO: Add Link for Fireworks page. It shoulld be a very similar in format to the ones above. I would recommend setting
   the 'href' field to be '/fireworks'. Again, dont forget the comma after the link. */
 
-  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'admin': true}
+  'Logs': { name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'admin': true }
 })
 
 
@@ -40,8 +42,8 @@ class Header extends Component {
       <div>
         <nav>
           <div className="red nav-wrapper">
-            <div className="brand-logo" style={{marginLeft:10}}>
-              <a href="#"><img src={require('../img/cuair_logo.png')}/></a>
+            <div className="brand-logo" style={{ marginLeft: 10 }}>
+              <a href="#"><img src={require('../img/cuair_logo.png')} /></a>
             </div>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
               {

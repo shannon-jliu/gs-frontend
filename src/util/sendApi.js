@@ -3,32 +3,32 @@ import _ from 'lodash'
 // non-GET requests here
 
 export const TargetSightingRequests = {
-  deleteTargetSighting: function(isAlphanum, id, successCallback, failureCallback) {
-    $.ajax('/api/v1/' + (isAlphanum ? 'alphanum' : 'emergent') + '_target_sighting/' + id, {method: 'DELETE'})
+  deleteTargetSighting: function (isAlphanum, id, successCallback, failureCallback) {
+    $.ajax('/api/v1/' + (isAlphanum ? 'alphanum' : 'emergent') + '_target_sighting/' + id, { method: 'DELETE' })
       .done(successCallback)
       .fail(failureCallback)
   },
 
-  saveTargetSighting: function(isAlphanum, assignmentId, sighting, successCallback, failureCallback) {
+  saveTargetSighting: function (isAlphanum, assignmentId, sighting, successCallback, failureCallback) {
     $.post('/api/v1/assignment/' + assignmentId + (isAlphanum ? '/alphanum' : '/emergent') + '_target_sighting', sighting)
       .done(successCallback)
       .fail(failureCallback)
   },
 
-  updateTargetSighting: function(isAlphanum, id, sighting, successCallback, failureCallback) {
+  updateTargetSighting: function (isAlphanum, id, sighting, successCallback, failureCallback) {
     $.ajax('/api/v1/' + (isAlphanum ? 'alphanum' : 'emergent') + '_target_sighting/' + id,
-      {method: 'PUT', data: sighting})
+      { method: 'PUT', data: sighting })
       .done(successCallback)
       .fail(failureCallback)
   },
 
-  deleteROISighting: function(id, successCallback, failureCallback) {
-    $.ajax('/api/v1/roi/' + id, {method: 'DELETE'})
+  deleteROISighting: function (id, successCallback, failureCallback) {
+    $.ajax('/api/v1/roi/' + id, { method: 'DELETE' })
       .done(successCallback)
       .fail(failureCallback)
   },
 
-  saveROISighting: function(assignmentId, sighting, successCallback, failureCallback) {
+  saveROISighting: function (assignmentId, sighting, successCallback, failureCallback) {
     $.post('/api/v1/assignment/' + assignmentId + '/roi', sighting)
       .done(successCallback)
       .fail(failureCallback)
@@ -36,37 +36,37 @@ export const TargetSightingRequests = {
 }
 
 export const targetRequests = {
-  deleteTarget: function(id, successCallback, failureCallback) {
+  deleteTarget: function (id, successCallback, failureCallback) {
     //no option for emergent bc it shouldn't be deleted
-    $.ajax('/api/v1/alphanum_target/' + id, {method: 'DELETE'})
+    $.ajax('/api/v1/alphanum_target/' + id, { method: 'DELETE' })
       .done(successCallback)
       .fail(failureCallback)
   },
 
-  saveTarget: function(target, successCallback, failureCallback) {
+  saveTarget: function (target, successCallback, failureCallback) {
     //no option for emergent bc it shouldn't be created here
     $.post('/api/v1/alphanum_target', target)
       .done(successCallback)
       .fail(failureCallback)
   },
 
-  updateTarget: function(isAlphanum, id, target, successCallback, failureCallback) {
+  updateTarget: function (isAlphanum, id, target, successCallback, failureCallback) {
     $.ajax('/api/v1/' + (isAlphanum ? 'alphanum' : 'emergent') + '_target/' + id,
-      {method: 'PUT', data: target})
+      { method: 'PUT', data: target })
       .done(successCallback)
       .fail(failureCallback)
   }
 }
 
 export const AssignmentRequests = {
-  updateAssignment: function(assignment, successCallback, failureCallback) {
+  updateAssignment: function (assignment, successCallback, failureCallback) {
     $.ajax('/api/v1/assignment/' + assignment.id,
-      {method: 'PUT', data: _.assign({}, assignment, { done: true })})
+      { method: 'PUT', data: _.assign({}, assignment, { done: true }) })
       .done(successCallback)
       .fail(failureCallback)
   },
 
-  requestWork: function(successCallback, failureCallback) {
+  requestWork: function (successCallback, failureCallback) {
     $.post('/api/v1/assignment/work/MDLC')
       .done(successCallback)
       .fail(failureCallback)
@@ -74,25 +74,25 @@ export const AssignmentRequests = {
 }
 
 export const SettingsRequest = {
-  updateSetting: function(route, settings, successCallback, failureCallback) {
+  updateSetting: function (route, settings, successCallback, failureCallback) {
     $.post(route, settings)
       .done(successCallback)
       .fail(failureCallback)
   },
 
-  updateAirdropSetting: function(settings, successCallback, failureCallback) {
+  updateAirdropSetting: function (settings, successCallback, failureCallback) {
     SettingsRequest.updateSetting('/api/v1/settings/airdrop', settings, successCallback, failureCallback)
   },
 
-  updateCameraSetting: function(settings, successCallback, failureCallback) {
+  updateCameraSetting: function (settings, successCallback, failureCallback) {
     SettingsRequest.updateSetting('/api/v1/settings/camera', settings, successCallback, failureCallback)
   },
 
-  updateCameraGimbalSetting: function(settings, successCallback, failureCallback) {
+  updateCameraGimbalSetting: function (settings, successCallback, failureCallback) {
     SettingsRequest.updateSetting('/api/v1/settings/camera_gimbal', settings, successCallback, failureCallback)
   },
 
-  updateGimbalSettingsSetting: function(settings, successCallback, failureCallback) {
+  updateGimbalSettingsSetting: function (settings, successCallback, failureCallback) {
     SettingsRequest.updateSetting('/api/v1/settings/gimbal', settings, successCallback, failureCallback)
   }
 }
@@ -101,7 +101,9 @@ export const FireworksPostRequests = {
   /* Finish implementing the Fireworks post request here. It should be very similar to the updateSetting function in the
   const SettingsRequest above. The only difference is that instead of passing in route as a parameter, the
   updateFireworksSetting function should have the route hard-coded in: /api/v1/settings/fireworks */
-  updateFireworksSetting: function(settings, successCallback, failureCallback) {
-    
+  updateFireworksSetting: function (settings, successCallback, failureCallback) {
+    $.post('/api/v1/settings/fireworks', settings)
+      .done(successCallback)
+      .fail(failureCallback)
   }
 }
