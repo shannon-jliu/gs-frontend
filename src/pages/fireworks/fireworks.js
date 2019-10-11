@@ -89,7 +89,7 @@ export class Fireworks extends Component {
   current state. Check out any of the other settings files for examples on how to complete the function.
   I believe they are all almost if not completely identical and are done in one line. */
   getDisplayFields() {
-
+    _.merge(this.getSavedFields(), this.state)
   }
 
   /* getNewFields() essentially takes the output of getDisplayFields() and does minimal correction if need be.
@@ -97,7 +97,10 @@ export class Fireworks extends Component {
   be a string. Then return the minimally corrected data. Again, examples of getNewFields() can be found in other settings
   files. */
   getNewFields() {
+    let fields = this.getDisplayFields()
+    if (_.isString(fields.zoom)) fields.zoom = Number.parseInt(fields.zoom)
 
+    return fields
   }
 
   /* canSave() determines whether or not the currently-selected fireworks setting can be "saved", or sent to the
@@ -107,7 +110,15 @@ export class Fireworks extends Component {
   the last is true, there is no reason to save/send the same settings to the plane. The settings are already there.
   Again, examples of canSave() can be found in the other settings files. */
   canSave() {
+    let newFields = this.getNewFields
+    let getSavedFields = this.getSavedFields
+    let number = Number.parseInt(newFields.number)
 
+    let isValidSetting = (
+      !_.isNaN(number)
+    )
+    return (this.props.settings.get('pending').size == 0 &&
+      !_.isEqual(newFields, savedFields) && isValidSetting)
   }
 
   /* save() should, if the currently-selected fireworks settings can be saved (hint right there), save the
