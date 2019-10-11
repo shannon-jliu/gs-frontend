@@ -16,7 +16,7 @@ import TextField from './components/TextField.js'
 import './fireworks.css'
 
 export class Fireworks extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     // This initializes the local state
     this.state = {
@@ -29,6 +29,12 @@ export class Fireworks extends Component {
     React.js function) must be bound to the Fireworks class so that the functions can be used. I have provided an example
     for the function getSavedFields(). You should finish the rest! */
     this.getSavedFields = this.getSavedFields.bind(this)
+    this.getDisplayFields = this.getDisplayFields.bind(this)
+    this.getNewFields = this.getNewFields.bind(this)
+    this.canSave = this.canSave.bind(this)
+    this.save = this.save.bind(this)
+    this.colorChange = this.color.bind(this)
+    this.numberChange = this.numberChange.bind(this)
   }
 
   /* Every second, componentDidMount() checks to see what the fireworks settings are on the plane and compares those
@@ -211,7 +217,7 @@ export class Fireworks extends Component {
                 />
               </div>
             </div>
-            <br/>
+            <br />
             <div className="content">
               <h6>Number:</h6>
               <div className="row">
