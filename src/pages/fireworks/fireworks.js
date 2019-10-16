@@ -127,7 +127,10 @@ export class Fireworks extends Component {
   re-setting the local state to its default values. Once again, examples of save() can be found in other settings
   files. */
   save() {
-
+    if (this.canSave()) {
+      let newFields = this.getNewFields()
+      this.props.updateSettingsStart(newFields)
+    }
   }
 
   /* I have given this function in its entirety because it deals with some semi-odd Javascript stuff as well as
