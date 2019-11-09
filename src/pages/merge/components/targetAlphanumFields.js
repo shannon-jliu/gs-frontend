@@ -29,7 +29,7 @@ const TargetAlphanumFields = ({ shape, shapeColor, alpha, alphaColor, getHandler
           type='text'
           value={alpha}
         />
-        <label htmlFor='alpha'>Alpha</label>
+        <label htmlFor='alpha' className={alpha ? 'active' : null}>Alpha</label>
       </div>
       {/* Select the alphanumeric color */}
       <ColorSelect

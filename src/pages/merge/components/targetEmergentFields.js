@@ -10,7 +10,7 @@ const TargetEmergentFields = ({ description, getHandler }) => (
         type='text'
         value={description}
       />
-      <label htmlFor='description'>Description</label>
+      <label htmlFor='description' className={description ? 'active' : null}>Description</label>
     </div>
   </div>
 )

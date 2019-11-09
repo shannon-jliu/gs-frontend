@@ -10,7 +10,7 @@ const TargetGeotagFields = ({ latitude, longitude, getHandler }) => (
         type='number'
         value={latitude}
       />
-      <label htmlFor="latitude">Latitude (-90–90)</label>
+      <label htmlFor="latitude" className={latitude ? 'active' : null}>Latitude (-90–90)</label>
     </div>
     {/*Longitude. Restricted to be a number, bounds should be checked when saving */}
     <div className='obj input-field col s6'>
@@ -19,7 +19,7 @@ const TargetGeotagFields = ({ latitude, longitude, getHandler }) => (
         type='number'
         value={longitude}
       />
-      <label htmlFor='longitude'>Longitude (-180–180)</label>
+      <label htmlFor='longitude' className={longitude ? 'active' : null}>Longitude (-180–180)</label>
     </div>
   </div>
 )
