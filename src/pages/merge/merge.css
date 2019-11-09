@@ -12,7 +12,7 @@
 
 .merge .targets .image.t-thumb {
   margin: 5px;
-  border-color: #F44336;
+  border-color: #f44336;
 }
 
 .merge .sightings {
@@ -31,15 +31,30 @@
   min-height: 100px;
   height: 100px;
   cursor: pointer;
+
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 25%);
 }
 
-.merge .sightings .sighting .fact-container {
+.merge .sightings .sighting .sighting-attributes {
   display: flex;
   padding: 0 10px;
   flex: 1 1 50%;
   cursor: auto;
   flex-direction: column;
   justify-content: center;
+  user-select: none;
+}
+
+.merge .sightings .sighting .sighting-attributes li .caption {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.75em;
+  opacity: 0.75;
+}
+
+.merge .sightings .sighting .sighting-attributes li p {
+  margin: 0;
 }
 
 .merge .targets {
@@ -71,7 +86,7 @@
 }
 
 .merge .targets .target.drag-over {
-  background-color: #00FF00;
+  background-color: #00ff00;
 }
 
 .merge .targets .target.new-target {

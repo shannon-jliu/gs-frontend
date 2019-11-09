@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import React, { Component } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import PropTypes from 'prop-types'
@@ -5,14 +7,15 @@ import PropTypes from 'prop-types'
 import MergeSightingPreview from './mergeSightingPreview.js'
 
 const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd }) => {
-  const shape = sighting.get('shape').charAt(0).toUpperCase() + sighting.get('shape').substr(1)
-  const shapeColor = sighting.get('shapeColor').charAt(0).toUpperCase() + sighting.get('shapeColor').substr(1)
-  const alphaColor = sighting.get('alphaColor').charAt(0).toUpperCase() + sighting.get('alphaColor').substr(1)
+  const shape = _.capitalize(sighting.get('shape'))
+  const shapeColor = _.capitalize(sighting.get('shapeColor'))
+  const alpha = _.capitalize(sighting.get('alpha'))
+  const alphaColor = _.capitalize(sighting.get('alphaColor'))
 
   return (
     <div
-      className="sighting card z-depth-2"
-      style={dragging ? {opacity: 0.15} : {}}>
+      className="sighting"
+      style={dragging ? { opacity: 0.15 } : {}}>
       <MergeSightingPreview
         isThumbnail={false}
         isMerged={false}
@@ -20,12 +23,16 @@ const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd }) => {
         onDragStart={onDragStart === undefined ? undefined : () => onDragStart(sighting)}
         onDragEnd={onDragEnd}
         dragging={dragging} />
-      <div className="fact-container">
-        <div className="fact">Shape: {shape}</div>
-        <div className="fact">Shape Color: {shapeColor}</div>
-        <div className="fact">Alpha: {sighting.get('alpha')}</div>
-        <div className="fact">Alpha Color: {alphaColor}</div>
-      </div>
+      <ul className="sighting-attributes">
+        <li>
+          <span class="caption">Shape</span>
+          <p>{shapeColor} {shape}</p>
+        </li>
+        <li>
+          <span class="caption">Alpha</span>
+          <p>{alphaColor} {alpha}</p>
+        </li>
+      </ul>
     </div>
   )
 }
