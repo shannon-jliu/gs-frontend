@@ -59,7 +59,7 @@ const TargetOperations = {
 
       const successCallback = () => {
         //doesn't need to make more calls because backend should auto-detach targets
-        dispatch(tsAction.deleteTargetFromTargetSightings(target))
+        dispatch(tsAction.removeTargetFromTargetSightings(target))
       }
 
       targetRequests.deleteTarget(target.get('id'), successCallback, failureCallback)

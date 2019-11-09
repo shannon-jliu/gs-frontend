@@ -48,7 +48,7 @@ export const addTargetSightingsFromServer = sightings => ({
   sightings
 })
 
-export const deleteTargetFromTargetSightings = target => ({
-  type: 'DELETE_TARGET_FROM_TARGET_SIGHTINGS',
+export const removeTargetFromTargetSightings = target => ({
+  type: 'REMOVE_TARGET_FROM_TARGET_SIGHTINGS',
   target
 })
