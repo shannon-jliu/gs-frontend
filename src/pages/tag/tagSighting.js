@@ -69,31 +69,33 @@ export class TagSighting extends Component {
         ))
       }
       if (s.type == 'alphanum') {
-        return (
-          s.shape.length > 0 &&
-          s.shapeColor.length > 0 &&
-          s.alpha.length > 0 &&
-          s.alphaColor.length > 0 &&
-          s.mdlcClassConf.length > 0 &&
-          !_.isEqual(
-            _.pick(s, [
-              'shape',
-              'shapeColor',
-              'alpha',
-              'alphaColor',
-              'offaxis',
-              'mdlcClassConf'
-            ]),
-            _.pick(sighting.toJS(), [
-              'shape',
-              'shapeColor',
-              'alpha',
-              'alphaColor',
-              'offaxis',
-              'mdlcClassConf'
-            ])
-          )
-        )
+        // is all of the info there?
+        if(!s.shape || !s.shapeColor || !s.alpha || !s.alphaColor || !s.mdlcClassConf) return false
+
+        // is our alpha actually alphanumeric?
+        if(!s.alpha.match(/^[A-Za-z0-9]$/g)) return false
+
+        // is it different from what we already have?
+        if(_.isEqual(
+          _.pick(s, [
+            'shape',
+            'shapeColor',
+            'alpha',
+            'alphaColor',
+            'offaxis',
+            'mdlcClassConf'
+          ]),
+          _.pick(sighting.toJS(), [
+            'shape',
+            'shapeColor',
+            'alpha',
+            'alphaColor',
+            'offaxis',
+            'mdlcClassConf'
+          ])
+        )) return false
+
+        return true
       }
     }
     return false
