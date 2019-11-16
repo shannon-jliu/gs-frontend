@@ -6,7 +6,7 @@ export const startUpdateTargetSightingCluster = (sightingCluster, attribute) => 
 
 export const succeedUpdateTargetSightingCluster = (newsightingCluster, attribute) => ({
   type: 'SUCCEED_UPDATE_TARGET_SIGHTING_CLUSTER',
-  newsightingCluster,
+  sightingCluster,
   attribute
 })
 
@@ -16,9 +16,9 @@ export const failUpdateTargetSightingCluster = (sightingCluster, attribute) => (
   attribute
 })
 
-export const addTargetSightingClustersFromServer = sightings => ({
+export const addTargetSightingClustersFromServer = sightingClusters => ({
   type: 'ADD_TARGET_SIGHTING_CLUSTERS_FROM_SERVER',
-  sightings
+  sightingClusters
 })
 
 export const removeTargetFromTargetSightingClusters = target => ({
