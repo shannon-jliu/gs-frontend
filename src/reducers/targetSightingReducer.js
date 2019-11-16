@@ -77,7 +77,7 @@ function failSaveTargetSighting(state, localId) {
 /** updateTargetSighting functions are for updating an attribute of a target sighting already on ground server */
 function startUpdateTargetSighting(state, sighting, attribute) {
   return state.update('saved', s => s.map(ts => {
-    if (ts.get('id') == sighting.get('id') && ts.get('type') == sighting.get('type')) {
+    if (ts.get('id') === sighting.get('id') && ts.get('type') === sighting.get('type')) {
       if (!ts.has('pending')) {
         return ts.set('pending', attribute)
       } else {
