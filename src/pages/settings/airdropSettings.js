@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
-import { fromJS, Map } from 'immutable'
+import { fromJS } from 'immutable'
 
-import airdropReducer from '../../reducers/airdropReducer.js'
 import airdropOperations from '../../operations/airdropOperations.js'
 
 import Switch from './components/Switch.js'
@@ -120,7 +119,7 @@ export class AirdropSettings extends Component {
       threshold >= 0
 
     return (
-      this.props.settings.get('pending').size == 0 &&
+      this.props.settings.get('pending').size === 0 &&
       !_.isEqual(newFields, savedFields) &&
       isValidSetting
     )

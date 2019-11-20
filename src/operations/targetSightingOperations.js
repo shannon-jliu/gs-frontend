@@ -57,7 +57,7 @@ const TargetSightingOperations = {
         TargetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
       }
 
-      TargetSightingRequests.deleteTargetSighting(sighting.get('type') == 'alphanum', sighting.get('id'), () => ({}), failureCallback)
+      TargetSightingRequests.deleteTargetSighting(sighting.get('type') === 'alphanum', sighting.get('id'), () => ({}), failureCallback)
     }
   ),
 
@@ -96,7 +96,7 @@ const TargetSightingOperations = {
         dispatch(action.failSaveTargetSighting(sighting.get('localId')))
       }
 
-      TargetSightingRequests.saveTargetSighting(sighting.get('type') == 'alphanum', sighting.getIn(['assignment', 'id']), sightingToSend, successCallback, failureCallback)
+      TargetSightingRequests.saveTargetSighting(sighting.get('type') === 'alphanum', sighting.getIn(['assignment', 'id']), sightingToSend, successCallback, failureCallback)
     }
   ),
 
@@ -144,14 +144,14 @@ const TargetSightingOperations = {
       let sightingToSend = _.assign(
         _.omit(sighting.toJS(), ['type', 'localTargetId', 'id', 'creator', 'geotag', 'target.type']),
         _.omit(attribute.toJS(), ['target.type']))
-      if (sighting.get('type') == 'emergent' || sighting.get('offaxis')) {
+      if (sighting.get('type') === 'emergent' || sighting.get('offaxis')) {
         delete sightingToSend.target
       }
 
       const successCallback = data => {
         SnackbarUtil.render('Succesfully updated target sighting')
         let receivedSighting = fromJS(data).set('type', sighting.get('type'))
-        if (receivedSighting.get('target') != null) {
+        if (!_.isNil(receivedSighting.get('target'))) {
           receivedSighting = receivedSighting.update('target', t => t.set('type', sighting.get('type')))
         }
         if (!_.has(data, 'target') && sighting.has('localTargetId')) {
@@ -165,7 +165,7 @@ const TargetSightingOperations = {
         dispatch(action.failUpdateTargetSighting(sighting, attribute))
       }
 
-      TargetSightingRequests.updateTargetSighting(sighting.get('type') == 'alphanum', sighting.get('id'), sightingToSend, successCallback, failureCallback)
+      TargetSightingRequests.updateTargetSighting(sighting.get('type') === 'alphanum', sighting.get('id'), sightingToSend, successCallback, failureCallback)
     }
   )
 }

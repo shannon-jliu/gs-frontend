@@ -2,14 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
-import { fromJS, Map } from 'immutable'
+import { fromJS } from 'immutable'
 
-import gimbalSettingsReducer from '../../reducers/gimbalSettingsReducer.js'
 import gimbalSettingsOperations from '../../operations/gimbalSettingsOperations.js'
 
-import Radio from './components/Radio.js'
 import TextField from './components/TextField.js'
-
 import Modes from './components/Modes.js'
 
 export class GimbalSettings extends Component {
@@ -116,8 +113,8 @@ export class GimbalSettings extends Component {
     }
 
     return (
-      this.props.cameraGimbalMode != Modes.UNDEFINED &&
-      this.props.settings.get('pending').size == 0 &&
+      this.props.cameraGimbalMode !== Modes.UNDEFINED &&
+      this.props.settings.get('pending').size === 0 &&
       !_.isEqual(newFields, savedFields) &&
       isValidInput
     )
@@ -212,7 +209,7 @@ export class GimbalSettings extends Component {
                 </div>
               </div>
               <div className="row">
-                <a onClick={this.save} className={saveClass}>
+                <a onClick={this.save} className={saveClass} href='/#'>
                   Save
                 </a>
               </div>

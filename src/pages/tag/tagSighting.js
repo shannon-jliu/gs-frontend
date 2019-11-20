@@ -6,7 +6,7 @@ import M from 'materialize-css'
 import _ from 'lodash'
 
 import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting } from './components'
-import { TypeSelect, ConfSelect } from '../../components/target'
+import { TypeSelect } from '../../components/target'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 
 export class TagSighting extends Component {
@@ -43,7 +43,7 @@ export class TagSighting extends Component {
   findDifference(fields) {
     const s = this.state
     const origSighting = this.props.sighting
-    const diffKeys = Object.keys(s).filter(k => fields.includes(k) && s[k] != origSighting.get(k))
+    const diffKeys = Object.keys(s).filter(k => fields.includes(k) && s[k] !== origSighting.get(k))
     let diffObj = {}
     for (let i = 0; i < diffKeys.length; i++) {
       const key = diffKeys[i]
@@ -60,7 +60,7 @@ export class TagSighting extends Component {
     if (this.actionable()) {
       const s = this.state
       if (s.type === 'roi') return true
-      if (s.type == 'emergent') {
+      if (s.type === 'emergent') {
         return (s.description.length > 0 &&
         s.mdlcClassConf.length > 0 &&
         !_.isEqual(
@@ -68,7 +68,7 @@ export class TagSighting extends Component {
           _.pick(sighting.toJS(), ['description', 'mdlcClassConf'])
         ))
       }
-      if (s.type == 'alphanum') {
+      if (s.type === 'alphanum') {
         return (
           s.shape.length > 0 &&
           s.shapeColor.length > 0 &&
@@ -164,14 +164,14 @@ export class TagSighting extends Component {
       } else {
         // adds fields listed and saves the target sighting
         let newSighting, attr
-        if (s.type == 'emergent') {
+        if (s.type === 'emergent') {
           newSighting = this.props.sighting.merge({
             type: s.type,
             description: s.description,
             mdlcClassConf: s.mdlcClassConf
           })
           attr = this.findDifference(['description', 'mdlcClassConf'])
-        } else if (s.type == 'alphanum') {
+        } else if (s.type === 'alphanum') {
           newSighting = this.props.sighting.merge({
             type: s.type,
             shape: s.shape,
@@ -232,7 +232,7 @@ export class TagSighting extends Component {
           />
         </div>
 
-        <div className={this.state.type == 'alphanum' ? '' : 'hidden'}>
+        <div className={this.state.type === 'alphanum' ? '' : 'hidden'}>
           <AlphanumFields
             shape={this.state.shape}
             shapeColor={this.state.shapeColor}
@@ -245,7 +245,7 @@ export class TagSighting extends Component {
           />
         </div>
 
-        <div className={this.state.type == 'emergent' ? '' : 'hidden'}>
+        <div className={this.state.type === 'emergent' ? '' : 'hidden'}>
           <EmergentFields
             description={this.state.description}
             confidence={this.state.mdlcClassConf}
@@ -254,7 +254,7 @@ export class TagSighting extends Component {
         </div>
 
         {/* TypeSelect still allows users to select no type, so this line is still rqeuired */}
-        <div className={this.state.type != '' ? 'row' : 'hidden'}>
+        <div className={this.state.type !== '' ? 'row' : 'hidden'}>
           <ButtonRow
             type={this.state.type}
             isSaved={this.props.sighting.has('id')}

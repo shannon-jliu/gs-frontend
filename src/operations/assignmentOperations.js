@@ -67,7 +67,7 @@ const AssignmentOperations = {
         const msg = assignments.length > 0 ? '. ' + assignments.length + ' assignments were found' : ''
         AssignmentRequests.requestWork((data, _, xhr) => {
           // if 204 is returned, no new assignments, do not increment
-          if (xhr.status == 204) {
+          if (xhr.status === 204) {
             dispatch(action.finishLoading())
             SnackbarUtil.render('No new assignments' + msg)
           } else {

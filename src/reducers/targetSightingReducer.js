@@ -1,4 +1,4 @@
-import { fromJS, merge, List, Map } from 'immutable'
+import { fromJS } from 'immutable'
 import _ from 'lodash'
 
 /**
@@ -53,33 +53,33 @@ function addTargetSighting(state, sighting, assignment) {
 
 function deleteTargetSighting(state, sighting) {
   if (_.isString(sighting.get('localId'))) {
-    return state.update('local', l => l.filter(ts => ts.get('localId') != sighting.get('localId')))
+    return state.update('local', l => l.filter(ts => ts.get('localId') !== sighting.get('localId')))
   } else {
     //alphanum and emergent targets have overlapping ids assigned by backend
-    return state.update('saved', s => s.filter(ts => ts.get('id') != sighting.get('id') || ts.get('type') != sighting.get('type')))
+    return state.update('saved', s => s.filter(ts => ts.get('id') !== sighting.get('id') || ts.get('type') !== sighting.get('type')))
   }
 }
 
 /** saveTargetSighting functions are for saving a local target sighting to the ground server */
 function startSaveTargetSighting(state, localId) {
-  return state.update('local', l => l.map(ts => ts.get('localId') == localId ? ts.set('pending', fromJS({})) : ts))
+  return state.update('local', l => l.map(ts => ts.get('localId') === localId ? ts.set('pending', fromJS({})) : ts))
 }
 
 function succeedSaveTargetSighting(state, sighting, localId) {
   return state
-    .update('local', l => l.filter(ts => ts.get('localId') != localId))
+    .update('local', l => l.filter(ts => ts.get('localId') !== localId))
     .update('saved', s => s.push(sighting))
 }
 
 function failSaveTargetSighting(state, localId) {
-  return state.update('local', s => s.map(ts => ts.get('localId') == localId ? ts.delete('pending') : ts))
+  return state.update('local', s => s.map(ts => ts.get('localId') === localId ? ts.delete('pending') : ts))
 }
 
 
 /** updateTargetSighting functions are for updating an attribute of a target sighting already on ground server */
 function startUpdateTargetSighting(state, sighting, attribute) {
   return state.update('saved', s => s.map(ts => {
-    if (ts.get('id') == sighting.get('id') && ts.get('type') == sighting.get('type')) {
+    if (ts.get('id') === sighting.get('id') && ts.get('type') === sighting.get('type')) {
       if (!ts.has('pending')) {
         return ts.set('pending', attribute)
       } else {
@@ -93,11 +93,11 @@ function startUpdateTargetSighting(state, sighting, attribute) {
 
 function succeedUpdateTargetSighting(state, sighting, attribute) {
   return state.update('saved', s => s.map(ts => {
-    if (ts.get('id') == sighting.get('id') && ts.get('type') == sighting.get('type')) {
+    if (ts.get('id') === sighting.get('id') && ts.get('type') === sighting.get('type')) {
       var newSighting = sighting
-      if (ts.get('pending') != undefined) {
+      if (ts.get('pending') !== undefined) {
         const newPending = ts.get('pending').deleteAll(attribute.keys())
-        if (newPending.size == 0) {
+        if (newPending.size === 0) {
           newSighting = sighting.delete('pending')
         } else {
           newSighting = sighting.set('pending', newPending)
@@ -111,12 +111,12 @@ function succeedUpdateTargetSighting(state, sighting, attribute) {
 
 function failUpdateTargetSighting(state, sighting, attribute) {
   return state.update('saved', s => s.map(ts => {
-    if (ts.get('id') == sighting.get('id') && ts.get('type') == sighting.get('type')) {
-      if (ts.get('pending') == undefined) {
+    if (ts.get('id') === sighting.get('id') && ts.get('type') === sighting.get('type')) {
+      if (ts.get('pending') === undefined) {
         return ts
       } else {
         const newPending = ts.get('pending').deleteAll(attribute.keys())
-        if (newPending.size == 0) {
+        if (newPending.size === 0) {
           return ts.delete('pending')
         } else {
           return ts.set('pending', newPending)
@@ -134,8 +134,8 @@ function addTargetSightingsFromServer(state, sightings) {
     sightings.map(ts => {
       if (_.isObject(savedById[ts.get('id') + ':' + ts.get('type')])) {
         const savedTs = fromJS(savedById[ts.get('id') + ':' + ts.get('type')])
-        ts = savedTs.get('pending') != undefined ? ts.set('pending', savedTs.get('pending')) : ts
-        ts = savedTs.get('localTargetId') != undefined ? ts.set('localTargetId', savedTs.get('localTargetId')) : ts
+        ts = savedTs.get('pending') !== undefined ? ts.set('pending', savedTs.get('pending')) : ts
+        ts = savedTs.get('localTargetId') !== undefined ? ts.set('localTargetId', savedTs.get('localTargetId')) : ts
       }
       return ts
     })
@@ -147,7 +147,7 @@ function deleteLocalTarget(state, target) {
     const localTargetId = target.get('localId')
     //no need to worry about emergent id overlapping because the emergent tgt is never local
     return state.update('saved', s => s.map(ts =>
-      ts.get('localTargetId') == localTargetId ? ts.delete('localTargetId') : ts))
+      ts.get('localTargetId') === localTargetId ? ts.delete('localTargetId') : ts))
   }
   return state
 }
@@ -156,7 +156,7 @@ function deleteTargetFromTargetSightings(state, target) {
   const targetId = target.get('id')
   const type = target.get('type')
   return state.update('saved', s => s.map(ts =>
-    ts.getIn(['target', 'id']) == targetId && ts.get('type') == type ? ts.delete('target') : ts))
+    ts.getIn(['target', 'id']) === targetId && ts.get('type') === type ? ts.delete('target') : ts))
 }
 
 export default targetSightingReducer

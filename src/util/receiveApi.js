@@ -3,8 +3,6 @@ import $ from 'jquery'
 import _ from 'lodash'
 
 import { AUTH_TOKEN_ID } from '../constants/constants'
-
-import Modes from '../pages/settings/components/Modes.js'
 import { GET_SETTINGS } from './config.js'
 
 export const TargetGetRequests = {
