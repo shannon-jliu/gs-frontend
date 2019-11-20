@@ -202,8 +202,8 @@ class ImageViewer extends Component {
       )
     }
     this.setState({
-      mx: newMX,
-      my: newMY,
+      mx: newMX, // not necessary to factor in scrolling since it will resize accordingly
+      my: newMY + document.documentElement.scrollTop, // imageTools bumps down the imageViewer, so user may need to scroll down
       view: {
         scale: s.view.scale,
         x: x,
