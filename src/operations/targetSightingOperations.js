@@ -74,21 +74,19 @@ const TargetSightingOperations = {
         const receivedSighting = fromJS(data).set('type', sighting.get('type'))
         dispatch(action.succeedSaveTargetSighting(receivedSighting, sighting.get('localId')))
 
-        /*
-        //if the target is emergent and has no description the description is updated to match that of the target sighting
-        if (sighting.get('type') == "emergent" && receivedSighting.get('target').description == "") {
-          const newEmergentTarget = receivedSighting.get('target').set('description', receivedSighting.get('description'))
-          //TODO call future targetOperations to save the target (I feel like maybe this should be done on BE though, but leaving for now)
-        } else if (sighting.get('type') == "alphanum" && sighting.get('offaxis') && data.get('target').shape === "") {
-          //if the target is off-axis and contains empty fields, target fields are populated
-          const newOffaxisTarget = data.get('target')
-                .set('shape', sighting.get('shape'))
-                .set('shapeColor', sighting.get('shapeColor'))
-                .set('alpha', sighting.get('alphaColor'))
-                .set('alphaColor', sighting.get('alphaColor'))
-          //TODO call future targetOperations to save the target
-        }
-        */
+        /* //if the target is emergent and has no description the description is updated to match that of the target sighting
+           if (sighting.get('type') == "emergent" && receivedSighting.get('target').description == "") {
+           const newEmergentTarget = receivedSighting.get('target').set('description', receivedSighting.get('description'))
+           //TODO call future targetOperations to save the target (I feel like maybe this should be done on BE though, but leaving for now)
+           } else if (sighting.get('type') == "alphanum" && sighting.get('offaxis') && data.get('target').shape === "") {
+           //if the target is off-axis and contains empty fields, target fields are populated
+           const newOffaxisTarget = data.get('target')
+           .set('shape', sighting.get('shape'))
+           .set('shapeColor', sighting.get('shapeColor'))
+           .set('alpha', sighting.get('alphaColor'))
+           .set('alphaColor', sighting.get('alphaColor'))
+           //TODO call future targetOperations to save the target
+           } */
       }
 
       const failureCallback = () => {

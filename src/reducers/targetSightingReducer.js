@@ -11,7 +11,7 @@ import _ from 'lodash'
  * - the pending field in a ts is set iff some part of the ts is saving
  *   - if the ts is being created on the backend (and is currently local), it is empty
  *   - if specific attributes are being updated, those attributes are all stored in pending
-*/
+ */
 const initialState = fromJS({
   local: [],
   saved: []

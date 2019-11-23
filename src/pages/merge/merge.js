@@ -125,9 +125,9 @@ export class Merge extends Component {
   }
 
   render() {
-    //pending's target overrides the normal target. If pending's target is null, the target is deleted; if pending's target is undefined, there is no override
-    //for that reason, this uses both loose and strict equality (!= null checks both - x != null is the same as (x !== null && x !== undefined))
-    //It should also be noted that _.isNil() will check both null and undefined equality.
+    /* pending's target overrides the normal target. If pending's target is null, the target is deleted; if pending's target is undefined, there is no override
+       for that reason, this uses both loose and strict equality (!= null checks both - x != null is the same as (x !== null && x !== undefined))
+       It should also be noted that _.isNil() will check both null and undefined equality. */
     const isAssigned = ts => (!_.isNil(ts.get('target')) && !_.isNull(ts.getIn(['pending', 'target']))) || !_.isNil(ts.getIn(['pending', 'target']))
     const assignedSightings = this.props.sightings.filter(isAssigned)
     const unassignedSightings = this.props.sightings.filter(ts => ts.get('type') === 'alphanum' && !isAssigned(ts))

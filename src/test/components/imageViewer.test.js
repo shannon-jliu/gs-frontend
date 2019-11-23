@@ -44,8 +44,8 @@ describe('componentDidMount', () => {
 })
 
 describe('onMouseMove', () => {
-  // don't have to worry about outside image viewer since they cannot click
-  // outside the bounds
+  /* don't have to worry about outside image viewer since they cannot click
+     outside the bounds */
   const event = {
     clientX: 100,
     clientY: 100

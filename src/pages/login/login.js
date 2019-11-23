@@ -23,8 +23,8 @@ class Login extends Component {
     this.redirect(window.location.href)
   }
 
-  // append #force if you want to access login page once
-  // already authenticated
+  /* append #force if you want to access login page once
+     already authenticated */
   redirect(currentHref) {
     if (
       AuthUtil.authenticated() &&

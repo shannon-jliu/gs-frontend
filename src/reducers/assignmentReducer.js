@@ -6,7 +6,7 @@ import {fromJS} from 'immutable'
  *   - image obj (imageUrl, image id, etc.)
  * - current - (int) the current index in assignments
  * - loading - (bool) indicates whether or not an assignment from the server is added
-*/
+ */
 const initialState = fromJS({
   assignments: [],
   current: -1,

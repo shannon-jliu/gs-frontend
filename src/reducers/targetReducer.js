@@ -10,7 +10,7 @@ import _ from 'lodash'
  * - the pending field in a target is set iff some part of the target is saving
  *   - if the target is being created on the backend (and is currently local), it is empty
  *   - if specific attributes are being updated, those attributes are all stored in pending
-*/
+ */
 const initialState = fromJS({
   local: [],
   saved: []

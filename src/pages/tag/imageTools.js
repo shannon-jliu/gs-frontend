@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 
 import Slider from './components/slider'
 
-// any parent component of ImageTools needs to initialize M.Range
-// (see tag.js for an example)
+/* any parent component of ImageTools needs to initialize M.Range
+   (see tag.js for an example) */
 const ImageTools =  ({ getHandler, reset, brightness, contrast, saturation})  => (
   <div className='tools'>
     <Slider id='brightness' getHandler={getHandler} value={brightness}/>

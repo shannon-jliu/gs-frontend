@@ -8,8 +8,8 @@ import { AssignmentRequests } from '../util/sendApi.js'
 import { AssignmentGetRequests } from '../util/receiveApi.js'
 import SnackbarUtil from '../util/snackbarUtil.js'
 
-// 'currAssignment' will always denotes an Immutable object, structured after Tag props
-// 'assignment' denotes the inside assignment object within currAssignment
+/* 'currAssignment' will always denotes an Immutable object, structured after Tag props
+   'assignment' denotes the inside assignment object within currAssignment */
 const AssignmentOperations = {
   getAllAssignments: dispatch => (
     currIndex => {
@@ -57,8 +57,8 @@ const AssignmentOperations = {
     }
   ),
 
-  // method factored out for nicer tests, should only be used as a
-  // success callback of AssignmentGetRequests.getNextAssignment
+  /* method factored out for nicer tests, should only be used as a
+     success callback of AssignmentGetRequests.getNextAssignment */
   nextAssignmentSuccess: dispatch => (
     currAssignment => (
       // adds assignments, a JS array from API output, into the store
@@ -87,11 +87,11 @@ const AssignmentOperations = {
     }
   ),
 
-  // adds assignments, a JS array from API output, into the store
-  // currAssignment is Immutable
-  // - if currAssignment is not defined, then it will bring the user back to
-  //    where they left off (they just reloaded the page)
-  // - if currAssignment is defined, then increment to the next assignment
+  /* adds assignments, a JS array from API output, into the store
+     currAssignment is Immutable
+     - if currAssignment is not defined, then it will bring the user back to
+     where they left off (they just reloaded the page)
+     - if currAssignment is defined, then increment to the next assignment */
   processAssignments: dispatch => (
     (assignments, currIndex, goToLast) => {
       if (assignments.length > 0) {

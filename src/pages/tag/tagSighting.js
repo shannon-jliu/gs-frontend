@@ -43,7 +43,7 @@ export class TagSighting extends Component {
   }
 
   /* returns the difference between the state and original sighting as immutable obj
-    within the given fields */
+     within the given fields */
   findDifference(fields) {
     const s = this.state
     const origSighting = this.props.sighting
@@ -105,7 +105,7 @@ export class TagSighting extends Component {
 
   componentDidMount() {
     /* required for selectors.
-      See: https://materializecss.com/select.html#initialization */
+       See: https://materializecss.com/select.html#initialization */
     let elems = document.querySelectorAll('select')
     M.FormSelect.init(elems, {})
 

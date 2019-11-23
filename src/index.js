@@ -59,8 +59,8 @@ var requireAuth = Class => {
   }
 }
 
-// PersistGate required to delay until persistence complete
-// see https://github.com/rt2zz/redux-persist#react-integration
+/* PersistGate required to delay until persistence complete
+   see https://github.com/rt2zz/redux-persist#react-integration */
 const GroundServerRouter = () =>
   (
     <Provider store={store}>

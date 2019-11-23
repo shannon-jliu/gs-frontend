@@ -230,8 +230,8 @@ const itRendersNormally = wrapper => {
   expect(tgtDiv.type()).toEqual('div')
   expect(tgtDiv.childAt(0).matchesElement(wrapper.instance().renderTarget(etgt, fromJS([esighting1, esighting2])))).toEqual(true)
   expect(tgtDiv.childAt(1).matchesElement(wrapper.instance().renderTarget(otgt, fromJS([osighting1, osighting2])))).toEqual(true)
-  //line below fails when target is updated twice for some reason. Unsure why, but next line shows props match. Similar lines commented out below.
-  //expect(tgtDiv.childAt(2).matchesElement(wrapper.instance().renderTarget(tgt1, fromJS([sighting2])))).toEqual(true)
+  /* line below fails when target is updated twice for some reason. Unsure why, but next line shows props match. Similar lines commented out below.
+     expect(tgtDiv.childAt(2).matchesElement(wrapper.instance().renderTarget(tgt1, fromJS([sighting2])))).toEqual(true) */
   expect(tgtDiv.childAt(2).props()).toEqual(wrapper.instance().renderTarget(tgt1, fromJS([sighting2])).props)
   expect(tgtDiv.childAt(3).matchesElement(wrapper.instance().renderTarget(tgt2, fromJS([sighting3])))).toEqual(true)
   expect(tgtDiv.childAt(4).matchesElement(wrapper.instance().renderTarget(localTgt))).toEqual(true)
@@ -437,8 +437,8 @@ describe('dragging and dropping', () => {
       expect(tgtDiv.type()).toEqual('div')
       expect(tgtDiv.childAt(0).matchesElement(wrapper.instance().renderTarget(etgt, fromJS([esighting1, esighting2])))).toEqual(true)
       expect(tgtDiv.childAt(1).matchesElement(wrapper.instance().renderTarget(otgt, fromJS([osighting1, osighting2])))).toEqual(true)
-      //line below fails on second call, so it was replaced with comparing props. cannot figure out why. worth looking into, but not a priority
-      //expect(tgtDiv.childAt(2).matchesElement(wrapper.instance().renderTarget(tgt1, fromJS([expectedSighting1, sighting2])))).toEqual(true)
+      /* line below fails on second call, so it was replaced with comparing props. cannot figure out why. worth looking into, but not a priority
+         expect(tgtDiv.childAt(2).matchesElement(wrapper.instance().renderTarget(tgt1, fromJS([expectedSighting1, sighting2])))).toEqual(true) */
       expect(tgtDiv.childAt(2).props()).toEqual(wrapper.instance().renderTarget(tgt1, fromJS([expectedSighting1, sighting2])).props)
       expect(tgtDiv.childAt(3).matchesElement(wrapper.instance().renderTarget(tgt2, fromJS([sighting3])))).toEqual(true)
       expect(tgtDiv.childAt(4).matchesElement(wrapper.instance().renderTarget(localTgt))).toEqual(true)
@@ -495,8 +495,8 @@ describe('dragging and dropping', () => {
       expect(tgtDiv.childAt(0).matchesElement(wrapper.instance().renderTarget(etgt, fromJS([esighting1, esighting2])))).toEqual(true)
       expect(tgtDiv.childAt(1).matchesElement(wrapper.instance().renderTarget(otgt, fromJS([osighting1, osighting2])))).toEqual(true)
       expect(tgtDiv.childAt(2).matchesElement(wrapper.instance().renderTarget(tgt1, fromJS([])))).toEqual(true)
-      //line below fails on second call, so it was replaced with comparing props. cannot figure out why. worth looking into, but not a priority
-      //expect(tgtDiv.childAt(3).matchesElement(wrapper.instance().renderTarget(tgt2, fromJS([expectedSighting2, sighting3])))).toEqual(true)
+      /* line below fails on second call, so it was replaced with comparing props. cannot figure out why. worth looking into, but not a priority
+         expect(tgtDiv.childAt(3).matchesElement(wrapper.instance().renderTarget(tgt2, fromJS([expectedSighting2, sighting3])))).toEqual(true) */
       expect(tgtDiv.childAt(3).props()).toEqual(wrapper.instance().renderTarget(tgt2, fromJS([expectedSighting2, sighting3])).props)
       expect(tgtDiv.childAt(4).matchesElement(wrapper.instance().renderTarget(localTgt))).toEqual(true)
       expect(tgtDiv.childAt(5).text()).toEqual('+ New Target')

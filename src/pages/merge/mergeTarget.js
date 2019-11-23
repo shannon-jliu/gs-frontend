@@ -47,15 +47,15 @@ export class MergeTarget extends Component {
   }
 
   componentDidMount() {
-    // required for selectors.
-    // See: https://materializecss.com/select.html#initialization
+    /* required for selectors.
+       See: https://materializecss.com/select.html#initialization */
     let elems = document.querySelectorAll('select')
     M.FormSelect.init(elems, {})
   }
 
   componentWillReceiveProps(nextProps) {
-    //update attributes changed from props to nextProps but unchanged from props to state
-    //don't need to merge in pending fields, because those fields must have already been changed on page
+    /* update attributes changed from props to nextProps but unchanged from props to state
+       don't need to merge in pending fields, because those fields must have already been changed on page */
     const changedState = this.props.target
       .filter((val, key) => this.state[key] === val && nextProps.target.get(key) !== val)
       .map((_, key) => nextProps.target.get(key)).toJSON()

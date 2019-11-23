@@ -5,7 +5,7 @@ import {fromJS, Map} from 'immutable'
  * - settings - (object) the current gimbal settings from the server. See API for reference.
  *   - contains a timestamp of the latest gimbal settings, -1 if none
  * - pending - (object) object in 'queue' to send to the ground server. If success, this will reset to {}.
-*/
+ */
 
 const initialState = fromJS({
   settings: fromJS({
