@@ -1,22 +1,29 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const ImageSighting = ({ heightWidth, imgWidth, imgHeight, imageUrl, sighting }) => {
+const ImageSighting = ({ heightWidth, imageUrl, imgWidth, imgHeight, compressedWidth, compressedHeight, sighting }) => {
   const radius = heightWidth / 2
-  const imgscale = heightWidth / sighting.get('width')
+  const imgscale = heightWidth / (2*Math.sqrt(2)*sighting.get('width'))
   const bgSize = imgWidth * imgscale + 'px ' + imgHeight * imgscale + 'px'
-  const x = radius - sighting.get('pixelX') * imgscale
-  const y = radius - sighting.get('pixelY') * imgscale
+  /* The following calculations for x and y are calculating the offset of the fully-sized/uncompressed image that
+    will be displayed as the background image for the actual image sighting. The ratio involved a compressed dimension
+    (such as compressedWidth) compensate for the difference in dimensions between the compressed image that is displayed
+    in the image viewer and the uncompressed image that is used for the image sighting. The 300/2 is dealing with moving
+    the background image relative to the center of the image sighting, which is 300px by 300px. */
+  let x = 300/2 - sighting.get('pixelX') * (imgWidth/compressedWidth) * imgscale
+  let y = 300/2 - sighting.get('pixelY') * (imgHeight/compressedHeight) * imgscale
   const drawOrientationLine = sighting.has('radiansFromTop')
   const orientationX = radius + radius * Math.sin(sighting.get('radiansFromTop'))
   const orientationY = heightWidth - (radius + radius * Math.cos(sighting.get('radiansFromTop')))
+
   return(
     <div
       className='image'
       style={{
         backgroundImage: 'url(' + imageUrl + ')',
         backgroundSize: bgSize,
-        backgroundPosition: x + 'px ' + y + 'px'
+        backgroundPosition: x + 'px ' + y + 'px',
+        backgroundRepeat: 'no-repeat'
       }}
     >
       {/* line shows orientation of target sighting */}
@@ -46,6 +53,8 @@ ImageSighting.propTypes = {
   imgWidth: PropTypes.number.isRequired,
   imgHeight: PropTypes.number.isRequired,
   imageUrl: PropTypes.string.isRequired,
+  compressedWidth: PropTypes.number.isRequired,
+  compressedHeight: PropTypes.number.isRequired,
   sighting: PropTypes.object.isRequired
 }
 

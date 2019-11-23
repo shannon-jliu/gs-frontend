@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { fromJS } from 'immutable'
 import M from 'materialize-css'
 import _ from 'lodash'
+import localforage from 'localforage'
 
 import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting } from './components'
 import { TypeSelect } from '../../components/target'
@@ -22,8 +23,11 @@ export class TagSighting extends Component {
       alphaColor: sighting.get('alphaColor') || '',
       offaxis: sighting.get('offaxis') || false,
       mdlcClassConf: sighting.get('mdlcClassConf') || '',
+      imgSrc: '',
       imgWidth: -1,
-      imgHeight: -1
+      imgHeight: -1,
+      compressedWidth: -1,
+      compressedHeight: -1
     }
     this.save = this.save.bind(this)
     this.canSave = this.canSave.bind(this)
@@ -38,8 +42,8 @@ export class TagSighting extends Component {
     return !this.props.sighting.has('pending')
   }
 
-  // returns the difference between the state and original sighting as immutable obj
-  // within the given fields
+  /* returns the difference between the state and original sighting as immutable obj
+    within the given fields */
   findDifference(fields) {
     const s = this.state
     const origSighting = this.props.sighting
@@ -100,8 +104,8 @@ export class TagSighting extends Component {
   }
 
   componentDidMount() {
-    // required for selectors.
-    // See: https://materializecss.com/select.html#initialization
+    /* required for selectors.
+      See: https://materializecss.com/select.html#initialization */
     let elems = document.querySelectorAll('select')
     M.FormSelect.init(elems, {})
 
@@ -135,7 +139,7 @@ export class TagSighting extends Component {
         val = e.target.value
       }
       if (prop === 'alpha') {
-        //Keeps alphanum input at one character
+        // Keeps alphanum input at one character
         val = val.slice(0, 1).toUpperCase()
       } else if (prop === 'description') {
         val = val.slice(0, 100)
@@ -149,11 +153,40 @@ export class TagSighting extends Component {
     let i = new Image()
     i.onload = () => {
       this.setState({
+        imgSrc: i.src,
         imgWidth: i.width,
         imgHeight: i.height
       })
     }
-    i.src = imageUrl
+
+    let imgUrlFull = imageUrl + '_full'
+
+    localforage.getItem(imgUrlFull).then(data => {
+      if (data !== null) {
+        i.src = 'data:image/png;base64,' + data
+      } else {
+        // Display compressed version
+        localforage.getItem(imageUrl).then(data => {
+          if (data !== null) {
+            i.src = data
+          }
+        })
+      }
+    })
+
+    let iCompressed = new Image()
+    iCompressed.onload = () => {
+      this.setState({
+        compressedWidth: iCompressed.width,
+        compressedHeight: iCompressed.height
+      })
+    }
+
+    localforage.getItem(imageUrl).then(data => {
+      if (data !== null) {
+        iCompressed.src = data
+      }
+    })
   }
 
   save() {
@@ -217,9 +250,11 @@ export class TagSighting extends Component {
       <div className={this.state.saved ? 'hidden' : 'sighting card'}>
         <ImageSighting
           heightWidth={height_width}
+          imageUrl={this.state.imgSrc}
           imgWidth={this.state.imgWidth}
           imgHeight={this.state.imgHeight}
-          imageUrl={this.props.imageUrl}
+          compressedWidth={this.state.compressedWidth}
+          compressedHeight={this.state.compressedHeight}
           sighting={this.props.sighting}
         />
 

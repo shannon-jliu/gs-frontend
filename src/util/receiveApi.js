@@ -49,6 +49,13 @@ export const AssignmentGetRequests = {
     $.get(route)
       .done(successCallback)
       .fail(failureCallback)
+  },
+
+  getAllImages: function(successCallback, failureCallback) {
+    // get all images
+    $.get('/api/v1/image')
+      .done(successCallback)
+      .fail(failureCallback)
   }
 }
 

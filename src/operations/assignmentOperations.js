@@ -104,6 +104,24 @@ const AssignmentOperations = {
         dispatch(action.setActive(ind))
       }
     }
+  ),
+
+  getAllImages: dispatch => (
+    () => {
+      const successCallback = data => {
+        for (let i = 0; i < data.length; i++) {
+          dispatch(imageAction.receiveImage(fromJS(data[i])))
+        }
+      }
+
+      AssignmentGetRequests.getAllImages(successCallback, () => {})
+    }
+  ),
+
+  preloadImage: dispatch => (
+    image => {
+      dispatch(imageAction.preloadImage(fromJS(image)))
+    }
   )
 }
 
