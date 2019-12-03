@@ -1,3 +1,5 @@
+import * as _ from 'lodash'
+
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import PropTypes from 'prop-types'

@@ -1,5 +1,29 @@
 import { fromJS } from 'immutable'
 import _ from 'lodash'
+import { Target } from './targetReducer'
+
+/**
+ * @typedef {Object} TargetSighting
+ * @property {string} id
+ * @property {string} type
+ * @property {?string} shape
+ * @property {?string} shapeColor
+ * @property {?string} alpha
+ * @property {?string} alphaColor
+ * @property {?string} alphaConfidence
+ * @property {?string} shapeColorConfidence
+ * @property {?string} orientationConfidence
+ * @property {?string} mdlcClassConf
+ * @property {boolean} offaxis
+ * @property {number} width
+ * @property {number} height
+ * @property {number} pixelX
+ * @property {number} pixelY
+ * @property {number} radiansFromTop
+ * @property {null} geotag TODO: what is the type of geotag supposed to be?
+ * @property {string} creator
+ * @property {?Target} target
+ */
 
 /**
  * Notes on state representation:

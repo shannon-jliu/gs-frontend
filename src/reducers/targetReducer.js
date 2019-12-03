@@ -2,6 +2,22 @@ import { fromJS } from 'immutable'
 import _ from 'lodash'
 
 /**
+ * @typedef Target
+ * @property {?number} id
+ * @property {?string} localId
+ * @property {string} type
+ * @property {?string} shape
+ * @property {?string} alpha
+ * @property {?string} shapeColor
+ * @property {?string} alphaColor
+ * @property {number} thumbnailTSId
+ * @property {null} geotag
+ * @property {string} creator
+ * @property {boolean} offaxis
+ * 
+ */
+
+/**
  * Notes on state representation:
  * - local is the list of unsaved (locally created, not yet saved on backend) targets.
  * - saved is the list of targets saved on the backend

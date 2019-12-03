@@ -2,11 +2,18 @@ import { fromJS, merge, List, Map } from 'immutable'
 import _ from 'lodash'
 
 /**
+ * @typedef {Object} TargetSightingCluster
+ * @property {number} id the id of this target sighting cluster
+ * @property {?string} targetId the id of the target that this cluster represents
+ * @property {?string} localTargetId the id of the target this cluster represents on the frontend
+ */
+
+/**
  * Notes on state representation:
  * - target sighting clusters are not created by the user, but by an automatic script on the backend
  * - this means that the user cannot create them, so there is no need for local and saved
  * 
- * - saved tsc have an int id parameter. Thses are assigned by the backend and will overlap for different target types
+ * - saved tsc have an int id parameter. these are assigned by the backend and will overlap for different target types
  * - if the tsc is attatched to a target, it either has a target (full object) or localTargetId (just target's localId) field
  * - the pending field in a tsc is set iff some part of the tsc is saving
  *   - if the tsc is being created on the backend (and is currently local), it is empty
@@ -16,17 +23,17 @@ const initialState = fromJS([])
 
 const targetSightingReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'START_UPDATE_TARGET_SIGHTING_CLUSTER':
-      return startUpdateTargetSightingCluster(state, action.sightingCluster, action.attribute)
-    case 'SUCCEED_UPDATE_TARGET_SIGHTING_CLUSTER':
-    case 'FAIL_UPDATE_TARGET_SIGHTING_CLUSTER':
-      return clearUpdateTargetSightingCluster(state, action.sightingCluster, action.attribute)
-    case 'ADD_TARGET_SIGHTING_CLUSTERS_FROM_SERVER':
-      return addTargetSightingClustersFromServer(state, action.sightings)
-    case 'REMOVE_TARGET_FROM_TARGET_SIGHTING_CLUSTERS':
-      return removeTargetFromTargetSightingClusters(state, action.target)
-    default:
-      return state
+  case 'START_UPDATE_TARGET_SIGHTING_CLUSTER':
+    return startUpdateTargetSightingCluster(state, action.sightingCluster, action.attribute)
+  case 'SUCCEED_UPDATE_TARGET_SIGHTING_CLUSTER':
+  case 'FAIL_UPDATE_TARGET_SIGHTING_CLUSTER':
+    return clearUpdateTargetSightingCluster(state, action.sightingCluster, action.attribute)
+  case 'ADD_TARGET_SIGHTING_CLUSTERS_FROM_SERVER':
+    return addTargetSightingClustersFromServer(state, action.sightings)
+  case 'REMOVE_TARGET_FROM_TARGET_SIGHTING_CLUSTERS':
+    return removeTargetFromTargetSightingClusters(state, action.target)
+  default:
+    return state
   }
 }
 
@@ -92,7 +99,7 @@ function addTargetSightingClustersFromServer(state, sightingClusters) {
     if (_.isObject(existing)) { // if existing exists
       const savedTsc = fromJS(existing) // convert to immutable
       tsc = savedTsc.get('pending') !== undefined ? tsc.set('pending', savedTsc.get('pending')) : tsc // clear pending
-      tsc = savedTsc.get('localTargetId') !== undefined ? tsc.set('localTargetId', savedTsc.get('localTargetId')) : ts // conserve local id
+      tsc = savedTsc.get('localTargetId') !== undefined ? tsc.set('localTargetId', savedTsc.get('localTargetId')) : tsc // conserve local id
     }
 
     return tsc
@@ -110,7 +117,7 @@ function removeTargetFromTargetSightingClusters(state, target) {
   const type = target.get('type')
 
   return state.map(tsc =>
-    tsc.getIn(['target', 'id']) == targetId && tsc.get('type') == type ?
+    tsc.getIn(['target', 'id']) === targetId && tsc.get('type') === type ?
       tsc.delete('target') :
       tsc)
 }
