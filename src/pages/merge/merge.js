@@ -162,6 +162,7 @@ export class Merge extends Component {
 
 const mapStateToProps = (state) => ({
   sightings: state.targetSightingReducer.get('saved'),
+  clusters: state.targetSightingClusterReducer,
   savedTargets: state.targetReducer.get('saved'),
   localTargets: state.targetReducer.get('local')
 })

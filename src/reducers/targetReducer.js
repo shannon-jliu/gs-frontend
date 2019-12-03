@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable'
+import { fromJS, List } from 'immutable'
 import _ from 'lodash'
 
 /**
@@ -14,10 +14,11 @@ import _ from 'lodash'
  * @property {null} geotag
  * @property {string} creator
  * @property {boolean} offaxis
- * 
+ * @property {Object} pending
  */
 
 /**
+ * @type {{ local: List<Target>, saved: List<Target> }}
  * Notes on state representation:
  * - local is the list of unsaved (locally created, not yet saved on backend) targets.
  * - saved is the list of targets saved on the backend

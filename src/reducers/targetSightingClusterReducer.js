@@ -6,15 +6,17 @@ import _ from 'lodash'
  * @property {number} id the id of this target sighting cluster
  * @property {?string} targetId the id of the target that this cluster represents
  * @property {?string} localTargetId the id of the target this cluster represents on the frontend
+ * @property {Object} pending
  */
 
 /**
+ * @type {List<TargetSightingCluster>}
  * Notes on state representation:
  * - target sighting clusters are not created by the user, but by an automatic script on the backend
  * - this means that the user cannot create them, so there is no need for local and saved
  * 
  * - saved tsc have an int id parameter. these are assigned by the backend and will overlap for different target types
- * - if the tsc is attatched to a target, it either has a target (full object) or localTargetId (just target's localId) field
+ * - if the tsc is attatched to a target, it either has a targetId or localTargetId field
  * - the pending field in a tsc is set iff some part of the tsc is saving
  *   - if the tsc is being created on the backend (and is currently local), it is empty
  *   - if specific attributes are being updated, those attributes are all stored in pending

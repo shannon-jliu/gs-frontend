@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable'
+import { fromJS, List } from 'immutable'
 import _ from 'lodash'
 import { Target } from './targetReducer'
 
@@ -23,9 +23,13 @@ import { Target } from './targetReducer'
  * @property {null} geotag TODO: what is the type of geotag supposed to be?
  * @property {string} creator
  * @property {?Target} target
+ * @property {?string} localTargetId
+ * @property {?string} clusterId
+ * @property {Object} pending
  */
 
 /**
+ * @type {{ local: List<TargetSighting>, saved: List<TargetSighting> }}
  * Notes on state representation:
  * - local is the list of unsaved (locally created, not yet saved on backend) ts.
  * - saved is the list of ts saved on the backend

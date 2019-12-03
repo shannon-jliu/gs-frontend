@@ -25,11 +25,11 @@ const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd }) => {
         dragging={dragging} />
       <ul className="sighting-attributes">
         <li>
-          <span class="caption">Shape</span>
+          <span className="caption">Shape</span>
           <p>{shapeColor} {shape}</p>
         </li>
         <li>
-          <span class="caption">Alpha</span>
+          <span className="caption">Alpha</span>
           <p>{alphaColor} {alpha}</p>
         </li>
       </ul>
