@@ -56,6 +56,14 @@ describe('onMouseMove', () => {
     expect(imgViewerInstance.state.my).toEqual(100)
   })
 
+  it('should account for vertical scrolling', () => {
+    document.documentElement.scrollTop = 50
+
+    imgViewerInstance.onMouseMove(event)
+    expect(imgViewerInstance.state.mx).toEqual(100)
+    expect(imgViewerInstance.state.my).toEqual(150)
+  })
+
   it('should drag the image if in dragging mode', () => {
     const event = {
       clientX: 100,

@@ -1,4 +1,4 @@
-import { fromJS, List } from 'immutable'
+import { fromJS } from 'immutable'
 import _ from 'lodash'
 
 /**
@@ -49,33 +49,33 @@ function deleteTarget(state, target) {
   if (_.isString(target.get('localId'))) {
     return state.update('local', l =>
       //don't need to check type because localIds don't overlap for diff types
-      l.filter(tgt => tgt.get('localId') != target.get('localId'))
+      l.filter(tgt => tgt.get('localId') !== target.get('localId'))
     )
   } else {
     return state.update('saved', l =>
-      l.filter(tgt => tgt.get('id') != target.get('id') || tgt.get('type') != target.get('type'))
+      l.filter(tgt => tgt.get('id') !== target.get('id') || tgt.get('type') !== target.get('type'))
     )
   }
 }
 
 function startSaveTarget(state, localId) {
-  return state.update('local', l => l.map(tgt => tgt.get('localId') == localId ? tgt.set('pending', fromJS({})) : tgt))
+  return state.update('local', l => l.map(tgt => tgt.get('localId') === localId ? tgt.set('pending', fromJS({})) : tgt))
 }
 
 function succeedSaveTarget(state, target, localId) {
   return state
-    .update('local', l => l.filter(tgt => tgt.get('localId') != localId))
+    .update('local', l => l.filter(tgt => tgt.get('localId') !== localId))
     .update('saved', s => s.push(target))
 }
 
 function failSaveTarget(state, localId) {
-  return state.update('local', l => l.map(tgt => tgt.get('localId') == localId ? tgt.delete('pending') : tgt))
+  return state.update('local', l => l.map(tgt => tgt.get('localId') === localId ? tgt.delete('pending') : tgt))
 }
 
 function startUpdateTarget(state, target, attribute) {
   return state.update('saved', s => s.map(tgt => {
-    if (tgt.get('id') == target.get('id') && tgt.get('type') == target.get('type')) {
-      if (tgt.get('pending') == undefined) {
+    if (tgt.get('id') === target.get('id') && tgt.get('type') === target.get('type')) {
+      if (tgt.get('pending') === undefined) {
         return tgt.set('pending', attribute)
       } else {
         //overwrite is fine because save should never be called for attribute currently pending save
@@ -88,10 +88,10 @@ function startUpdateTarget(state, target, attribute) {
 
 function succeedUpdateTarget(state, target, attribute) {
   return state.update('saved', s => s.map(tgt => {
-    if (tgt.get('id') == target.get('id') && tgt.get('type') == target.get('type')) {
-      if (tgt.get('pending') != undefined) {
+    if (tgt.get('id') === target.get('id') && tgt.get('type') === target.get('type')) {
+      if (tgt.get('pending') !== undefined) {
         const newPending = tgt.get('pending').deleteAll(attribute.keys())
-        return newPending.size == 0 ? target.delete('pending') : target.set('pending', newPending)
+        return newPending.size === 0 ? target.delete('pending') : target.set('pending', newPending)
       }
       return target
     }
@@ -101,10 +101,10 @@ function succeedUpdateTarget(state, target, attribute) {
 
 function failUpdateTarget(state, target, attribute) {
   return state.update('saved', s => s.map(tgt => {
-    if (tgt.get('id') == target.get('id') && tgt.get('type') == target.get('type')) {
-      if (tgt.get('pending') != undefined) {
+    if (tgt.get('id') === target.get('id') && tgt.get('type') === target.get('type')) {
+      if (tgt.get('pending') !== undefined) {
         const newPending = tgt.get('pending').deleteAll(attribute.keys())
-        return newPending.size == 0 ? tgt.delete('pending') : tgt.set('pending', newPending)
+        return newPending.size === 0 ? tgt.delete('pending') : tgt.set('pending', newPending)
       }
     }
     return tgt
@@ -118,7 +118,7 @@ function addTargetsFromServer(state, targets) {
     targets.map(tgt => {
       if (_.isObject(savedById[tgt.get('id') + ':' + tgt.get('type')])) {
         const savedTgt = savedById[tgt.get('id') + ':' + tgt.get('type')]
-        return savedTgt.get('pending') != undefined ? tgt.set('pending', savedTgt.get('pending')) : tgt
+        return savedTgt.get('pending') !== undefined ? tgt.set('pending', savedTgt.get('pending')) : tgt
       } else {
         return tgt
       }

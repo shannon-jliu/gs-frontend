@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
-import { fromJS, Map } from 'immutable'
+import { fromJS } from 'immutable'
 
-import cameraReducer from '../../reducers/cameraReducer.js'
 import cameraOperations from '../../operations/cameraOperations.js'
 
 import Switch from './components/Switch.js'
@@ -77,7 +76,7 @@ export class CameraSettings extends Component {
       (zoom >= 0 && zoom <= 2)
 
     return (
-      this.props.settings.get('pending').size == 0 &&
+      this.props.settings.get('pending').size === 0 &&
       !_.isEqual(newFields, savedFields) &&
       isValidSetting
     )

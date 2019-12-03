@@ -50,7 +50,7 @@ export class MergeTarget extends Component {
     // required for selectors.
     // See: https://materializecss.com/select.html#initialization
     let elems = document.querySelectorAll('select')
-    let instances = M.FormSelect.init(elems, {})
+    M.FormSelect.init(elems, {})
   }
 
   componentWillReceiveProps(nextProps) {
@@ -106,10 +106,10 @@ export class MergeTarget extends Component {
 
     //0.5 degrees of latitude is longitude is 25-35 miles -- should be used as a sanity check, not a guarantee within bounds
     const isGeotagValid =
-      s.latitude === '' && s.longitude === '' ||
-      !_.isNaN(parseFloat(s.latitude)) && !_.isNaN(parseFloat(s.longitude)) &&
-        (Math.abs(parseFloat(s.latitude) - PAX_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - PAX_COORDS[1]) < 0.5 ||
-          Math.abs(parseFloat(s.latitude) - NENO_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - NENO_COORDS[1]) < 0.5)
+      (s.latitude === '' && s.longitude === '') ||
+      (!_.isNaN(parseFloat(s.latitude)) && !_.isNaN(parseFloat(s.longitude)) &&
+        (Math.abs(parseFloat(s.latitude) - PAX_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - PAX_COORDS[1]) < 0.5)) ||
+          (Math.abs(parseFloat(s.latitude) - NENO_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - NENO_COORDS[1]) < 0.5)
 
     if (!isGeotagValid) {
       if (showReason) {
@@ -162,8 +162,8 @@ export class MergeTarget extends Component {
       s.latitude !== '' && s.longitude !== '' &&
         (!t.hasIn(['geotag', 'gpsLocation', 'latitude']) ||
         !t.hasIn(['geotag', 'gpsLocation', 'longitude']) ||
-        t.getIn(['geotag', 'gpsLocation', 'latitude']) != s.latitude ||
-        t.getIn(['geotag', 'gpsLocation', 'longitude']) != s.longitude)
+        t.getIn(['geotag', 'gpsLocation', 'latitude']) !== s.latitude ||
+        t.getIn(['geotag', 'gpsLocation', 'longitude']) !== s.longitude)
 
     if (geotagHasChanged) return true
 
@@ -196,8 +196,8 @@ export class MergeTarget extends Component {
       const validEmergentFields = ['description']
       const validAlphanumFields = ['shape', 'shapeColor', 'alpha', 'alphaColor']
 
-      let newVals = fromJS(_.pick(s, _.concat(validFields, t.get('type') == 'alphanum' ? validAlphanumFields : validEmergentFields)))
-        .filter((value, key) => t.get(key) != value)
+      let newVals = fromJS(_.pick(s, _.concat(validFields, t.get('type') === 'alphanum' ? validAlphanumFields : validEmergentFields)))
+        .filter((value, key) => t.get(key) !== value)
 
       if (s.longitude !== '' && s.latitude !== '' &&
           (t.getIn(['geotag', 'gpsLocation', 'longitude']) !== s.longitude ||
@@ -314,7 +314,7 @@ export class MergeTarget extends Component {
             <MergeSightingPreview
               key={ts.get('id') + '-image-' + ts.get('type')}
               onClick={() => this.selectThumb(ts.get('id'))}
-              isThumbnail={ts.get('id') == this.state.thumbnailTSId}
+              isThumbnail={ts.get('id') === this.state.thumbnailTSId}
               isMerged={true}
               sighting={ts}
               onDragStart={
@@ -325,7 +325,7 @@ export class MergeTarget extends Component {
                 t.get('type') === 'emergent' || t.get('offaxis')
                   ? undefined : this.props.onTsDragEnd
               }
-              dragging={t.get('type') == 'alphanum' && ts.get('id') === this.props.dragId}
+              dragging={t.get('type') === 'alphanum' && ts.get('id') === this.props.dragId}
             />
           )).toJSON() /*toJSON is a shallow conversion while toJS is deep */}
         </div>

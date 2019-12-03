@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
 import _ from 'lodash'
+import localforage from 'localforage'
 
 import './stylesheets/imageViewer.css'
 
@@ -27,6 +28,7 @@ class ImageViewer extends Component {
         scale: 1
       },
       img: { // img height and width
+        src: null,
         width: 0,
         height: 0
       },
@@ -48,8 +50,8 @@ class ImageViewer extends Component {
 
   // on mouse press down
   onMouseDown(event) {
-    // save the location where the mouse was clicked (the center)
-    // if the image is zoomed, you can "drag" the image around
+    /* save the location where the mouse was clicked (the center)
+      if the image is zoomed, you can "drag" the image around */
     this.setState({
       dragging: true,
       mousedown: {
@@ -118,8 +120,8 @@ class ImageViewer extends Component {
     // w and h are the dimensions of the image in the image viewer
     const w = wmin * s.view.scale
     const h = hmin * s.view.scale
-    // s.view.x * w / s.img.width and for height is the offset if the image is zoomed in
-    // actual_x and y is position of the top left corner in the image viewer space
+    /* s.view.x * w / s.img.width and for height is the offset if the image is zoomed in
+      actual_x and y is position of the top left corner in the image viewer space */
     const actual_x = (s.width - w) / 2 + s.view.x * w / s.img.width
     const actual_y = (s.height - h) / 2 + s.view.y * h / s.img.height
     // multiply the original image dimensions by the %s that point is a
@@ -140,7 +142,7 @@ class ImageViewer extends Component {
         let dy = n.y - s.tag.cy
         let r = Math.sqrt(dx * dx + dy * dy)
         let rad = (Math.atan2(dy, dx) + 5 * Math.PI / 2) % (2 * Math.PI)
-        //record tag
+        // record tag
         this.props.onTag({
           pixelX: Math.round(s.tag.cx),
           pixelY: Math.round(s.tag.cy),
@@ -149,7 +151,7 @@ class ImageViewer extends Component {
           radiansFromTop: rad,
           localId: s.tag.cx + ':' + s.tag.cy + ':' + r + ':' + Math.random()
         })
-        //clear state
+        // clear state
         this.setState({
           tag: {
             on: false,
@@ -178,16 +180,16 @@ class ImageViewer extends Component {
     const s = this.state
     let x = s.view.x
     let y = s.view.y
-    // event.clientX and Y is the mouse's position in the whole window
-    // however we offset it from the location of the imageviewer itself, pos
+    /* event.clientX and Y is the mouse's position in the whole window
+      however we offset it from the location of the imageviewer itself, pos */
     let pos = $(this.refs.viewer).offset()
     let newMX = event.clientX - pos.left
     let newMY = event.clientY - pos.top
 
     if (s.dragging) {
-      // if the mouse is currently being pressed down, moving the mouse will also
-      // shift the image
-      // yeah i also wish this math was documented lmao
+      /* if the mouse is currently being pressed down, moving the mouse will also
+        shift the image
+        yeah i also wish this math was documented lmao */
       let maxTransX = s.img.width * (1 - 1 / s.view.scale) / 2
       let maxTransY = s.img.height * (1 - 1 / s.view.scale) / 2
       let maxScale =
@@ -202,8 +204,8 @@ class ImageViewer extends Component {
       )
     }
     this.setState({
-      mx: newMX,
-      my: newMY,
+      mx: newMX, // not necessary to factor in scrolling since it will resize accordingly
+      my: newMY + document.documentElement.scrollTop, // imageTools bumps down the imageViewer, so user may need to scroll down
       view: {
         scale: s.view.scale,
         x: x,
@@ -217,14 +219,14 @@ class ImageViewer extends Component {
     let w = this.refs.viewer.offsetWidth
     let h = this.refs.viewer.offsetHeight
     if (h < 300) {
-      // keep attempting to resize it until the height is at least 300
-      // could be that the image hasn't loaded yet
+      /* keep attempting to resize it until the height is at least 300
+        could be that the image hasn't loaded yet */
       setTimeout(this.resize, 10)
     } else {
       const s = this.state
       if (w !== s.width || h !== s.height) {
-        // update the width/height in the state
-        // maintain aspect ratio to the image
+        /* update the width/height in the state
+          maintain aspect ratio to the image */
         let hmin = Math.min(s.height, s.width * s.img.height / s.img.width)
         let maxScale = s.img.height / hmin // maxScale for the image when zoomed
         this.setState({
@@ -242,12 +244,12 @@ class ImageViewer extends Component {
 
   // loads the given image into the state
   loadImage(imageUrl) {
-    if (imageUrl === undefined) imageUrl = DEFAULT_IMG
     let i = new Image()
     i.onload = () => {
       this.setState({
         loaded: true,
         img: {
+          src: i.src,
           width: i.width,
           height: i.height
         },
@@ -258,7 +260,14 @@ class ImageViewer extends Component {
         }
       })
     }
-    i.src = imageUrl
+
+    localforage.getItem(imageUrl).then(data => {
+      if (data !== null) {
+        i.src = data
+      } else {
+        i.src = DEFAULT_IMG
+      }
+    })
   }
 
   componentDidMount() {
@@ -284,6 +293,7 @@ class ImageViewer extends Component {
           scale: 1
         },
         img: {
+          src: null,
           width: 0,
           height: 0
         }
@@ -327,7 +337,7 @@ class ImageViewer extends Component {
   render() {
     const p = this.props
     let style = {
-      backgroundImage: 'url("' + p.imageUrl + '")'
+      backgroundImage: 'url("' + this.state.img.src + '")',
     }
     if (!_.isUndefined(p.brightness) &&
       !_.isUndefined(p.contrast) &&
@@ -343,9 +353,9 @@ class ImageViewer extends Component {
     const s = this.state
     let tagger = null
     if (s.loaded) {
-      // calculations for the image itself
-      // calculate width/height of the image according to scale
-      // do min here to because it fits the image to scale within the imageviewer
+      /* calculations for the image itself
+        calculate width/height of the image according to scale
+        do min here to because it fits the image to scale within the imageviewer */
       let wmin = Math.min(s.width, s.height * s.img.width / s.img.height)
       let hmin = Math.min(s.height, s.width * s.img.height / s.img.width)
       let w = wmin * s.view.scale

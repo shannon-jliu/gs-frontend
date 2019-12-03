@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import _ from 'lodash'
 import * as action from '../actions/gimbalSettingsActionCreator.js'
 import { SettingsRequest } from '../util/sendApi.js'
 import { SettingsGetRequests } from '../util/receiveApi.js'

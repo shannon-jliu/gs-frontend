@@ -37,7 +37,7 @@ class Header extends Component {
         <nav>
           <div className="red nav-wrapper">
             <div className="brand-logo" style={{marginLeft:10}}>
-              <a href="#"><img src={require('../img/cuair_logo.png')}/></a>
+              <a href="/#"><img src={require('../img/cuair_logo.png')} alt='' /></a>
             </div>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
               {

@@ -12,7 +12,6 @@ import gimbalSettingsOperations from '../../operations/gimbalSettingsOperations.
 import airdropOperations from '../../operations/airdropOperations.js'
 
 import Modes from './components/Modes.js'
-import { GET_SETTINGS } from '../../util/config.js'
 
 import './settings.css'
 

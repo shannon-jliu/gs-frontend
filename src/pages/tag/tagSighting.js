@@ -4,9 +4,10 @@ import PropTypes from 'prop-types'
 import { fromJS } from 'immutable'
 import M from 'materialize-css'
 import _ from 'lodash'
+import localforage from 'localforage'
 
 import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting } from './components'
-import { TypeSelect, ConfSelect } from '../../components/target'
+import { TypeSelect } from '../../components/target'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 
 export class TagSighting extends Component {
@@ -22,8 +23,11 @@ export class TagSighting extends Component {
       alphaColor: sighting.get('alphaColor') || '',
       offaxis: sighting.get('offaxis') || false,
       mdlcClassConf: sighting.get('mdlcClassConf') || '',
+      imgSrc: '',
       imgWidth: -1,
-      imgHeight: -1
+      imgHeight: -1,
+      compressedWidth: -1,
+      compressedHeight: -1
     }
     this.save = this.save.bind(this)
     this.canSave = this.canSave.bind(this)
@@ -38,12 +42,12 @@ export class TagSighting extends Component {
     return !this.props.sighting.has('pending')
   }
 
-  // returns the difference between the state and original sighting as immutable obj
-  // within the given fields
+  /* returns the difference between the state and original sighting as immutable obj
+    within the given fields */
   findDifference(fields) {
     const s = this.state
     const origSighting = this.props.sighting
-    const diffKeys = Object.keys(s).filter(k => fields.includes(k) && s[k] != origSighting.get(k))
+    const diffKeys = Object.keys(s).filter(k => fields.includes(k) && s[k] !== origSighting.get(k))
     let diffObj = {}
     for (let i = 0; i < diffKeys.length; i++) {
       const key = diffKeys[i]
@@ -60,7 +64,7 @@ export class TagSighting extends Component {
     if (this.actionable()) {
       const s = this.state
       if (s.type === 'roi') return true
-      if (s.type == 'emergent') {
+      if (s.type === 'emergent') {
         return (s.description.length > 0 &&
         s.mdlcClassConf.length > 0 &&
         !_.isEqual(
@@ -68,42 +72,40 @@ export class TagSighting extends Component {
           _.pick(sighting.toJS(), ['description', 'mdlcClassConf'])
         ))
       }
-      if (s.type == 'alphanum') {
-        // is all of the info there?
-        if(!s.shape || !s.shapeColor || !s.alpha || !s.alphaColor || !s.mdlcClassConf) return false
-
-        // is our alpha actually alphanumeric?
-        if(!s.alpha.match(/^[A-Za-z0-9]$/g)) return false
-
-        // is it different from what we already have?
-        if(_.isEqual(
-          _.pick(s, [
-            'shape',
-            'shapeColor',
-            'alpha',
-            'alphaColor',
-            'offaxis',
-            'mdlcClassConf'
-          ]),
-          _.pick(sighting.toJS(), [
-            'shape',
-            'shapeColor',
-            'alpha',
-            'alphaColor',
-            'offaxis',
-            'mdlcClassConf'
-          ])
-        )) return false
-
-        return true
+      if (s.type === 'alphanum') {
+        return (
+          s.shape.length > 0 &&
+          s.shapeColor.length > 0 &&
+          s.alpha.length > 0 &&
+          s.alphaColor.length > 0 &&
+          s.mdlcClassConf.length > 0 &&
+          !_.isEqual(
+            _.pick(s, [
+              'shape',
+              'shapeColor',
+              'alpha',
+              'alphaColor',
+              'offaxis',
+              'mdlcClassConf'
+            ]),
+            _.pick(sighting.toJS(), [
+              'shape',
+              'shapeColor',
+              'alpha',
+              'alphaColor',
+              'offaxis',
+              'mdlcClassConf'
+            ])
+          )
+        )
       }
     }
     return false
   }
 
   componentDidMount() {
-    // required for selectors.
-    // See: https://materializecss.com/select.html#initialization
+    /* required for selectors.
+      See: https://materializecss.com/select.html#initialization */
     let elems = document.querySelectorAll('select')
     M.FormSelect.init(elems, {})
 
@@ -137,7 +139,7 @@ export class TagSighting extends Component {
         val = e.target.value
       }
       if (prop === 'alpha') {
-        //Keeps alphanum input at one character
+        // Keeps alphanum input at one character
         val = val.slice(0, 1).toUpperCase()
       } else if (prop === 'description') {
         val = val.slice(0, 100)
@@ -151,11 +153,40 @@ export class TagSighting extends Component {
     let i = new Image()
     i.onload = () => {
       this.setState({
+        imgSrc: i.src,
         imgWidth: i.width,
         imgHeight: i.height
       })
     }
-    i.src = imageUrl
+
+    let imgUrlFull = imageUrl + '_full'
+
+    localforage.getItem(imgUrlFull).then(data => {
+      if (data !== null) {
+        i.src = 'data:image/png;base64,' + data
+      } else {
+        // Display compressed version
+        localforage.getItem(imageUrl).then(data => {
+          if (data !== null) {
+            i.src = data
+          }
+        })
+      }
+    })
+
+    let iCompressed = new Image()
+    iCompressed.onload = () => {
+      this.setState({
+        compressedWidth: iCompressed.width,
+        compressedHeight: iCompressed.height
+      })
+    }
+
+    localforage.getItem(imageUrl).then(data => {
+      if (data !== null) {
+        iCompressed.src = data
+      }
+    })
   }
 
   save() {
@@ -166,14 +197,14 @@ export class TagSighting extends Component {
       } else {
         // adds fields listed and saves the target sighting
         let newSighting, attr
-        if (s.type == 'emergent') {
+        if (s.type === 'emergent') {
           newSighting = this.props.sighting.merge({
             type: s.type,
             description: s.description,
             mdlcClassConf: s.mdlcClassConf
           })
           attr = this.findDifference(['description', 'mdlcClassConf'])
-        } else if (s.type == 'alphanum') {
+        } else if (s.type === 'alphanum') {
           newSighting = this.props.sighting.merge({
             type: s.type,
             shape: s.shape,
@@ -219,9 +250,11 @@ export class TagSighting extends Component {
       <div className={this.state.saved ? 'hidden' : 'sighting card'}>
         <ImageSighting
           heightWidth={height_width}
+          imageUrl={this.state.imgSrc}
           imgWidth={this.state.imgWidth}
           imgHeight={this.state.imgHeight}
-          imageUrl={this.props.imageUrl}
+          compressedWidth={this.state.compressedWidth}
+          compressedHeight={this.state.compressedHeight}
           sighting={this.props.sighting}
         />
 
@@ -234,7 +267,7 @@ export class TagSighting extends Component {
           />
         </div>
 
-        <div className={this.state.type == 'alphanum' ? '' : 'hidden'}>
+        <div className={this.state.type === 'alphanum' ? '' : 'hidden'}>
           <AlphanumFields
             shape={this.state.shape}
             shapeColor={this.state.shapeColor}
@@ -247,7 +280,7 @@ export class TagSighting extends Component {
           />
         </div>
 
-        <div className={this.state.type == 'emergent' ? '' : 'hidden'}>
+        <div className={this.state.type === 'emergent' ? '' : 'hidden'}>
           <EmergentFields
             description={this.state.description}
             confidence={this.state.mdlcClassConf}
@@ -256,7 +289,7 @@ export class TagSighting extends Component {
         </div>
 
         {/* TypeSelect still allows users to select no type, so this line is still rqeuired */}
-        <div className={this.state.type != '' ? 'row' : 'hidden'}>
+        <div className={this.state.type !== '' ? 'row' : 'hidden'}>
           <ButtonRow
             type={this.state.type}
             isSaved={this.props.sighting.has('id')}

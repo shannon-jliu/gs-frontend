@@ -67,7 +67,7 @@ const AssignmentOperations = {
         const msg = assignments.length > 0 ? '. ' + assignments.length + ' assignments were found' : ''
         AssignmentRequests.requestWork((data, _, xhr) => {
           // if 204 is returned, no new assignments, do not increment
-          if (xhr.status == 204) {
+          if (xhr.status === 204) {
             dispatch(action.finishLoading())
             SnackbarUtil.render('No new assignments' + msg)
           } else {
@@ -103,6 +103,24 @@ const AssignmentOperations = {
         const ind = currIndex + (goToLast ? assignments.length : 1)
         dispatch(action.setActive(ind))
       }
+    }
+  ),
+
+  getAllImages: dispatch => (
+    () => {
+      const successCallback = data => {
+        for (let i = 0; i < data.length; i++) {
+          dispatch(imageAction.receiveImage(fromJS(data[i])))
+        }
+      }
+
+      AssignmentGetRequests.getAllImages(successCallback, () => {})
+    }
+  ),
+
+  preloadImage: dispatch => (
+    image => {
+      dispatch(imageAction.preloadImage(fromJS(image)))
     }
   )
 }

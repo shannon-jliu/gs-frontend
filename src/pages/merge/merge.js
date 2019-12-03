@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
+import _ from 'lodash'
 
 import MergeSighting from './mergeSighting'
 import MergeTarget from './mergeTarget'
@@ -59,7 +60,7 @@ export class Merge extends Component {
   }
 
   onDragEnd() {
-    if (this.state.dragSighting != null && this.state.dragSighting.get('target') != null) {
+    if (!_.isNil(this.state.dragSighting) && !_.isNil(this.state.dragSighting.get('target'))) {
       this.props.updateTargetSighting(this.state.dragSighting, fromJS({target: null}))
     }
     this.setState({
@@ -69,9 +70,9 @@ export class Merge extends Component {
 
   onDrop(target) {
     if (target.has('id')) {
-      const dragTgt = this.state.dragSighting.getIn(['pending', 'target']) === null ? undefined :
+      const dragTgt = _.isNull(this.state.dragSighting.getIn(['pending', 'target'])) ? undefined :
         (this.state.dragSighting.getIn(['pending', 'target']) || this.state.dragSighting.get('target'))
-      if (dragTgt == undefined || dragTgt.get('id') != target.get('id')) {
+      if (_.isUndefined(dragTgt) || dragTgt.get('id') !== target.get('id')) {
         this.props.updateTargetSighting(this.state.dragSighting, fromJS({target}))
       }
     }
@@ -81,8 +82,8 @@ export class Merge extends Component {
   }
 
   renderSighting(sighting) {
-    const isDragging = this.state.dragSighting != null &&
-        sighting.get('id') == this.state.dragSighting.get('id')
+    const isDragging = !_.isNil(this.state.dragSighting) &&
+        sighting.get('id') === this.state.dragSighting.get('id')
 
     return (
       <MergeSighting
@@ -107,7 +108,7 @@ export class Merge extends Component {
       })
       : fromJS([])
 
-    const dragId = this.state.dragSighting == null ? undefined
+    const dragId = _.isNil(this.state.dragSighting) ? undefined
       : this.state.dragSighting.get('id')
 
     return (
@@ -126,14 +127,14 @@ export class Merge extends Component {
   render() {
     //pending's target overrides the normal target. If pending's target is null, the target is deleted; if pending's target is undefined, there is no override
     //for that reason, this uses both loose and strict equality (!= null checks both - x != null is the same as (x !== null && x !== undefined))
-    const isAssigned = ts => (ts.get('target') != null && ts.getIn(['pending', 'target']) !== null) || ts.getIn(['pending', 'target']) != null
+    //It should also be noted that _.isNil() will check both null and undefined equality.
+    const isAssigned = ts => (!_.isNil(ts.get('target')) && !_.isNull(ts.getIn(['pending', 'target']))) || !_.isNil(ts.getIn(['pending', 'target']))
     const assignedSightings = this.props.sightings.filter(isAssigned)
     const unassignedSightings = this.props.sightings.filter(ts => ts.get('type') === 'alphanum' && !isAssigned(ts))
-
     const sortedTargets = this.props.savedTargets.sort((target1, target2) => {
-      if (target1.get('type') == 'emergent') {
+      if (target1.get('type') === 'emergent') {
         return -1
-      } else if (target2.get('type') == 'emergent') {
+      } else if (target2.get('type') === 'emergent') {
         return 1
       } else {
         return target1.get('id') - target2.get('id')

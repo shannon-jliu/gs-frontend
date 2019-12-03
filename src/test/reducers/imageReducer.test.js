@@ -10,6 +10,7 @@ describe('imageReducer', () => {
 
   const initState = fromJS({
     all: {},
+    lastIdPreloaded: -1,
     recent: {
       timestamp: -1
     }
@@ -41,6 +42,7 @@ describe('imageReducer', () => {
           all: {
             1: firstImg,
           },
+          lastIdPreloaded: -1,
           recent: firstImg,
         })
       )
@@ -108,6 +110,58 @@ describe('imageReducer', () => {
             2: secondImg,
           },
           recent: firstImg,
+        })
+      )
+    })
+  })
+
+  describe('PRELOAD_IMAGE', () => {
+    const firstImg = fromJS({
+      'id': 1,
+      'timestamp': 5,
+      'state': null,
+      'imageUrl': '/api/v1/image/file/5.jpeg',
+      'telemetryData': null,
+      'gimbalView': null
+    })
+    it('should handle PRELOAD_IMAGE', () => {
+      expect(
+        reducer(
+          initState,
+          {
+            type: 'PRELOAD_IMAGE',
+            img: firstImg,
+          })
+      ).toEqualImmutable(
+        fromJS({
+          all: {},
+          lastIdPreloaded: 1,
+          recent: {
+            timestamp: -1
+          }
+        })
+      )
+    })
+
+    it('should not update lastIdPreloaded twice', () => {
+      expect(
+        reducer(
+          initState,
+          {
+            type: 'PRELOAD_IMAGE',
+            img: firstImg,
+          },
+          {
+            type: 'PRELOAD_IMAGE',
+            img: firstImg,
+          })
+      ).toEqualImmutable(
+        fromJS({
+          all: {},
+          lastIdPreloaded: 1,
+          recent: {
+            timestamp: -1
+          }
         })
       )
     })

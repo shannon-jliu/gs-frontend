@@ -1,6 +1,4 @@
-import _ from 'lodash'
-
-import React, { Component } from 'react'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import PropTypes from 'prop-types'
 

@@ -3,8 +3,6 @@ import $ from 'jquery'
 import _ from 'lodash'
 
 import { AUTH_TOKEN_ID } from '../constants/constants'
-
-import Modes from '../pages/settings/components/Modes.js'
 import { GET_SETTINGS } from './config.js'
 
 export const TargetGetRequests = {
@@ -49,6 +47,13 @@ export const AssignmentGetRequests = {
       ? '/api/v1/assignment'
       : '/api/v1/assignment/user'
     $.get(route)
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+
+  getAllImages: function(successCallback, failureCallback) {
+    // get all images
+    $.get('/api/v1/image')
       .done(successCallback)
       .fail(failureCallback)
   }

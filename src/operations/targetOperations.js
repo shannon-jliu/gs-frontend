@@ -78,7 +78,7 @@ const TargetOperations = {
         const recievedTarget = fromJS(data).set('type', 'alphanum')
         dispatch(action.succeedSaveTarget(recievedTarget, target.get('localId')))
 
-        sightings.filter(ts => ts.get('localTargetId') == target.get('localId')).forEach(ts => {
+        sightings.filter(ts => ts.get('localTargetId') === target.get('localId')).forEach(ts => {
           TargetSightingOperations.updateTargetSighting(dispatch)(ts, fromJS({target: recievedTarget}))
         })
       }
@@ -117,7 +117,7 @@ const TargetOperations = {
         dispatch(action.failUpdateTarget(target, attribute))
       }
 
-      targetRequests.updateTarget(target.get('type') == 'alphanum', target.get('id'), targetToSend, successCallback, failureCallback)
+      targetRequests.updateTarget(target.get('type') === 'alphanum', target.get('id'), targetToSend, successCallback, failureCallback)
     }
   )
 }

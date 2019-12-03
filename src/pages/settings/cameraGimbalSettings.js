@@ -4,12 +4,9 @@ import _ from 'lodash'
 
 import { fromJS } from 'immutable'
 
-import cameraGimbalReducer from '../../reducers/cameraGimbalReducer.js'
 import cameraGimbalOperations from '../../operations/cameraGimbalOperations.js'
 
 import Radio from './components/Radio.js'
-import TextField from './components/TextField.js'
-
 import Modes from './components/Modes.js'
 
 export class CameraGimbalSettings extends Component {
@@ -59,11 +56,10 @@ export class CameraGimbalSettings extends Component {
 
   canSave() {
     let newFields = this.getNewFields()
-    let savedFields = this.getSavedFields()
 
     return (
-      newFields.mode != undefined &&
-      this.props.settings.get('pending').size == 0
+      newFields.mode !== undefined &&
+      this.props.settings.get('pending').size === 0
     )
   }
 
@@ -147,7 +143,7 @@ export class CameraGimbalSettings extends Component {
                 />
               </div>
               <div className="row">
-                <a onClick={this.save} className={saveClass}>
+                <a onClick={this.save} className={saveClass} href='/#'>
                   Save
                 </a>
               </div>
