@@ -31,7 +31,10 @@ class MergeSightingCluster extends Component {
    * @param {DragEvent} ev 
    */
   onDragStart(ev) {
-    ev.dataTransfer.setData('application/json+cluster', JSON.stringify(this.props.cluster.toJS()))
+    const data = this.props.cluster.toJS()
+    const str = JSON.stringify(data)
+
+    ev.dataTransfer.setData('application/json+cluster', str)
     ev.dataTransfer.dropEffect = 'move'
   }
 
@@ -48,21 +51,24 @@ class MergeSightingCluster extends Component {
         style={dragging ? { opacity: 0.15 } : {}}
         draggable
         onDragStart={this.onDragStart}>
-        <ul className="merge-cluster-attributes">
-          <li>
-            <label>Shape</label>
-            <br />
-            <span>{shapeColor} {shape}</span>
-          </li>
-          <li>
-            <label>Alpha</label>
-            <br />
-            <span>{alphaColor} {alpha}</span>
-          </li>
-        </ul>
+        {this.props.isMerged ?
+          null :
+          <ul className="merge-cluster-attributes">
+            <li>
+              <label>Shape</label>
+              <br />
+              <span>{shapeColor} {shape}</span>
+            </li>
+            <li>
+              <label>Alpha</label>
+              <br />
+              <span>{alphaColor} {alpha}</span>
+            </li>
+          </ul>}
         <ul className="merge-cluster-sightings">
           {sightings.map(s => <li>
             <MergeSightingPreview
+              key={s.id}
               isThumbnail={false}
               isMerged={false}
               sighting={s} />
@@ -76,9 +82,6 @@ class MergeSightingCluster extends Component {
 
 MergeSightingCluster.propTypes = {
   cluster: ImmutablePropTypes.map.isRequired,
-  dragging: PropTypes.bool.isRequired,
-  onDragStart: PropTypes.func,
-  onDragEnd: PropTypes.func
 }
 
 export default connect((state, props) => ({

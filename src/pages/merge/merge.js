@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fromJS } from 'immutable'
+import { fromJS, List } from 'immutable'
 import _ from 'lodash'
 
 import MergeSightingCluster from './mergeSightingCluster'
@@ -12,7 +12,7 @@ import TargetOperations from '../../operations/targetOperations'
 import './merge.css'
 
 export class Merge extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -20,10 +20,6 @@ export class Merge extends Component {
     }
 
     this.newTarget = this.newTarget.bind(this)
-    this.onDragStart = this.onDragStart.bind(this)
-    this.onDragEnd = this.onDragEnd.bind(this)
-    this.onDrop = this.onDrop.bind(this)
-    // this.renderSighting = this.renderSighting.bind(this)
     this.renderTarget = this.renderTarget.bind(this)
   }
 
@@ -54,73 +50,19 @@ export class Merge extends Component {
     this.props.addTarget(target)
   }
 
-  onDragStart(sighting) {
-    this.setState({
-      dragSighting: sighting
-    })
-  }
-
-  onDragEnd() {
-    if (!_.isNil(this.state.dragSighting) && !_.isNil(this.state.dragSighting.get('target'))) {
-      this.props.updateTargetSighting(this.state.dragSighting, fromJS({target: null}))
-    }
-    this.setState({
-      dragSighting: null
-    })
-  }
-
-  onDrop(target) {
-    if (target.has('id')) {
-      const dragTgt = _.isNull(this.state.dragSighting.getIn(['pending', 'target'])) ? undefined :
-        (this.state.dragSighting.getIn(['pending', 'target']) || this.state.dragSighting.get('target'))
-      if (_.isUndefined(dragTgt) || dragTgt.get('id') !== target.get('id')) {
-        this.props.updateTargetSighting(this.state.dragSighting, fromJS({target}))
-      }
-    }
-    this.setState({
-      dragSighting: null
-    })
-  }
-
-  // renderSighting(sighting) {
-  //   const isDragging = !_.isNil(this.state.dragSighting) &&
-  //       sighting.get('id') === this.state.dragSighting.get('id')
-
-  //   return (
-  //     <MergeSighting
-  //       key={sighting.get('id') + '-sighting-info'}
-  //       sighting={sighting}
-  //       onDragStart={() => this.onDragStart(sighting)}
-  //       onDragEnd={this.onDragEnd}
-  //       dragging={isDragging}
-  //     />
-  //   )
-  // }
-
-  renderTarget(target, assignedSightings) {
-    const boundSightings = target.has('id') ?
-      assignedSightings.filter(s => {
-        if (s.hasIn(['pending', 'target'])) {
-          //if pending.target === null, this will return false
-          return s.getIn(['pending', 'target', 'id']) === target.get('id') && s.get('type') === target.get('type')
-        } else {
-          return s.getIn(['target', 'id']) === target.get('id') && s.get('type') === target.get('type')
-        }
+  renderTarget(target, assignedClusters) {
+    const boundClusters = _.isNil(target.get('id')) ?
+      List() :
+      assignedClusters.filter(c => {
+        if (c.get('type') !== target.get('type')) return false
+        return c.hasIn(['pending', 'targetId']) === target.get('id') || c.get('targetId') === target.get('id')
       })
-      : fromJS([])
-
-    const dragId = _.isNil(this.state.dragSighting) ? undefined
-      : this.state.dragSighting.get('id')
 
     return (
       <MergeTarget
         key={(target.get('id') || target.get('localId')) + '-target-' + target.get('type')}
         target={target}
-        sightings={boundSightings}
-        onTsDragStart={this.onDragStart}
-        onTsDragEnd={this.onDragEnd}
-        onTsDrop={this.onDrop}
-        dragId={dragId}
+        clusters={boundClusters}
       />
     )
   }
@@ -128,7 +70,7 @@ export class Merge extends Component {
   render() {
     const isAssigned = cluster => {
       if (cluster.get('type') !== 'alphanum') {
-        // cluster is emergent target
+        // cluster is for emergent target
         return true
       }
 
@@ -139,9 +81,6 @@ export class Merge extends Component {
 
     const unassignedClusters = this.props.clusters.filterNot(isAssigned)
     const assignedClusters = this.props.clusters.filter(isAssigned)
-
-    const assignedSightings = this.props.sightings
-    const unassignedSightings = this.props.sightings
 
     const sortedTargets = this.props.savedTargets.sort((target1, target2) => {
       if (target1.get('type') === 'emergent') {
@@ -156,22 +95,22 @@ export class Merge extends Component {
     return (
       <div className='merge'>
         <ul className='merge-clusters'>
-          {unassignedClusters.map(cluster => (<MergeSightingCluster cluster={cluster}/>))}
+          {unassignedClusters.map(cluster => (<MergeSightingCluster
+            key={cluster.id}
+            cluster={cluster}
+          />))}
         </ul>
         <div className='targets'>
-          {sortedTargets.map(t => this.renderTarget(t, assignedSightings)).concat(this.props.localTargets.map(this.renderTarget)).toJSON()}
+          {sortedTargets
+            .map(t => this.renderTarget(t, assignedClusters))
+            .concat(this.props.localTargets.map(this.renderTarget))
+            .toJSON()}
           <div
             className='new-target target card'
             onClick={this.newTarget}
           >
             + New Target
           </div>
-          <button
-            className='card'
-            onClick={this.dummyCluster}
-          >
-            Dummy Cluster
-          </button>
         </div>
       </div>
     )
@@ -190,7 +129,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   addTarget: TargetOperations.addTarget(dispatch),
   getAllSightings: TargetSightingOperations.getAllSightings(dispatch),
   getAllTargets: TargetOperations.getAllTargets(dispatch),
-  dummyCluster: TargetSightingClusterOperations.dummyCluster(dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Merge)

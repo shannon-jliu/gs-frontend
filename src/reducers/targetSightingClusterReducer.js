@@ -76,18 +76,18 @@ function startUpdateTargetSightingCluster(state, sightingCluster, attribute) {
 function clearUpdateTargetSightingCluster(state, sightingCluster, attribute) {
   return state.map(cluster => {
     // if the id and type don't match, leave this cluster alone
-    if (!cluster.get('id') !== sightingCluster.get('id') ||
-      !cluster.get('type') !== sightingCluster.get('type')) return cluster
+    if (cluster.get('id') !== sightingCluster.get('id') ||
+      cluster.get('type') !== sightingCluster.get('type')) return cluster
 
     let pending = cluster.get('pending')
-    if (!pending) return cluster
+    if (!pending) return sightingCluster
 
     pending = pending.deleteAll(attribute.keys()) // clear all of the attributes from pending list
 
     // if pending list is now empty, remove it and we are done
-    if (pending.size === 0) return cluster.delete('pending')
+    if (pending.size === 0) return sightingCluster.delete('pending')
 
-    return cluster.set('pending', pending)
+    return sightingCluster.set('pending', pending)
   })
 }
 

@@ -6,12 +6,14 @@ import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
 import M from 'materialize-css'
 import _ from 'lodash'
+import classNames from 'classnames'
 
 import { TargetAlphanumFields, TargetEmergentFields, TargetGeotagFields, TargetButtonRow } from './components'
-import MergeSightingPreview from './mergeSightingPreview.js'
+import MergeSightingCluster from './mergeSightingCluster'
 import TargetOperations from '../../operations/targetOperations'
 import SnackbarUtil from '../../util/snackbarUtil.js'
-import {NENO_COORDS, PAX_COORDS} from '../../constants/constants.js'
+import { NENO_COORDS, PAX_COORDS } from '../../constants/constants.js'
+import TargetSightingClusterOperations from '../../operations/targetSightingClusterOperations'
 
 export class MergeTarget extends Component {
   constructor(props) {
@@ -30,19 +32,24 @@ export class MergeTarget extends Component {
       description: t.get('description') || '',
       longitude: t.getIn(['geotag', 'gpsLocation', 'longitude']) || '',
       latitude: t.getIn(['geotag', 'gpsLocation', 'latitude']) || '',
-      dragCtr: 0, //counter rather than boolean to allow hovering over child elements
+      dragHover: 0,
       iwidth: -1,
       iheight: -1
     }
 
-    this.canDelete = this.canDelete.bind(this)
-    this.canSave = this.canSave.bind(this)
-    this.getHandler = this.getHandler.bind(this)
     this.save = this.save.bind(this)
     this.delete = this.delete.bind(this)
-    this.dragEnter = this.dragEnter.bind(this)
-    this.dragLeave = this.dragLeave.bind(this)
-    this.drop = this.drop.bind(this)
+
+    this.canSave = this.canSave.bind(this)
+    this.canDelete = this.canDelete.bind(this)
+
+    this.getHandler = this.getHandler.bind(this)
+
+    this.onDragEnter = this.onDragEnter.bind(this)
+    this.onDragOver = this.onDragOver.bind(this)
+    this.onDragLeave = this.onDragLeave.bind(this)
+    this.onDrop = this.onDrop.bind(this)
+
     this.selectThumb = this.selectThumb.bind(this)
   }
 
@@ -109,7 +116,7 @@ export class MergeTarget extends Component {
       (s.latitude === '' && s.longitude === '') ||
       (!_.isNaN(parseFloat(s.latitude)) && !_.isNaN(parseFloat(s.longitude)) &&
         (Math.abs(parseFloat(s.latitude) - PAX_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - PAX_COORDS[1]) < 0.5)) ||
-          (Math.abs(parseFloat(s.latitude) - NENO_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - NENO_COORDS[1]) < 0.5)
+      (Math.abs(parseFloat(s.latitude) - NENO_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - NENO_COORDS[1]) < 0.5)
 
     if (!isGeotagValid) {
       if (showReason) {
@@ -121,7 +128,7 @@ export class MergeTarget extends Component {
           SnackbarUtil.render('Cannot save target: longitude is not a number')
         } else {
           SnackbarUtil.render('Cannot save target: geotag not near PAX (lat: ' + PAX_COORDS[0] +
-              ', long: ' + PAX_COORDS[1] + ') or Neno (lat: ' + NENO_COORDS[0] + ', long: ' + NENO_COORDS[1] + ')')
+            ', long: ' + PAX_COORDS[1] + ') or Neno (lat: ' + NENO_COORDS[0] + ', long: ' + NENO_COORDS[1] + ')')
         }
       }
       return false
@@ -160,7 +167,7 @@ export class MergeTarget extends Component {
     //don't need to check isNaN because isGeotagValid must have already be true
     const geotagHasChanged =
       s.latitude !== '' && s.longitude !== '' &&
-        (!t.hasIn(['geotag', 'gpsLocation', 'latitude']) ||
+      (!t.hasIn(['geotag', 'gpsLocation', 'latitude']) ||
         !t.hasIn(['geotag', 'gpsLocation', 'longitude']) ||
         t.getIn(['geotag', 'gpsLocation', 'latitude']) !== s.latitude ||
         t.getIn(['geotag', 'gpsLocation', 'longitude']) !== s.longitude)
@@ -200,7 +207,7 @@ export class MergeTarget extends Component {
         .filter((value, key) => t.get(key) !== value)
 
       if (s.longitude !== '' && s.latitude !== '' &&
-          (t.getIn(['geotag', 'gpsLocation', 'longitude']) !== s.longitude ||
+        (t.getIn(['geotag', 'gpsLocation', 'longitude']) !== s.longitude ||
           t.getIn(['geotag', 'gpsLocation', 'latitude']) !== s.latitude)) {
         newVals = newVals.set('geotag', fromJS({
           gpsLocation: {
@@ -228,23 +235,47 @@ export class MergeTarget extends Component {
     }
   }
 
-  dragEnter(e) {
-    this.setState({
-      dragCtr: this.state.dragCtr + 1
-    })
+  onDragEnter(e) {
+    // can't inspect the actual contents of event until drop() due to security restrictions
+    // https://stackoverflow.com/questions/28487352/dragndrop-datatransfer-getdata-empty
+    // so just check mime type
+    if (!e.dataTransfer.types.includes('application/json+cluster'))
+      return
+
+    // increment counter for child element
+    this.setState({ dragHover: this.state.dragHover + 1 })
+
+    e.preventDefault()
   }
 
-  dragLeave(e) {
-    this.setState({
-      dragCtr: this.state.dragCtr - 1
-    })
+  onDragOver(e) {
+    if (!e.dataTransfer.types.includes('application/json+cluster'))
+      return
+
+    e.preventDefault()
   }
 
-  drop(e) {
-    this.setState({
-      dragCtr: 0
-    })
-    this.props.onTsDrop(this.props.target)
+  onDragLeave() {
+    this.setState({ dragHover: this.state.dragHover - 1 })
+  }
+
+  /**
+   * @param {DragEvent} e 
+   */
+  onDrop(e) {
+    if (!e.dataTransfer.types.includes('application/json+cluster')) return
+
+    const data = e.dataTransfer.getData('application/json+cluster')
+    if (_.isEmpty(data)) return
+
+    const cluster = fromJS(JSON.parse(data))
+    const target = this.props.target
+    if (_.isNil(cluster) || cluster.get('type') !== target.get('type')) return
+
+    e.preventDefault()
+
+    this.setState({ dragHover: false })
+    this.props.updateCluster(cluster, { targetId: target.get('id') })
   }
 
   selectThumb(tsId) {
@@ -255,22 +286,24 @@ export class MergeTarget extends Component {
     const t = this.props.target
 
     //both for whether ts can be dragged in and whether it has title
-    const canHoldTs = t.get('type') === 'emergent' || t.get('offaxis') || !t.has('id')
+    const cannotAddTs = t.get('type') === 'emergent' || t.get('offaxis') || !t.has('id')
     const title = t.get('type') === 'emergent' ? 'Emergent' :
       (t.get('offaxis') ? 'Off-axis' : 'Unsaved')
 
     return (
       <div
         ref='main'
-        className={'target card' + (this.state.dragCtr > 0 ? ' drag-over' : '')}
-        onDragEnter={canHoldTs ? undefined : this.dragEnter}
-        onDragLeave={canHoldTs ? undefined : this.dragLeave}
-        onDragOver={canHoldTs ? undefined : e => e.preventDefault()}
-        onDrop={canHoldTs ? undefined : this.drop}
+        className={'merge-target'}
+        onDragEnter={cannotAddTs ? undefined : this.onDragEnter}
+        onDragOver={cannotAddTs ? undefined : this.onDragOver}
+        onDragLeave={cannotAddTs ? undefined : this.onDragLeave}
+        onDrop={cannotAddTs ? undefined : this.onDrop}
       >
-        <div className={'type' + (canHoldTs ? '' : ' hidden')}>
+        <div className={classNames('merge-target-drop-overlay', { active: this.state.dragHover > 0 })}>
+          <p>✔️</p>
+        </div>
+        <div className={'merge-target-type' + (cannotAddTs ? '' : ' hidden')}>
           {title}
-          <div className='border'></div>
         </div>
         <div className='facts'>
           <div className={t.get('type') === 'alphanum' ? 'row' : 'hidden'}>
@@ -309,26 +342,15 @@ export class MergeTarget extends Component {
           />
         </div>
         {/*All images from target sightings */}
-        <div className='sighting-images'>
-          {this.props.sightings.map(ts => (
-            <MergeSightingPreview
-              key={ts.get('id') + '-image-' + ts.get('type')}
-              onClick={() => this.selectThumb(ts.get('id'))}
-              isThumbnail={ts.get('id') === this.state.thumbnailTSId}
+        <ul className='merge-target-clusters'>
+          {this.props.clusters.map(cluster => (
+            <MergeSightingCluster
+              key={cluster.get('id')}
+              cluster={cluster}
               isMerged={true}
-              sighting={ts}
-              onDragStart={
-                t.get('type') === 'emergent' || t.get('offaxis')
-                  ? undefined : () => this.props.onTsDragStart(ts)
-              }
-              onDragEnd={
-                t.get('type') === 'emergent' || t.get('offaxis')
-                  ? undefined : this.props.onTsDragEnd
-              }
-              dragging={t.get('type') === 'alphanum' && ts.get('id') === this.props.dragId}
             />
           )).toJSON() /*toJSON is a shallow conversion while toJS is deep */}
-        </div>
+        </ul>
       </div>
     )
   }
@@ -336,18 +358,16 @@ export class MergeTarget extends Component {
 
 MergeTarget.propTypes = {
   target: ImmutablePropTypes.map.isRequired,
-  sightings: ImmutablePropTypes.listOf(ImmutablePropTypes.map).isRequired, //all sightings bound to the target
-  onTsDragStart: PropTypes.func.isRequired,
-  onTsDragEnd: PropTypes.func.isRequired,
-  onTsDrop: PropTypes.func.isRequired,
-  dragId: PropTypes.number
+  clusters: ImmutablePropTypes.listOf(ImmutablePropTypes.map).isRequired, //all clusters bound to the target
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   saveTarget: TargetOperations.saveTarget(dispatch),
   updateTarget: TargetOperations.updateTarget(dispatch),
   deleteSavedTarget: TargetOperations.deleteSavedTarget(dispatch),
-  deleteUnsavedTarget: TargetOperations.deleteUnsavedTarget(dispatch)
+  deleteUnsavedTarget: TargetOperations.deleteUnsavedTarget(dispatch),
+  updateCluster: TargetSightingClusterOperations.updateCluster(dispatch),
+
 })
 
 export default connect(null, mapDispatchToProps)(MergeTarget)

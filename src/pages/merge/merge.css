@@ -4,17 +4,6 @@
   display: inline-block;
 }
 
-.merge .targets .image {
-  margin: 0 5px;
-  cursor: pointer;
-  border: 5px solid transparent;
-}
-
-.merge .targets .image.t-thumb {
-  margin: 5px;
-  border-color: #f44336;
-}
-
 .merge .merge-clusters {
   float: left;
   width: 320px;
@@ -24,12 +13,7 @@
   list-style: none;
 }
 
-.merge .merge-clusters .merge-cluster {
-  width: 300px;
-  border: 1px solid rgba(0, 0, 0, 25%);
-}
-
-.merge .merge-clusters .merge-cluster {
+.merge .merge-cluster {
   width: 300px;
   border: 1px solid rgba(0, 0, 0, 25%);
   background-color: white;
@@ -38,19 +22,19 @@
   user-select: none;
 }
 
-.merge .merge-clusters .merge-cluster .merge-cluster-attributes {
+.merge .merge-cluster .merge-cluster-attributes {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
 }
 
-.merge .merge-clusters .merge-cluster .merge-cluster-attributes li {
+.merge .merge-cluster .merge-cluster-attributes li {
   flex-grow: 1;
   flex-basis: 1;
   padding: 10px;
 }
 
-.merge .merge-clusters .merge-cluster .merge-cluster-sightings {
+.merge .merge-cluster .merge-cluster-sightings {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -66,22 +50,44 @@
   padding: 10px;
 }
 
-.merge .targets .target {
+.merge .targets .merge-target {
   width: 100%;
   margin: 10px 0;
   display: flex;
   flex-direction: row;
   padding: 10px;
   min-height: 0;
-  position: static;
+  position: relative;
   overflow: visible;
+  border: 1px solid rgba(0, 0, 0, 25%);
 }
 
-.merge .targets .target .sighting-images {
-  display: inline-block;
-  flex: 1 1 1px;
-  height: 130px;
-  overflow-y: auto;
+.merge .targets .merge-target .merge-target-drop-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+
+  outline: 2px dashed rgba(0, 0, 0, 25%);
+  outline-offset: -10px;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1000;
+}
+
+.merge .targets .merge-target .merge-target-drop-overlay.active {
+  display: flex;
+}
+
+.merge .targets .target .merge-target-clusters {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .merge .targets .target.drag-over {
@@ -102,15 +108,17 @@
   margin-bottom: 0.25rem;
 }
 
-.merge .type {
+.merge .merge-target-type {
   writing-mode: tb-rl;
   transform: rotate(-180deg);
   text-align: center;
   /* left/right and top/bottom are flipped because of the transform */
-  padding-top: 30px;
-  margin-left: -5px;
   margin-right: 10px;
+  width: 2em;
+  overflow: hidden;
+  border-left: 1px solid rgba(0, 0, 0, 25%);
   letter-spacing: 2px;
+  text-transform: uppercase;
   color: gray;
 }
 
