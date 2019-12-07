@@ -4,7 +4,7 @@ export const startUpdateTargetSightingCluster = (sightingCluster, attribute) => 
   attribute
 })
 
-export const succeedUpdateTargetSightingCluster = (newsightingCluster, attribute) => ({
+export const succeedUpdateTargetSightingCluster = (sightingCluster, attribute) => ({
   type: 'SUCCEED_UPDATE_TARGET_SIGHTING_CLUSTER',
   sightingCluster,
   attribute
@@ -25,3 +25,10 @@ export const removeTargetFromTargetSightingClusters = target => ({
   type: 'REMOVE_TARGET_FROM_TARGET_SIGHTING_CLUSTERS',
   target
 })
+
+/**
+ * DEVELOPMENT ONLY
+ * Dummy action that groups all existing sightings into one cluster
+ * @param {import("../reducers/targetSightingClusterReducer").TargetSightingCluster} info
+ */
+export const dummyCluster = (info) => ({ type: 'DUMMY_CLUSTER', info })

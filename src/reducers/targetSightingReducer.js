@@ -1,4 +1,4 @@
-import { fromJS, List } from 'immutable'
+import { fromJS, List, Map } from 'immutable'
 import _ from 'lodash'
 import { Target } from './targetReducer'
 
@@ -23,13 +23,12 @@ import { Target } from './targetReducer'
  * @property {null} geotag TODO: what is the type of geotag supposed to be?
  * @property {string} creator
  * @property {?Target} target
- * @property {?string} localTargetId
  * @property {?string} clusterId
  * @property {Object} pending
  */
 
 /**
- * @type {{ local: List<TargetSighting>, saved: List<TargetSighting> }}
+ * @type {Map}
  * Notes on state representation:
  * - local is the list of unsaved (locally created, not yet saved on backend) ts.
  * - saved is the list of ts saved on the backend
@@ -67,6 +66,8 @@ const targetSightingReducer = (state = initialState, action) => {
     return addTargetSightingsFromServer(state, action.sightings)
   case 'REMOVE_TARGET_FROM_TARGET_SIGHTINGS':
     return removeTargetFromTargetSightings(state, action.target)
+  case 'DUMMY_CLUSTER':
+    return dummyCluster(state, action.info)
   default:
     return state
   }
@@ -183,6 +184,16 @@ function removeTargetFromTargetSightings(state, target) {
   const type = target.get('type')
   return state.update('saved', s => s.map(ts =>
     ts.getIn(['target', 'id']) === targetId && ts.get('type') === type ? ts.delete('target') : ts))
+}
+
+/**
+ * DEVELOPMENT ONLY
+ * Dummy action that groups all existing sightings into one cluster
+ * @param {Map} state
+ * @param {import('./targetSightingClusterReducer').TargetSightingCluster} info
+ */
+function dummyCluster(state, info) {
+  return state.update('saved', s => s.map(ts => ts.set('clusterId', info.id)))
 }
 
 export default targetSightingReducer

@@ -4,13 +4,19 @@ import _ from 'lodash'
 /**
  * @typedef {Object} TargetSightingCluster
  * @property {number} id the id of this target sighting cluster
+ * @property {string} type
  * @property {?string} targetId the id of the target that this cluster represents
  * @property {?string} localTargetId the id of the target this cluster represents on the frontend
+ * @property {?string} shape
+ * @property {?string} shapeColor
+ * @property {?string} alpha
+ * @property {?string} alphaColor
+ * @property {boolean} offaxis
  * @property {Object} pending
  */
 
 /**
- * @type {List<TargetSightingCluster>}
+ * @type {List<Map<keyof TargetSightingCluster, any>>}
  * Notes on state representation:
  * - target sighting clusters are not created by the user, but by an automatic script on the backend
  * - this means that the user cannot create them, so there is no need for local and saved
@@ -34,6 +40,8 @@ const targetSightingReducer = (state = initialState, action) => {
     return addTargetSightingClustersFromServer(state, action.sightings)
   case 'REMOVE_TARGET_FROM_TARGET_SIGHTING_CLUSTERS':
     return removeTargetFromTargetSightingClusters(state, action.target)
+  case 'DUMMY_CLUSTER':
+    return dummyCluster(state, action.info)
   default:
     return state
   }
@@ -122,6 +130,17 @@ function removeTargetFromTargetSightingClusters(state, target) {
     tsc.getIn(['target', 'id']) === targetId && tsc.get('type') === type ?
       tsc.delete('target') :
       tsc)
+}
+
+/**
+ * DEVELOPMENT ONLY
+ * Dummy action that groups all existing sightings into one cluster
+ * @param {List<Map<keyof TargetSightingCluster, any>>} state
+ * @param {TargetSightingCluster} info
+ * @returns {List<TargetSightingCluster>}
+ */
+function dummyCluster(state, info) {
+  return state.push(fromJS(info))
 }
 
 export default targetSightingReducer
