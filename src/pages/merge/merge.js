@@ -72,7 +72,7 @@ export class Merge extends Component {
     if (target.has('id')) {
       const dragTgt = _.isNull(this.state.dragSighting.getIn(['pending', 'target'])) ? undefined :
         (this.state.dragSighting.getIn(['pending', 'target']) || this.state.dragSighting.get('target'))
-      if (_.isUndefined(dragTgt) || dragTgt.get('id') !== target.get('id')) {
+      if (_.isNil(dragTgt) || dragTgt.get('id') !== target.get('id')) {
         this.props.updateTargetSighting(this.state.dragSighting, fromJS({target}))
       }
     }
