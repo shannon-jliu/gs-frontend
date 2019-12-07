@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
 import _ from 'lodash'
 
-import MergeSighting from './mergeSighting'
+import MergeSightingCluster from './mergeSightingCluster'
 import MergeTarget from './mergeTarget'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
+import TargetSightingClusterOperations from '../../operations/targetSightingClusterOperations'
 import TargetOperations from '../../operations/targetOperations'
 
 import './merge.css'
@@ -22,7 +23,7 @@ export class Merge extends Component {
     this.onDragStart = this.onDragStart.bind(this)
     this.onDragEnd = this.onDragEnd.bind(this)
     this.onDrop = this.onDrop.bind(this)
-    this.renderSighting = this.renderSighting.bind(this)
+    // this.renderSighting = this.renderSighting.bind(this)
     this.renderTarget = this.renderTarget.bind(this)
   }
 
@@ -81,20 +82,20 @@ export class Merge extends Component {
     })
   }
 
-  renderSighting(sighting) {
-    const isDragging = !_.isNil(this.state.dragSighting) &&
-        sighting.get('id') === this.state.dragSighting.get('id')
+  // renderSighting(sighting) {
+  //   const isDragging = !_.isNil(this.state.dragSighting) &&
+  //       sighting.get('id') === this.state.dragSighting.get('id')
 
-    return (
-      <MergeSighting
-        key={sighting.get('id') + '-sighting-info'}
-        sighting={sighting}
-        onDragStart={() => this.onDragStart(sighting)}
-        onDragEnd={this.onDragEnd}
-        dragging={isDragging}
-      />
-    )
-  }
+  //   return (
+  //     <MergeSighting
+  //       key={sighting.get('id') + '-sighting-info'}
+  //       sighting={sighting}
+  //       onDragStart={() => this.onDragStart(sighting)}
+  //       onDragEnd={this.onDragEnd}
+  //       dragging={isDragging}
+  //     />
+  //   )
+  // }
 
   renderTarget(target, assignedSightings) {
     const boundSightings = target.has('id') ?
@@ -125,12 +126,23 @@ export class Merge extends Component {
   }
 
   render() {
-    //pending's target overrides the normal target. If pending's target is null, the target is deleted; if pending's target is undefined, there is no override
-    //for that reason, this uses both loose and strict equality (!= null checks both - x != null is the same as (x !== null && x !== undefined))
-    //It should also be noted that _.isNil() will check both null and undefined equality.
-    const isAssigned = ts => (!_.isNil(ts.get('target')) && !_.isNull(ts.getIn(['pending', 'target']))) || !_.isNil(ts.getIn(['pending', 'target']))
-    const assignedSightings = this.props.sightings.filter(isAssigned)
-    const unassignedSightings = this.props.sightings.filter(ts => ts.get('type') === 'alphanum' && !isAssigned(ts))
+    const isAssigned = cluster => {
+      if (cluster.get('type') !== 'alphanum') {
+        // cluster is emergent target
+        return true
+      }
+
+      // pending target overrides base target
+      const target = cluster.getIn(['pending', 'targetId']) || cluster.get('targetId') || null
+      return !_.isNil(target)
+    }
+
+    const unassignedClusters = this.props.clusters.filterNot(isAssigned)
+    const assignedClusters = this.props.clusters.filter(isAssigned)
+
+    const assignedSightings = this.props.sightings
+    const unassignedSightings = this.props.sightings
+
     const sortedTargets = this.props.savedTargets.sort((target1, target2) => {
       if (target1.get('type') === 'emergent') {
         return -1
@@ -143,9 +155,9 @@ export class Merge extends Component {
 
     return (
       <div className='merge'>
-        <div className='sightings'>
-          {unassignedSightings.map(this.renderSighting).toJSON()}
-        </div>
+        <ul className='merge-clusters'>
+          {unassignedClusters.map(cluster => (<MergeSightingCluster cluster={cluster}/>))}
+        </ul>
         <div className='targets'>
           {sortedTargets.map(t => this.renderTarget(t, assignedSightings)).concat(this.props.localTargets.map(this.renderTarget)).toJSON()}
           <div
@@ -154,6 +166,12 @@ export class Merge extends Component {
           >
             + New Target
           </div>
+          <button
+            className='card'
+            onClick={this.dummyCluster}
+          >
+            Dummy Cluster
+          </button>
         </div>
       </div>
     )
@@ -171,7 +189,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   updateTargetSighting: TargetSightingOperations.updateTargetSighting(dispatch),
   addTarget: TargetOperations.addTarget(dispatch),
   getAllSightings: TargetSightingOperations.getAllSightings(dispatch),
-  getAllTargets: TargetOperations.getAllTargets(dispatch)
+  getAllTargets: TargetOperations.getAllTargets(dispatch),
+  dummyCluster: TargetSightingClusterOperations.dummyCluster(dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Merge)

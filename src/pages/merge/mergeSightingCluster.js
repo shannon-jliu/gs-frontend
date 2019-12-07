@@ -36,30 +36,31 @@ class MergeSightingCluster extends Component {
     const alphaColor = _.capitalize(cluster.get('alphaColor'))
 
     return (
-      <div
-        className="cluster"
+      <li
+        className="merge-cluster"
         style={dragging ? { opacity: 0.15 } : {}}>
-        <ul className="cluster-attributes">
+        <ul className="merge-cluster-attributes">
           <li>
-            <span className="caption">Shape</span>
-            <p>{shapeColor} {shape}</p>
+            <label>Shape</label>
+            <br />
+            <span>{shapeColor} {shape}</span>
           </li>
           <li>
-            <span className="caption">Alpha</span>
-            <p>{alphaColor} {alpha}</p>
+            <label>Alpha</label>
+            <br />
+            <span>{alphaColor} {alpha}</span>
           </li>
         </ul>
-        <ul className="cluster-sightings">
-          {sightings.map(s => <MergeSightingPreview
-            isThumbnail={false}
-            isMerged={false}
-            sighting={s}
-            onDragStart={onDragStart === undefined ? undefined : () => onDragStart(sighting)}
-            onDragEnd={onDragEnd}
-            dragging={dragging} />
+        <ul className="merge-cluster-sightings">
+          {sightings.map(s => <li>
+            <MergeSightingPreview
+              isThumbnail={false}
+              isMerged={false}
+              sighting={s} />
+          </li>
           )}
         </ul>
-      </div>
+      </li>
     )
   }
 }
@@ -73,5 +74,5 @@ MergeSightingCluster.propTypes = {
 
 export default connect((state, props) => ({
   // retrieve sightings corresponding to this cluster from the store
-  sightings: state.targetSightingReducer.saved.filter(ts => ts.clusterId === props.cluster.id)
+  sightings: state.targetSightingReducer.get('saved').filter(ts => ts.clusterId === props.cluster.id)
 }))(MergeSightingCluster)

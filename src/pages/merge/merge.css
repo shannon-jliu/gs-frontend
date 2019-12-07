@@ -15,46 +15,44 @@
   border-color: #f44336;
 }
 
-.merge .sightings {
+.merge .merge-clusters {
   float: left;
-  width: 300px;
-  overflow: hidden;
+  width: 320px;
+  overflow: auto;
   padding: 10px;
   box-sizing: border-box;
+  list-style: none;
 }
 
-.merge .sightings .sighting {
-  width: 100%;
-  margin: 10px 0;
-  display: flex;
-  flex-direction: row;
-  min-height: 100px;
-  height: 100px;
-  cursor: pointer;
-
-  background: transparent;
+.merge .merge-clusters .merge-cluster {
+  width: 300px;
   border: 1px solid rgba(0, 0, 0, 25%);
 }
 
-.merge .sightings .sighting .sighting-attributes {
+.merge .merge-clusters .merge-cluster {
+  width: 300px;
+  border: 1px solid rgba(0, 0, 0, 25%);
+  cursor: pointer;
+  box-sizing: content-box;
+}
+
+.merge .merge-clusters .merge-cluster .merge-cluster-attributes {
   display: flex;
-  padding: 0 10px;
-  flex: 1 1 50%;
-  cursor: auto;
-  flex-direction: column;
-  justify-content: center;
-  user-select: none;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  
 }
 
-.merge .sightings .sighting .sighting-attributes li .caption {
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 0.75em;
-  opacity: 0.75;
+.merge .merge-clusters .merge-cluster .merge-cluster-attributes li {
+  flex-grow: 1;
+  flex-basis: 1;
+  padding: 10px;
 }
 
-.merge .sightings .sighting .sighting-attributes li p {
-  margin: 0;
+.merge .merge-clusters .merge-cluster .merge-cluster-sightings {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .merge .targets {
