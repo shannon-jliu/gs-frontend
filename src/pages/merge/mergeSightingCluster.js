@@ -14,10 +14,7 @@ import MergeSightingPreview from './mergeSightingPreview.js'
 /**
  * @typedef MergeSightingClusterProperties
  * @property {Map<keyof TargetSightingCluster, any>} cluster
- * @property {List<TargetSighting>} sightings provided by Redux
- * @property {boolean}  dragging
- * @property {Function} onDragEnd 
- * @property {Function} onDragEnd
+ * @property {List<TargetSighting>} sightings
  */
 
 /**
@@ -26,6 +23,16 @@ import MergeSightingPreview from './mergeSightingPreview.js'
 class MergeSightingCluster extends Component {
   constructor(props) {
     super(props)
+
+    this.onDragStart = this.onDragStart.bind(this)
+  }
+
+  /**
+   * @param {DragEvent} ev 
+   */
+  onDragStart(ev) {
+    ev.dataTransfer.setData('application/json+cluster', JSON.stringify(this.props.cluster.toJS()))
+    ev.dataTransfer.dropEffect = 'move'
   }
 
   render() {
@@ -38,7 +45,9 @@ class MergeSightingCluster extends Component {
     return (
       <li
         className="merge-cluster"
-        style={dragging ? { opacity: 0.15 } : {}}>
+        style={dragging ? { opacity: 0.15 } : {}}
+        draggable
+        onDragStart={this.onDragStart}>
         <ul className="merge-cluster-attributes">
           <li>
             <label>Shape</label>
@@ -74,5 +83,6 @@ MergeSightingCluster.propTypes = {
 
 export default connect((state, props) => ({
   // retrieve sightings corresponding to this cluster from the store
-  sightings: state.targetSightingReducer.get('saved').filter(ts => ts.clusterId === props.cluster.id)
+  sightings: state.targetSightingReducer.get('saved').filter(ts => ts.clusterId === props.cluster.id),
+  target: state.targetReducer.get('saved').find(t => t.id === props.cluster.id)
 }))(MergeSightingCluster)

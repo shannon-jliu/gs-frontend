@@ -32,15 +32,16 @@
 .merge .merge-clusters .merge-cluster {
   width: 300px;
   border: 1px solid rgba(0, 0, 0, 25%);
+  background-color: white;
   cursor: pointer;
   box-sizing: content-box;
+  user-select: none;
 }
 
 .merge .merge-clusters .merge-cluster .merge-cluster-attributes {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  
 }
 
 .merge .merge-clusters .merge-cluster .merge-cluster-attributes li {
