@@ -4,12 +4,26 @@
   display: inline-block;
 }
 
-.merge .merge-clusters {
+.merge .merge-sidebar {
   float: left;
   width: 320px;
   overflow: auto;
   padding: 10px;
   box-sizing: border-box;
+  position: relative;
+  min-height: 600px;
+  margin-top: 10px;
+}
+
+.merge .merge-sidebar {
+  float: left;
+  width: 320px;
+  overflow: auto;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.merge .merge-sidebar .merge-clusters {
   list-style: none;
 }
 
@@ -40,7 +54,7 @@
   flex-wrap: wrap;
 }
 
-.merge .targets {
+.merge .merge-targets {
   position: relative;
   top: 0;
   right: 0;
@@ -50,7 +64,7 @@
   padding: 10px;
 }
 
-.merge .targets .merge-target {
+.merge .merge-targets .merge-target {
   width: 100%;
   margin: 10px 0;
   display: flex;
@@ -62,13 +76,14 @@
   border: 1px solid rgba(0, 0, 0, 25%);
 }
 
-.merge .targets .merge-target .merge-target-drop-overlay {
+.merge .merge-cluster-drop-overlay {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.7);
+  color: grey;
 
   outline: 2px dashed rgba(0, 0, 0, 25%);
   outline-offset: -10px;
@@ -80,18 +95,14 @@
   z-index: 1000;
 }
 
-.merge .targets .merge-target .merge-target-drop-overlay.active {
+.merge .merge-cluster-drop-overlay.active {
   display: flex;
 }
 
-.merge .targets .target .merge-target-clusters {
+.merge .merge-targets .target .merge-target-clusters {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-}
-
-.merge .targets .target.drag-over {
-  background-color: #00ff00;
 }
 
 .merge .targets .target.new-target {
@@ -112,14 +123,43 @@
   writing-mode: tb-rl;
   transform: rotate(-180deg);
   text-align: center;
-  /* left/right and top/bottom are flipped because of the transform */
+
   margin-right: 10px;
-  width: 2em;
+  margin-left: -10px;
+  
+  /* left/right and top/bottom are flipped because of the transform */
+  padding-right: 10px;
+  padding-left: 10px;
+
+  width: 2.5em;
   overflow: hidden;
-  border-left: 1px solid rgba(0, 0, 0, 25%);
   letter-spacing: 2px;
   text-transform: uppercase;
+
+  border-radius: 0.5em 0 0 0.5em;
+}
+
+.merge .merge-target-type.merge-target-type-emergent {
+  color: white;
+  background-color: red;
+}
+
+.merge .merge-target-type.merge-target-type-offaxis {
+  color: white;
+  background-color: dodgerblue;
+}
+
+.merge .merge-target-type.merge-target-type-alphanum {
+  border-color: rgba(0, 0, 0, 50%);
+  border-style: solid;
+  border-width: 1px 0 1px 1px;
+}
+
+.merge .merge-target-type.merge-target-type-unsaved {
   color: gray;
+  border-color: rgba(0, 0, 0, 25%);
+  border-style: solid;
+  border-width: 1px 0 1px 1px;
 }
 
 .merge .border {

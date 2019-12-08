@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fromJS, List } from 'immutable'
 import _ from 'lodash'
+import classNames from 'classnames'
 
-import MergeSightingCluster from './mergeSightingCluster'
+import MergeSidebar from './mergeSidebar'
 import MergeTarget from './mergeTarget'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import TargetSightingClusterOperations from '../../operations/targetSightingClusterOperations'
@@ -14,10 +15,6 @@ import './merge.css'
 export class Merge extends Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      dragSighting: null
-    }
 
     this.newTarget = this.newTarget.bind(this)
     this.renderTarget = this.renderTarget.bind(this)
@@ -94,13 +91,8 @@ export class Merge extends Component {
 
     return (
       <div className='merge'>
-        <ul className='merge-clusters'>
-          {unassignedClusters.map(cluster => (<MergeSightingCluster
-            key={cluster.id}
-            cluster={cluster}
-          />))}
-        </ul>
-        <div className='targets'>
+        <MergeSidebar clusters={unassignedClusters} />
+        <section className='merge-targets'>
           {sortedTargets
             .map(t => this.renderTarget(t, assignedClusters))
             .concat(this.props.localTargets.map(this.renderTarget))
@@ -111,7 +103,7 @@ export class Merge extends Component {
           >
             + New Target
           </div>
-        </div>
+        </section>
       </div>
     )
   }

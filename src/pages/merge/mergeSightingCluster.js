@@ -68,7 +68,7 @@ class MergeSightingCluster extends Component {
         <ul className="merge-cluster-sightings">
           {sightings.map(s => <li>
             <MergeSightingPreview
-              key={s.id}
+              key={s.id + s.localId}
               isThumbnail={false}
               isMerged={false}
               sighting={s} />

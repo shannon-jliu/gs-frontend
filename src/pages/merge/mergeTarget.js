@@ -274,7 +274,7 @@ export class MergeTarget extends Component {
 
     e.preventDefault()
 
-    this.setState({ dragHover: false })
+    this.setState({ dragHover: 0 })
     this.props.updateCluster(cluster, { targetId: target.get('id') })
   }
 
@@ -286,24 +286,33 @@ export class MergeTarget extends Component {
     const t = this.props.target
 
     //both for whether ts can be dragged in and whether it has title
-    const cannotAddTs = t.get('type') === 'emergent' || t.get('offaxis') || !t.has('id')
-    const title = t.get('type') === 'emergent' ? 'Emergent' :
-      (t.get('offaxis') ? 'Off-axis' : 'Unsaved')
+    const canAddCluster = t.has('id') && !t.get('offaxis') && t.get('type') !== 'emergent'
+    const targetType = t.get('offaxis') ? 'offaxis' :
+      !t.has('id') ? 'unsaved' :
+        t.get('type')
+
+    const getAlphanumTitle = (t) => {
+      const shape = _.capitalize(t.get('shape'))
+      const shapeColor = _.capitalize(t.get('shapeColor'))
+      const alpha = _.capitalize(t.get('alpha'))
+      const alphaColor = _.capitalize(t.get('alphaColor'))
+      return `${shapeColor} ${shape}, ${alphaColor} ${alpha}`
+    }
 
     return (
       <div
         ref='main'
         className={'merge-target'}
-        onDragEnter={cannotAddTs ? undefined : this.onDragEnter}
-        onDragOver={cannotAddTs ? undefined : this.onDragOver}
-        onDragLeave={cannotAddTs ? undefined : this.onDragLeave}
-        onDrop={cannotAddTs ? undefined : this.onDrop}
+        onDragEnter={canAddCluster ? this.onDragEnter : undefined}
+        onDragOver={canAddCluster ? this.onDragOver : undefined}
+        onDragLeave={canAddCluster ? this.onDragLeave : undefined}
+        onDrop={canAddCluster ? this.onDrop : undefined}
       >
-        <div className={classNames('merge-target-drop-overlay', { active: this.state.dragHover > 0 })}>
+        <div className={classNames('merge-cluster-drop-overlay', { active: this.state.dragHover > 0 })}>
           <p>✔️</p>
         </div>
-        <div className={'merge-target-type' + (cannotAddTs ? '' : ' hidden')}>
-          {title}
+        <div className={classNames('merge-target-type', 'merge-target-type-' + targetType)}>
+          {targetType === 'alphanum' ? getAlphanumTitle(t) : targetType}
         </div>
         <div className='facts'>
           <div className={t.get('type') === 'alphanum' ? 'row' : 'hidden'}>
@@ -341,7 +350,6 @@ export class MergeTarget extends Component {
             deleteFn={this.delete}
           />
         </div>
-        {/*All images from target sightings */}
         <ul className='merge-target-clusters'>
           {this.props.clusters.map(cluster => (
             <MergeSightingCluster
