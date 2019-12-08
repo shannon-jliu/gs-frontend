@@ -67,6 +67,7 @@ class MergeSightingPreview extends Component {
         onClick={this.props.onClick}
         onDragStart={this.props.onDragStart}
         onDragEnd={this.props.onDragEnd}
+        onDrag={this.props.onDrag}
         draggable={this.props.onDragStart !== undefined}
         style={this.getStyle()}>
       &nbsp;

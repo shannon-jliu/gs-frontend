@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import MergeSightingPreview from './mergeSightingPreview.js'
 
-const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd }) => {
+const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd, onDrag }) => {
   const shape = sighting.get('shape').charAt(0).toUpperCase() + sighting.get('shape').substr(1)
   const shapeColor = sighting.get('shapeColor').charAt(0).toUpperCase() + sighting.get('shapeColor').substr(1)
   const alphaColor = sighting.get('alphaColor').charAt(0).toUpperCase() + sighting.get('alphaColor').substr(1)
@@ -19,6 +19,7 @@ const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd }) => {
         sighting={sighting}
         onDragStart={onDragStart === undefined ? undefined : () => onDragStart(sighting)}
         onDragEnd={onDragEnd}
+        onDrag={onDrag}
         dragging={dragging} />
       <div className="fact-container">
         <div className="fact">Shape: {shape}</div>

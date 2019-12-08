@@ -21,6 +21,7 @@ export class Merge extends Component {
     this.newTarget = this.newTarget.bind(this)
     this.onDragStart = this.onDragStart.bind(this)
     this.onDragEnd = this.onDragEnd.bind(this)
+    this.onDrag = this.onDrag.bind(this)
     this.onDrop = this.onDrop.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
     this.renderTarget = this.renderTarget.bind(this)
@@ -81,6 +82,16 @@ export class Merge extends Component {
     })
   }
 
+  onDrag(e) {
+    if (e.clientY < 300) {
+      window.scrollBy(0, -7, 'smooth')
+    }
+
+    if (e.clientY > (window.innerHeight - 300)) {
+      window.scrollBy(0, 7, 'smooth')
+    }
+  }
+
   renderSighting(sighting) {
     const isDragging = !_.isNil(this.state.dragSighting) &&
         sighting.get('id') === this.state.dragSighting.get('id')
@@ -91,6 +102,7 @@ export class Merge extends Component {
         sighting={sighting}
         onDragStart={() => this.onDragStart(sighting)}
         onDragEnd={this.onDragEnd}
+        onDrag={this.onDrag}
         dragging={isDragging}
       />
     )
