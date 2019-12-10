@@ -3,16 +3,24 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [gs-frontend](#gs-frontend)
+  - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Development](#development)
   - [Running](#running)
   - [Testing](#testing)
+    - [Unit Testing](#unit-testing)
+    - [Manual Testing](#manual-testing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # gs-frontend
 
 Welcome to the fully upgraded, WIP `ground-server` frontend. We are now using the latest version of ReactJS and Redux instead of NuclearJS.
+
+## Prerequisites
+- `node`, preferably `v8.x`+
+- `npm` (should come with Node)
+- The `ground-server`, located at [this repository](https://github.com/CUAir/ground-server) (this may soon be deprecated, and become [the updated one](https://github.com/CUAir/gs-backend))
 
 ## Installation
 
@@ -40,4 +48,28 @@ Check `src/constants/links.js` to ensure that `GROUND_SERVER_URL` is properly se
 You can set `NODE_ENV` inline when running from bash/zsh: `NODE_ENV=development npm run start`. If you need to connect to a ground server other than `127.0.0.1` or `192.168.0.22`, then set the environment variable `REACT_APP_GS_IP` to the IP of the server you want to connect to.
 
 ## Testing
+
+### Unit Testing
 We use Jest as our testing framework. See some test files for examples for now. You can run `npm run test` to run all existing tests with various modes. Please ensure all tests are passing before asking for a review on a PR.
+
+### Manual Testing
+If you need to actually interact with the frontend, then you will need to do the following:
+1. Navigate to the `ground-server` folder on your local machine
+1. Make sure that it is checked out to the `integration` branch. It will *NOT* work on `master` (we're aware of how that sounds)
+1. Run the `ground-server` via the directions provided in that repo
+1. Follow the [steps for running](#running)
+  1. If you don't disable auth, grab the authorization key via entering your browser's `console` and entering: `localStorage.getItem('cuair-ground-server-auth')`
+1. Use Postman or `curl` to `POST` images to `localhost:9000/api/v1/image`
+
+Example query with `curl`:
+```
+curl -X POST \
+  http://localhost:9000/api/v1/image \
+  -H 'Content-Type: multipart/form-data' \
+  -H 'X-AUTH-TOKEN: <YOUR AUTHORIZATION KEY HERE>' \
+  -F files=@<PATH-TO-YOUR-FILE> \
+  -F 'json={"timestamp": <ANY NUMBER THAT ISN'T A DUPLICATE>, "camGimMode": <"fixed"/"tracking">, "numRois": 0}'
+```
+Note that the `X-AUTH-TOKEN` should be entered without quotes.
+
+Images should now show up!
