@@ -10,7 +10,7 @@ export const TargetSightingRequests = {
   },
 
   saveTargetSighting: function(isAlphanum, assignmentId, sighting, successCallback, failureCallback) {
-    $.post('/api/v1/assignment/' + assignmentId + (isAlphanum ? '/alphanum' : '/emergent') + '_target_sighting', sighting)
+    $.post('/api/v1' + (isAlphanum ? '/alphanum' : '/emergent') + '_target_sighting/assignment' + assignmentId, sighting)
       .done(successCallback)
       .fail(failureCallback)
   },
