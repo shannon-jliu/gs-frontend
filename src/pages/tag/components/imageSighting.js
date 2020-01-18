@@ -3,15 +3,15 @@ import PropTypes from 'prop-types'
 
 const ImageSighting = ({ heightWidth, imageUrl, imgWidth, imgHeight, compressedWidth, compressedHeight, sighting }) => {
   const radius = heightWidth / 2
-  const imgscale = heightWidth / (2*Math.sqrt(2)*sighting.get('width'))
+  const imgscale = heightWidth / sighting.get('width')
   const bgSize = imgWidth * imgscale + 'px ' + imgHeight * imgscale + 'px'
   /* The following calculations for x and y are calculating the offset of the fully-sized/uncompressed image that
     will be displayed as the background image for the actual image sighting. The ratio involved a compressed dimension
     (such as compressedWidth) compensate for the difference in dimensions between the compressed image that is displayed
-    in the image viewer and the uncompressed image that is used for the image sighting. The 300/2 is dealing with moving
-    the background image relative to the center of the image sighting, which is 300px by 300px. */
-  let x = 300/2 - sighting.get('pixelX') * (imgWidth/compressedWidth) * imgscale
-  let y = 300/2 - sighting.get('pixelY') * (imgHeight/compressedHeight) * imgscale
+    in the image viewer and the uncompressed image that is used for the image sighting. The heightWidth/2 is dealing with moving
+    the background image relative to the center of the image sighting, which is 330px by 306.25px. */
+  let x = heightWidth/2 - sighting.get('pixel_x') * (imgWidth/compressedWidth) * imgscale
+  let y = heightWidth/2 - sighting.get('pixel_y') * (imgHeight/compressedHeight) * imgscale
   const drawOrientationLine = sighting.has('radiansFromTop')
   const orientationX = radius + radius * Math.sin(sighting.get('radiansFromTop'))
   const orientationY = heightWidth - (radius + radius * Math.cos(sighting.get('radiansFromTop')))
@@ -20,6 +20,9 @@ const ImageSighting = ({ heightWidth, imageUrl, imgWidth, imgHeight, compressedW
     <div
       className='image'
       style={{
+        width: '100%',
+        height: '0',
+        paddingBottom: '100%',
         backgroundImage: 'url(' + imageUrl + ')',
         backgroundSize: bgSize,
         backgroundPosition: x + 'px ' + y + 'px',

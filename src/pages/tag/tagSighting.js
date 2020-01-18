@@ -245,7 +245,7 @@ export class TagSighting extends Component {
   }
 
   render() {
-    const height_width = 300
+    const height_width = 330
     return (
       <div className={this.state.saved ? 'hidden' : 'sighting card'}>
         <ImageSighting

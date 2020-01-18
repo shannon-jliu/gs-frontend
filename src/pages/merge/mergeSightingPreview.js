@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import PropTypes from 'prop-types'
+import localforage from 'localforage'
 
-import { GROUND_SERVER_URL } from '../../constants/links'
+// import { GROUND_SERVER_URL } from '../../constants/links'
 
 class MergeSightingPreview extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      iSrc: '',
       iwidth: -1,
-      iheight: -1
+      iheight: -1,
+      compressedWidth: -1,
+      compressedHeight: -1
     }
 
     this.loadImage = this.loadImage.bind(this)
@@ -20,11 +24,40 @@ class MergeSightingPreview extends Component {
     let i = new Image()
     i.onload = () => {
       this.setState({
+        iSrc: i.src,
         iwidth: i.width,
         iheight: i.height
       })
     }
-    i.src = GROUND_SERVER_URL + imageUrl
+
+    let imgUrlFull = imageUrl + '_full'
+
+    localforage.getItem(imgUrlFull).then(data => {
+      if (data !== null) {
+        i.src = 'data:image/png;base64,' + data
+      } else {
+        // Display compressed version
+        localforage.getItem(imageUrl).then(data => {
+          if (data !== null) {
+            i.src = data
+          }
+        })
+      }
+    })
+
+    let iCompressed = new Image()
+    iCompressed.onload = () => {
+      this.setState({
+        compressedWidth: iCompressed.width,
+        compressedHeight: iCompressed.height
+      })
+    }
+
+    localforage.getItem(imageUrl).then(data => {
+      if (data !== null) {
+        iCompressed.src = data
+      }
+    })
   }
 
   componentDidMount() {
@@ -36,17 +69,20 @@ class MergeSightingPreview extends Component {
     if (testWidth === undefined && this.state.iwidth === -1) {
       return {}
     }
-    const imageUrl = this.props.sighting.getIn(['assignment', 'image', 'imageUrl'])
-    const imgscale = 100 / this.props.sighting.get('width')
+    const heightWidth = 100
+    const imageUrl = this.state.iSrc
+    const imgscale = heightWidth / this.props.sighting.get('width')
     const iwidth = testWidth === undefined ? this.state.iwidth : testWidth
     const iheight = testHeight === undefined ? this.state.iheight : testHeight
     const bgSize = iwidth * imgscale + 'px ' + iheight * imgscale + 'px'
-    const x = 50 - this.props.sighting.get('pixelX') * imgscale
-    const y = 50 - this.props.sighting.get('pixelY') * imgscale
+    const x = heightWidth/2 - this.props.sighting.get('pixel_x') * (iwidth/this.state.compressedWidth) * imgscale
+    const y = heightWidth/2 - this.props.sighting.get('pixel_y') * (iheight/this.state.compressedHeight) * imgscale
     let style = {
-      backgroundImage: 'url(' + GROUND_SERVER_URL + imageUrl + ')',
+      backgroundImage: 'url(' + imageUrl + ')',
       backgroundSize: bgSize,
-      backgroundPosition: x + 'px ' + y + 'px'
+      // backgroundPosition: x + 'px ' + y + 'px',
+      backgroundPosition: x + 'px ' + y + 'px',
+      backgroundRepeat: 'no-repeat'
     }
     if (this.props.dragging) {
       style['opacity'] = 0.15

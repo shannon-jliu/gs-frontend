@@ -18,6 +18,7 @@ const initialState = fromJS({
 })
 
 const targetSightingReducer = (state = initialState, action) => {
+  // console.log(state.get('local'))
   switch (action.type) {
   case 'ADD_TARGET_SIGHTING':
     return addTargetSighting(state, action.sighting, action.assignment)

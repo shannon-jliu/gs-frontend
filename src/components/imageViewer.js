@@ -144,8 +144,8 @@ class ImageViewer extends Component {
         let rad = (Math.atan2(dy, dx) + 5 * Math.PI / 2) % (2 * Math.PI)
         // record tag
         this.props.onTag({
-          pixelX: Math.round(s.tag.cx),
-          pixelY: Math.round(s.tag.cy),
+          pixel_x: Math.round(s.tag.cx),
+          pixel_y: Math.round(s.tag.cy),
           width: Math.round(r * 2),
           height: Math.round(r * 2),
           radiansFromTop: rad,

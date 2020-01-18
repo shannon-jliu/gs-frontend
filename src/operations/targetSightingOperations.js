@@ -65,6 +65,8 @@ const TargetSightingOperations = {
     sighting => {
       dispatch(action.startSaveTargetSighting(sighting.get('localId')))
 
+      console.log('saving target sighting')
+
       const sightingToSend = _.assign(
         _.omit(sighting.toJS(), ['localId', 'type']),
         { creator: 'MDLC' })
@@ -72,6 +74,7 @@ const TargetSightingOperations = {
       const successCallback = data => {
         SnackbarUtil.render('Succesfully saved target sighting')
         const receivedSighting = fromJS(data).set('type', sighting.get('type'))
+        console.log(receivedSighting)
         dispatch(action.succeedSaveTargetSighting(receivedSighting, sighting.get('localId')))
 
         /*
