@@ -106,15 +106,15 @@ const AssignmentOperations = {
     }
   ),
 
-  getAllImages: dispatch => (
-    () => {
+  getNewImages: dispatch => (
+    (index) => {
       const successCallback = data => {
         for (let i = 0; i < data.length; i++) {
           dispatch(imageAction.receiveImage(fromJS(data[i])))
         }
       }
 
-      AssignmentGetRequests.getAllImages(successCallback, () => {})
+      AssignmentGetRequests.getNewImages(index, successCallback, () => {})
     }
   ),
 

@@ -51,9 +51,9 @@ export const AssignmentGetRequests = {
       .fail(failureCallback)
   },
 
-  getAllImages: function(successCallback, failureCallback) {
+  getNewImages: function(index, successCallback, failureCallback) {
     // get all images
-    $.get('/api/v1/image')
+    $.get('/api/v1/image/all/' + index)
       .done(successCallback)
       .fail(failureCallback)
   }
