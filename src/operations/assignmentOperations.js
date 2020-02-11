@@ -110,7 +110,7 @@ const AssignmentOperations = {
     (index) => {
       const successCallback = data => {
         for (let i = 0; i < data.length; i++) {
-            if (data[i] !== null) dispatch(imageAction.receiveImage(fromJS(data[i])))
+          if (data[i] !== null) dispatch(imageAction.receiveImage(fromJS(data[i])))
         }
       }
 

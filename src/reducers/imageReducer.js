@@ -15,7 +15,6 @@ const initialState = fromJS({
 })
 
 const imageReducer = (state = initialState, action) => {
-  // return initialState
   switch (action.type) {
   case 'RECEIVE_IMAGE':
     var img = action.img
