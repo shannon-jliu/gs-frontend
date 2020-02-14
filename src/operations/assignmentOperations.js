@@ -11,11 +11,11 @@ import SnackbarUtil from '../util/snackbarUtil.js'
 // 'currAssignment' will always denotes an Immutable object, structured after Tag props
 // 'assignment' denotes the inside assignment object within currAssignment
 const AssignmentOperations = {
-  getAllAssignments: dispatch => (
+  getAllAssignmentsAfter: dispatch => (
     currIndex => {
       const success = data => AssignmentOperations.processAssignments(dispatch)(data, currIndex, true)
       const failure = () => SnackbarUtil.render('Failed to retrieve assignments')
-      AssignmentGetRequests.getAllAssignments(success, failure)
+      AssignmentGetRequests.getAllAssignmentsAfter(currIndex, success, failure)
     }
   ),
 

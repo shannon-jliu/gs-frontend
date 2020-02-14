@@ -36,17 +36,8 @@ export const TargetSightingGetRequests = {
 export const AssignmentGetRequests = {
   getAllAssignmentsAfter: function(index, successCallback, failureCallback) {
     // grab ids that are created after the current id
+    // the controller handles whether or not the user is authenticated
     $.get('/api/v1/assignment/after/' + index)
-      .done(successCallback)
-      .fail(failureCallback)
-  },
-
-  getAllAssignments: function(successCallback, failureCallback) {
-    // if undefined, auth is disabled, grab all assignments
-    const route = _.isNull(localStorage.getItem(AUTH_TOKEN_ID))
-      ? '/api/v1/assignment'
-      : '/api/v1/assignment/user'
-    $.get(route)
       .done(successCallback)
       .fail(failureCallback)
   },

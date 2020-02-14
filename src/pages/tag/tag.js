@@ -14,6 +14,7 @@ import ImageTools from './imageTools'
 import { GROUND_SERVER_URL } from '../../constants/links'
 import { TWO_PASS_MODE } from '../../util/config'
 
+import Switch from '../settings/components/Switch.js'
 import './tag.css'
 
 export class Tag extends Component {
@@ -23,7 +24,8 @@ export class Tag extends Component {
     this.state = {
       brightness: 100,
       contrast: 100,
-      saturation: 100
+      saturation: 100,
+      isReceiving: true
     }
 
     this.reset = this.reset.bind(this)
@@ -35,6 +37,7 @@ export class Tag extends Component {
     this.preloadForageFull = this.preloadForageFull.bind(this)
     this.getHandler = this.getHandler.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
+    this.updateReceiving = this.updateReceiving.bind(this)
   }
 
   onTag(tagged) {
@@ -115,11 +118,11 @@ export class Tag extends Component {
 
   componentDidMount() {
     // required to render the sliders properly
-    let elems = document.querySelectorAll('input')
+    let elems = document.querySelectorAll('input[type=range]')
     M.Range.init(elems, {})
 
     if (!this.props.assignment.hasIn(['assignment', 'id'])) {
-      this.props.getAllAssignments(this.props.assignment.get('currentIndex'))
+      this.props.getAllAssignmentsAfter(this.props.assignment.get('currentIndex'))
       this.props.getAllSightings()
     }
 
@@ -180,6 +183,11 @@ export class Tag extends Component {
     )
   }
 
+  updateReceiving(e) {
+    console.log(e.target.checked)
+    this.setState({ isReceiving: e.target.checked })
+  }
+
   render() {
     //     localforage.clear().then(function() {
     //     // Run this code once the database has been entirely deleted.
@@ -210,13 +218,22 @@ export class Tag extends Component {
     const nextClass = 'next ' + btnClass + (assignment.get('loading') ? ' disabled' : '')
     return (
       <div className='tag'>
-        <ImageTools
-          getHandler={this.getHandler}
-          reset={this.reset}
-          brightness={this.state.brightness}
-          contrast={this.state.contrast}
-          saturation={this.state.saturation}
-        />
+        <div className='flex-row'>
+          <ImageTools
+            getHandler={this.getHandler}
+            reset={this.reset}
+            brightness={this.state.brightness}
+            contrast={this.state.contrast}
+            saturation={this.state.saturation}
+          />
+          <Switch offState={'Not receiving'}
+            myRef={ref => (this.isReceiving = ref)}
+            onChange={this.updateReceiving}
+            id={'ad-receiving'}
+            checked={this.state.isReceiving}
+            onState={'Receiving'}
+          />
+        </div>
         <div className='detect'>
           <div className='tag-image card'>
             <ImageViewer
@@ -275,7 +292,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   getAllSightings: TargetSightingOperations.getAllSightings(dispatch),
   getNewImages: AssignmentOperations.getNewImages(dispatch),
   preloadImage: AssignmentOperations.preloadImage(dispatch),
-  getAllAssignments: AssignmentOperations.getAllAssignments(dispatch),
+  getAllAssignmentsAfter: AssignmentOperations.getAllAssignmentsAfter(dispatch),
   finishAssignment: AssignmentOperations.finishAssignment(dispatch),
   getPrevAssignment: AssignmentOperations.getPrevAssignment(dispatch)
 })
