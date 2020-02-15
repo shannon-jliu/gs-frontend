@@ -122,6 +122,12 @@ const AssignmentOperations = {
     image => {
       dispatch(imageAction.preloadImage(fromJS(image)))
     }
+  ),
+
+  enableReceiving: dispatch => (
+    enable => {
+      AssignmentRequests.enableReceiving(() => {dispatch(action.enableReceiving(enable))}, () => {})
+    }
   )
 }
 

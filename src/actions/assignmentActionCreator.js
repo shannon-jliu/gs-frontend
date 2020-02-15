@@ -20,3 +20,8 @@ export const updateAssignment = assignment => ({
   type: 'UPDATE_ASSIGNMENT',
   assignment
 })
+
+export const enableReceiving = enable => ({
+  type: 'ENABLE_RECEIVING',
+  enable
+})

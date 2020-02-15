@@ -11,7 +11,8 @@ describe('assignmentReducer', () => {
   const initState = fromJS({
     assignments: [],
     current: -1,
-    loading: false
+    loading: false,
+    isReceiving: true
   })
 
   // fields are omitted intentionally to avoid length
@@ -32,6 +33,7 @@ describe('assignmentReducer', () => {
     assignments: [firstAssignment],
     current: -1,
     loading: false,
+    isReceiving: true
   })
 
   it('should return the initial state', () => {
@@ -75,6 +77,7 @@ describe('assignmentReducer', () => {
           assignments: [firstAssignment, sndAssignment],
           current: -1,
           loading: false,
+          isReceiving: true
         })
       )
     })
@@ -85,7 +88,8 @@ describe('assignmentReducer', () => {
           fromJS({
             assignments: [],
             current: -1,
-            loading: true
+            loading: true,
+            isReceiving: true
           }),
           {
             type: 'GET_NEW_ASSIGNMENT_SUCCESS',
@@ -96,6 +100,7 @@ describe('assignmentReducer', () => {
           assignments: [firstAssignment],
           current: -1,
           loading: false,
+          isReceiving: true
         })
       )
     })
@@ -113,7 +118,8 @@ describe('assignmentReducer', () => {
         fromJS({
           assignments: [],
           current: -1,
-          loading: true
+          loading: true,
+          isReceiving: true
         })
       )
     })
@@ -129,7 +135,8 @@ describe('assignmentReducer', () => {
         fromJS({
           assignments: [],
           current: -1,
-          loading: false
+          loading: false,
+          isReceiving: true
         }))
     })
   })
@@ -148,7 +155,8 @@ describe('assignmentReducer', () => {
         fromJS({
           assignments: [firstAssignment],
           current: 0,
-          loading: false
+          loading: false,
+          isReceiving: true
         }))
     })
 
@@ -165,7 +173,8 @@ describe('assignmentReducer', () => {
         fromJS({
           assignments: [],
           current: -1,
-          loading: false
+          loading: false,
+          isReceiving: true
         }))
     })
 
@@ -182,7 +191,8 @@ describe('assignmentReducer', () => {
         fromJS({
           assignments: [],
           current: -1,
-          loading: false
+          loading: false,
+          isReceiving: true
         }))
     })
   })
@@ -199,7 +209,8 @@ describe('assignmentReducer', () => {
         fromJS({
           assignments: [firstAssignment.set('done', true)],
           current: -1,
-          loading: false
+          loading: false,
+          isReceiving: true
         }))
     })
 
@@ -212,6 +223,41 @@ describe('assignmentReducer', () => {
             assignment: firstAssignment.set('id', 50).set('done', true)
           })
       ).toEqualImmutable(firstStateAfterInit)
+    })
+  })
+  describe('ENABLE_RECEIVING', () => {
+    it('should properly update', () => {
+      expect(
+        reducer(
+          firstStateAfterInit,
+          {
+            type: 'ENABLE_RECEIVING',
+            enable: true
+          })
+      ).toEqualImmutable(
+        fromJS({
+          assignments: [firstAssignment],
+          current: -1,
+          loading: false,
+          isReceiving: true
+        }))
+    })
+
+    it('should properly update', () => {
+      expect(
+        reducer(
+          firstStateAfterInit,
+          {
+            type: 'ENABLE_RECEIVING',
+            enable: false
+          })
+      ).toEqualImmutable(
+        fromJS({
+          assignments: [firstAssignment],
+          current: -1,
+          loading: false,
+          isReceiving: false
+        }))
     })
   })
 
