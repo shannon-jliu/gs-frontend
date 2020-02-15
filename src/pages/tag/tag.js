@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
+import _ from 'lodash'
 import M from 'materialize-css'
 import localforage from 'localforage'
 import imageCompression from 'browser-image-compression'
@@ -116,6 +117,10 @@ export class Tag extends Component {
     })
   }
 
+  updateReceiving(e) {
+    this.props.enableReceiving(e.target.checked)
+  }
+
   componentDidMount() {
     // required to render the sliders properly
     let elems = document.querySelectorAll('input[type=range]')
@@ -163,8 +168,15 @@ export class Tag extends Component {
     })
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     M.updateTextFields()
+
+    if (!_.isEqual(prevProps, this.props) &&
+      this.props.get('isReceiving') !== this.state.isReceiving) {
+      this.setState({
+        isReceiving: this.props.get('isReceiving')
+      })
+    }
   }
 
   renderSighting(s, isTracking) {
@@ -226,7 +238,7 @@ export class Tag extends Component {
             contrast={this.state.contrast}
             saturation={this.state.saturation}
           />
-          <Switch offState={'Not receiving'}
+          <Switch offState={'Not Receiving'}
             myRef={ref => (this.isReceiving = ref)}
             onChange={this.updateReceiving}
             id={'ad-receiving'}
@@ -284,7 +296,8 @@ const getSightingsForAssignment = (a, ts) => {
 const mapStateToProps = (state) => ({
   assignment: getCurrentAssignment(state.assignmentReducer),
   sightings: getSightingsForAssignment(state.assignmentReducer, state.targetSightingReducer),
-  imageState: state.imageReducer
+  imageState: state.imageReducer,
+  isReceiving: state.assignmentReducer.isReceiving
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -294,7 +307,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   preloadImage: AssignmentOperations.preloadImage(dispatch),
   getAllAssignmentsAfter: AssignmentOperations.getAllAssignmentsAfter(dispatch),
   finishAssignment: AssignmentOperations.finishAssignment(dispatch),
-  getPrevAssignment: AssignmentOperations.getPrevAssignment(dispatch)
+  getPrevAssignment: AssignmentOperations.getPrevAssignment(dispatch),
+  enableReceiving: AssignmentOperations.enableReceiving(dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tag)

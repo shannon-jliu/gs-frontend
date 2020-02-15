@@ -10,7 +10,8 @@ import {fromJS} from 'immutable'
 const initialState = fromJS({
   assignments: [],
   current: -1,
-  loading: false
+  loading: false,
+  isReceiving: true
 })
 
 const assignmentReducer = (state = initialState, action) => {
@@ -26,6 +27,8 @@ const assignmentReducer = (state = initialState, action) => {
     return setActive(state, action.index)
   case 'UPDATE_ASSIGNMENT':
     return updateAssignment(state, action.assignment)
+  case 'ENABLE_RECEIVING':
+    return enableReceiving(state, action.enable)
   default:
     return state
   }
@@ -63,6 +66,10 @@ function updateAssignment(state, updatedAssign) {
       }
     })
   )
+}
+
+function enableReceiving(state, enable) {
+  return state.set('isReceiving', enable)
 }
 
 export default assignmentReducer

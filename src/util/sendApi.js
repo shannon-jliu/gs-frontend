@@ -70,6 +70,12 @@ export const AssignmentRequests = {
     $.post('/api/v1/assignment/work/MDLC')
       .done(successCallback)
       .fail(failureCallback)
+  },
+
+  enableReceiving: function(enable, successCallback, failureCallback) {
+    $.ajax('/api/v1/assignment/enable', {method: 'POST', data: { enable: enable }})
+      .done(successCallback)
+      .fail(failureCallback)
   }
 }
 
