@@ -16,6 +16,7 @@ const initialState = fromJS({
 
 const assignmentReducer = (state = initialState, action) => {
   // return initialState
+  console.log(state.get('assignments'))
   switch (action.type) {
   case 'GET_NEW_ASSIGNMENT_SUCCESS':
     return receiveNewAssignment(state, action.assignment)

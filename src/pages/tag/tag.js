@@ -162,7 +162,7 @@ export class Tag extends Component {
           }
           return false
         })
-        setTimeout(loadImages, 5000)
+        setTimeout(loadImages, 500)
       }
       loadImages()
     })
@@ -172,9 +172,9 @@ export class Tag extends Component {
     M.updateTextFields()
 
     if (!_.isEqual(prevProps, this.props) &&
-      this.props.get('isReceiving') !== this.state.isReceiving) {
+      this.props.isReceiving !== this.state.isReceiving) {
       this.setState({
-        isReceiving: this.props.get('isReceiving')
+        isReceiving: this.props.isReceiving
       })
     }
   }
