@@ -160,7 +160,7 @@ export class Tag extends Component {
           }
           return false
         })
-        setTimeout(loadImages, 5000)
+        setTimeout(loadImages, 500)
       }
       loadImages()
     })
