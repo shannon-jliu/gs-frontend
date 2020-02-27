@@ -1,3 +1,18 @@
+#containerContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px;
+}
+
+#clearButtonContainer {
+    padding-bottom: 8px;
+    width: 100%;
+}
+
+#clearButtonContainer a {
+    width: 100%;
+}
+
 #container {
     display: flex;
 }

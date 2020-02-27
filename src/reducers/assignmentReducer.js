@@ -28,6 +28,8 @@ const assignmentReducer = (state = initialState, action) => {
     return updateAssignment(state, action.assignment)
   case 'ENABLE_RECEIVING':
     return enableReceiving(state, action.enable)
+  case 'CLEAR_STATE':
+    return initialState
   default:
     return state
   }

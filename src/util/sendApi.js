@@ -76,7 +76,13 @@ export const AssignmentRequests = {
     $.ajax('/api/v1/assignment/enable', {method: 'POST', data: { enable: enable }})
       .done(successCallback)
       .fail(failureCallback)
-  }
+  },
+
+  clearDb: function(successCallback, failureCallback) {
+    $.post('/api/v1/util/clear')
+      .done(successCallback)
+      .fail(failureCallback)
+  },
 }
 
 export const SettingsRequest = {

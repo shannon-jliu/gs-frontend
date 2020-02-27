@@ -25,3 +25,7 @@ export const enableReceiving = enable => ({
   type: 'ENABLE_RECEIVING',
   enable
 })
+
+export const clearState = () => ({
+  type: 'CLEAR_STATE'
+})
