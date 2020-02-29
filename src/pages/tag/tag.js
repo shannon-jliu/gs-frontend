@@ -201,13 +201,6 @@ export class Tag extends Component {
   }
 
   render() {
-    //     localforage.clear().then(function() {
-    //     // Run this code once the database has been entirely deleted.
-    //     console.log('Database is now empty.');
-    // }).catch(function(err) {
-    //     // This code runs if there were any errors
-    //     console.log(err);
-    // });
     const assignment = this.props.assignment
     const sightings = this.props.sightings
 
