@@ -34,6 +34,8 @@ const imageReducer = (state = initialState, action) => {
     } else {
       return state
     }
+  case 'CLEAR_STATE':
+    return initialState
   default:
     return state
   }

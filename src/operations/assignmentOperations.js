@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable'
 import _ from 'lodash'
+import localforage from 'localforage'
 
 import * as action from '../actions/assignmentActionCreator.js'
 import * as imageAction from '../actions/imageActionCreator.js'
@@ -128,7 +129,21 @@ const AssignmentOperations = {
     enable => {
       AssignmentRequests.enableReceiving(() => {dispatch(action.enableReceiving(enable))}, () => {})
     }
-  )
+  ),
+
+  clearDb: dispatch => {
+    AssignmentRequests.clearDb(() => {
+      dispatch(action.clearState())
+      dispatch(imageAction.clearState())
+      localforage.clear().then(function() {
+        // Run this code once the database has been entirely deleted.
+        console.log('Database is now empty.')
+      }).catch(function(err) {
+        // This code runs if there were any errors
+        console.log(err)
+      })
+    }, () => {})
+  }
 }
 
 export default AssignmentOperations

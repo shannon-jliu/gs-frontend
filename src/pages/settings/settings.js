@@ -10,6 +10,7 @@ import cameraOperations from '../../operations/cameraOperations.js'
 import cameraGimbalOperations from '../../operations/cameraGimbalOperations.js'
 import gimbalSettingsOperations from '../../operations/gimbalSettingsOperations.js'
 import airdropOperations from '../../operations/airdropOperations.js'
+import assignmentOperations from '../../operations/assignmentOperations.js'
 
 import Modes from './components/Modes.js'
 
@@ -22,6 +23,7 @@ export class Settings extends Component {
       cameraGimbalMode: Modes.IDLE
     }
 
+    this.clearDb = this.clearDb.bind(this)
     this.changeCameraGimbalMode = this.changeCameraGimbalMode.bind(this)
   }
 
@@ -39,6 +41,11 @@ export class Settings extends Component {
     })
   }
 
+  clearDb(e) {
+    e.preventDefault()
+    this.props.clearDb()
+  }
+
   changeCameraGimbalMode(newCameraGimbalMode) {
     this.setState({cameraGimbalMode: newCameraGimbalMode})
   }
@@ -46,11 +53,18 @@ export class Settings extends Component {
   render() {
     return (
       <React.Fragment>
-        <div id='container'>
-          <CameraSettings/>
-          <CameraGimbalSettings changeCameraGimbalMode={this.changeCameraGimbalMode}/>
-          <GimbalSettings cameraGimbalMode={this.state.cameraGimbalMode}/>
-          <AirdropSettings/>
+        <div id='containerContainer'>
+          <div id='clearButtonContainer' className="row">
+            <a onClick={this.clearDb} className='waves-effect waves-light btn red' href='/#'>
+              Clear DB
+            </a>
+          </div>
+          <div id='container'>
+            <CameraSettings/>
+            <CameraGimbalSettings changeCameraGimbalMode={this.changeCameraGimbalMode}/>
+            <GimbalSettings cameraGimbalMode={this.state.cameraGimbalMode}/>
+            <AirdropSettings/>
+          </div>
         </div>
       </React.Fragment>
     )
@@ -62,7 +76,8 @@ const mapDispatchToProps = dispatch => ({
   getCameraZoom: data => cameraOperations.getZoom(dispatch),
   getCameraGimbalSettings: data => cameraGimbalOperations.getSetting(dispatch),
   getGimbalSettingSettings: data => gimbalSettingsOperations.getSetting(dispatch),
-  getAirdropSettings: data => airdropOperations.getSetting(dispatch)
+  getAirdropSettings: data => airdropOperations.getSetting(dispatch),
+  clearDb: data => assignmentOperations.clearDb(dispatch),
 })
 
 export default connect(null, mapDispatchToProps)(Settings)
