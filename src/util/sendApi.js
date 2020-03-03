@@ -79,10 +79,11 @@ export const AssignmentRequests = {
   },
 
   clearDb: function(successCallback, failureCallback) {
-    $.post('/api/v1/util/clear')
+    $.ajax('/api/v1/util/clear',
+      {method: 'POST', dataType: 'html'})
       .done(successCallback)
       .fail(failureCallback)
-  },
+  }
 }
 
 export const SettingsRequest = {
