@@ -46,3 +46,7 @@ export const addTargetsFromServer = targets => ({
   type: 'ADD_TARGETS_FROM_SERVER',
   targets
 })
+
+export const clearState = () => ({
+  type: 'CLEAR_STATE'
+})

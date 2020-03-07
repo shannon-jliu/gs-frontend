@@ -67,7 +67,7 @@ export const AssignmentRequests = {
   },
 
   requestWork: function(successCallback, failureCallback) {
-    $.post('/api/v1/assignment/work/MDLC')
+    $.post('/api/v1/assignment/work')
       .done(successCallback)
       .fail(failureCallback)
   },
@@ -76,13 +76,7 @@ export const AssignmentRequests = {
     $.ajax('/api/v1/assignment/enable', {method: 'POST', data: { enable: enable }})
       .done(successCallback)
       .fail(failureCallback)
-  },
-
-  clearDb: function(successCallback, failureCallback) {
-    $.post('/api/v1/util/clear')
-      .done(successCallback)
-      .fail(failureCallback)
-  },
+  }
 }
 
 export const SettingsRequest = {
@@ -106,5 +100,14 @@ export const SettingsRequest = {
 
   updateGimbalSettingsSetting: function(settings, successCallback, failureCallback) {
     SettingsRequest.updateSetting('/api/v1/settings/gimbal', settings, successCallback, failureCallback)
+  }
+}
+
+export const UtilRequests = {
+  clearMdlc: function(successCallback, failureCallback) {
+    $.ajax('/api/v1/util/clear_mdlc',
+      {method: 'POST', dataType: 'html'})
+      .done(successCallback)
+      .fail(failureCallback)
   }
 }

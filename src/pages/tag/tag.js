@@ -133,7 +133,6 @@ export class Tag extends Component {
 
     window.addEventListener('load', () => {
       let loadImages = () => {
-        // TODO: Refine/retest when all of the new backend has been implemented
         let recentImage = this.props.imageState.get('recent')
         this.props.getNewImages((recentImage.get('timestamp') === -1 ? 0 : recentImage.get('id')))
         let images = this.props.imageState.get('all')
@@ -193,11 +192,6 @@ export class Tag extends Component {
         cameraTilt={showOffaxis}
       />
     )
-  }
-
-  updateReceiving(e) {
-    console.log(e.target.checked)
-    this.setState({ isReceiving: e.target.checked })
   }
 
   render() {

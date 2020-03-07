@@ -52,3 +52,7 @@ export const deleteTargetFromTargetSightings = target => ({
   type: 'DELETE_TARGET_FROM_TARGET_SIGHTINGS',
   target
 })
+
+export const clearState = () => ({
+  type: 'CLEAR_STATE'
+})

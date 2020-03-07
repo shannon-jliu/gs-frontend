@@ -34,17 +34,15 @@ export const TargetSightingGetRequests = {
 }
 
 export const AssignmentGetRequests = {
-  getAllAssignmentsAfter: function(index, successCallback, failureCallback) {
-    // grab ids that are created after the current id
-    // the controller handles whether or not the user is authenticated
-    $.get('/api/v1/assignment/after/' + index)
+  getAllAssignments: function(successCallback, failureCallback) {
+    $.get('/api/v1/assignment')
       .done(successCallback)
       .fail(failureCallback)
   },
 
-  getNewImages: function(index, successCallback, failureCallback) {
-    // get all images
-    $.get('/api/v1/image/all/' + index)
+  getNewImages: function(id, successCallback, failureCallback) {
+    // get all images after id
+    $.get('/api/v1/image/all/' + id)
       .done(successCallback)
       .fail(failureCallback)
   }
