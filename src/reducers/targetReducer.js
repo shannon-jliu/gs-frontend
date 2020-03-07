@@ -36,6 +36,8 @@ const targetReducer = (state = initialState, action) => {
     return failUpdateTarget(state, action.target, action.attribute)
   case 'ADD_TARGETS_FROM_SERVER':
     return addTargetsFromServer(state, action.targets)
+  case 'CLEAR_STATE':
+    return initialState
   default:
     return state
   }

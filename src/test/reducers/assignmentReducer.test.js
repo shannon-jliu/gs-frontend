@@ -242,23 +242,6 @@ describe('assignmentReducer', () => {
           isReceiving: true
         }))
     })
-
-    it('should properly update', () => {
-      expect(
-        reducer(
-          firstStateAfterInit,
-          {
-            type: 'ENABLE_RECEIVING',
-            enable: false
-          })
-      ).toEqualImmutable(
-        fromJS({
-          assignments: [firstAssignment],
-          current: -1,
-          loading: false,
-          isReceiving: false
-        }))
-    })
   })
 
 })

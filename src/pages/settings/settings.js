@@ -23,7 +23,7 @@ export class Settings extends Component {
       cameraGimbalMode: Modes.IDLE
     }
 
-    this.clearDb = this.clearDb.bind(this)
+    this.clearMdlc = this.clearMdlc.bind(this)
     this.changeCameraGimbalMode = this.changeCameraGimbalMode.bind(this)
   }
 
@@ -41,9 +41,11 @@ export class Settings extends Component {
     })
   }
 
-  clearDb(e) {
+  clearMdlc(e) {
     e.preventDefault()
-    this.props.clearDb()
+    if (window.confirm('Are you sure you wish to clear the MDLC-related tables?')) {
+      this.props.clearMdlc()
+    }
   }
 
   changeCameraGimbalMode(newCameraGimbalMode) {
@@ -55,7 +57,7 @@ export class Settings extends Component {
       <React.Fragment>
         <div id='containerContainer'>
           <div id='clearButtonContainer' className="row">
-            <a onClick={this.clearDb} className='waves-effect waves-light btn red' href='/#'>
+            <a onClick={this.clearMdlc} className='waves-effect waves-light btn red' href='/#'>
               Clear DB
             </a>
           </div>
@@ -77,7 +79,7 @@ const mapDispatchToProps = dispatch => ({
   getCameraGimbalSettings: data => cameraGimbalOperations.getSetting(dispatch),
   getGimbalSettingSettings: data => gimbalSettingsOperations.getSetting(dispatch),
   getAirdropSettings: data => airdropOperations.getSetting(dispatch),
-  clearDb: data => assignmentOperations.clearDb(dispatch),
+  clearMdlc: data => assignmentOperations.clearMdlc(dispatch)
 })
 
 export default connect(null, mapDispatchToProps)(Settings)

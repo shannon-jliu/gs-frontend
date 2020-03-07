@@ -41,6 +41,8 @@ const targetSightingReducer = (state = initialState, action) => {
     return deleteLocalTarget(state, action.target)
   case 'DELETE_TARGET_FROM_TARGET_SIGHTINGS':
     return deleteTargetFromTargetSightings(state, action.target)
+  case 'CLEAR_STATE':
+    return initialState
   default:
     return state
   }

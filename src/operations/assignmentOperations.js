@@ -4,9 +4,12 @@ import localforage from 'localforage'
 
 import * as action from '../actions/assignmentActionCreator.js'
 import * as imageAction from '../actions/imageActionCreator.js'
+import * as tAction from '../actions/targetActionCreator.js'
+import * as tsAction from '../actions/targetSightingActionCreator.js'
 
 import { AssignmentRequests } from '../util/sendApi.js'
 import { AssignmentGetRequests } from '../util/receiveApi.js'
+import { UtilRequests } from '../util/sendApi.js'
 import SnackbarUtil from '../util/snackbarUtil.js'
 
 // 'currAssignment' will always denotes an Immutable object, structured after Tag props
@@ -131,16 +134,17 @@ const AssignmentOperations = {
     }
   ),
 
-  clearDb: dispatch => {
-    AssignmentRequests.clearDb(() => {
+  // clears all mdlc-related states on the frontend
+  clearMdlc: dispatch => {
+    UtilRequests.clearMdlc(() => {
       dispatch(action.clearState())
       dispatch(imageAction.clearState())
+      dispatch(tAction.clearState())
+      dispatch(tsAction.clearState())
       localforage.clear().then(function() {
-        // Run this code once the database has been entirely deleted.
-        console.log('Database is now empty.')
+        SnackbarUtil.render('Database is now empty')
       }).catch(function(err) {
-        // This code runs if there were any errors
-        console.log(err)
+        SnackbarUtil.render(err)
       })
     }, () => {})
   }
