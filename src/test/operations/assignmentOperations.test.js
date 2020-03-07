@@ -82,7 +82,7 @@ describe('AssignmentOperations', () => {
       let assignments = [1, 2, 3, 4, 5] // just giving it a length
       AssignmentOperations.nextAssignmentSuccess(dispatch)(assignment)(assignments)
       expect(AssignmentRequests.requestWork).toHaveBeenCalledTimes(1)
-      expect(SnackbarUtil.render).toHaveBeenCalledWith('No new assignments. 5 assignments were found')
+      expect(SnackbarUtil.render).toHaveBeenCalledWith('No new assignments')
       expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
     })
 
@@ -111,14 +111,13 @@ describe('AssignmentOperations', () => {
 
   describe('getNextAssignment', () => {
     beforeEach(() => {
-      AssignmentGetRequests.getAllAssignmentsAfter = jest.fn((x, y, z) => (x, y, z))
+      AssignmentGetRequests.getAllAssignments = jest.fn((x, y) => (x, y))
     })
 
-    it('it properly calls getAfter with the correct id', () => {
+    it('it properly calls getAllAssignments', () => {
       AssignmentOperations.getNextAssignment(dispatch)(assignment)
-      expect(AssignmentGetRequests.getAllAssignmentsAfter).toHaveBeenCalledTimes(1)
-      expect(AssignmentGetRequests.getAllAssignmentsAfter).toHaveBeenCalledWith(
-        11,
+      expect(AssignmentGetRequests.getAllAssignments).toHaveBeenCalledTimes(1)
+      expect(AssignmentGetRequests.getAllAssignments).toHaveBeenCalledWith(
         expect.any(Function),
         expect.any(Function)
       )

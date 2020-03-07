@@ -58,7 +58,7 @@ export class Settings extends Component {
         <div id='containerContainer'>
           <div id='clearButtonContainer' className="row">
             <a onClick={this.clearMdlc} className='waves-effect waves-light btn red' href='/#'>
-              Clear DB
+              Clear MDLC
             </a>
           </div>
           <div id='container'>

@@ -52,8 +52,7 @@ const AssignmentOperations = {
         dispatch(action.setActive(currAssignment.get('currentIndex') + 1))
       } else if (!currAssignment.get('loading')) {
         const failure = () => dispatch(action.finishLoading())
-        AssignmentGetRequests.getAllAssignmentsAfter(
-          currAssignment.getIn(['assignment', 'id']) || 0,
+        AssignmentGetRequests.getAllAssignments(
           AssignmentOperations.nextAssignmentSuccess(dispatch)(currAssignment),
           failure
         )
@@ -67,13 +66,11 @@ const AssignmentOperations = {
     currAssignment => (
       // adds assignments, a JS array from API output, into the store
       assignments => {
-        AssignmentOperations.processAssignments(dispatch)(assignments, currAssignment.get('currentIndex'), false)
-        const msg = assignments.length > 0 ? '. ' + assignments.length + ' assignments were found' : ''
         AssignmentRequests.requestWork((data, _, xhr) => {
           // if 204 is returned, no new assignments, do not increment
           if (xhr.status === 204) {
             dispatch(action.finishLoading())
-            SnackbarUtil.render('No new assignments' + msg)
+            SnackbarUtil.render('No new assignments')
           } else {
             dispatch(action.receiveNewAssignment(fromJS(data)))
             dispatch(imageAction.receiveImage(fromJS(data.image)))
@@ -110,15 +107,15 @@ const AssignmentOperations = {
     }
   ),
 
-  getAllImages: dispatch => (
-    () => {
+  getNewImages: dispatch => (
+    index => {
       const successCallback = data => {
         for (let i = 0; i < data.length; i++) {
           dispatch(imageAction.receiveImage(fromJS(data[i])))
         }
       }
 
-      AssignmentGetRequests.getAllImages(successCallback, () => {})
+      AssignmentGetRequests.getNewImages(index, successCallback, () => {})
     }
   ),
 

@@ -67,7 +67,7 @@ export const AssignmentRequests = {
   },
 
   requestWork: function(successCallback, failureCallback) {
-    $.post('/api/v1/assignment/work/MDLC')
+    $.post('/api/v1/assignment/work')
       .done(successCallback)
       .fail(failureCallback)
   },
@@ -105,7 +105,8 @@ export const SettingsRequest = {
 
 export const UtilRequests = {
   clearMdlc: function(successCallback, failureCallback) {
-    $.post('/api/v1/util/clear_mdlc')
+    $.ajax('/api/v1/util/clear_mdlc',
+      {method: 'POST', dataType: 'html'})
       .done(successCallback)
       .fail(failureCallback)
   }

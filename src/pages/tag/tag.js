@@ -133,7 +133,8 @@ export class Tag extends Component {
 
     window.addEventListener('load', () => {
       let loadImages = () => {
-        this.props.getAllImages()
+        let recentImage = this.props.imageState.get('recent')
+        this.props.getNewImages((recentImage.get('timestamp') === -1 ? 0 : recentImage.get('id')))
         let images = this.props.imageState.get('all')
         let mostRecentPreloadedId = this.props.imageState.get('lastIdPreloaded')
         images.map((value, key) => {
@@ -289,7 +290,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   addTargetSighting: TargetSightingOperations.addTargetSighting(dispatch),
   getAllSightings: TargetSightingOperations.getAllSightings(dispatch),
-  getAllImages: AssignmentOperations.getAllImages(dispatch),
+  getNewImages: AssignmentOperations.getNewImages(dispatch),
   preloadImage: AssignmentOperations.preloadImage(dispatch),
   getAllAssignments: AssignmentOperations.getAllAssignments(dispatch),
   finishAssignment: AssignmentOperations.finishAssignment(dispatch),

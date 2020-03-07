@@ -34,26 +34,15 @@ export const TargetSightingGetRequests = {
 }
 
 export const AssignmentGetRequests = {
-  getAllAssignmentsAfter: function(index, successCallback, failureCallback) {
-    // grab ids that are created after the current id
-    $.get('/api/v1/assignment/after/' + index)
-      .done(successCallback)
-      .fail(failureCallback)
-  },
-
   getAllAssignments: function(successCallback, failureCallback) {
-    // if undefined, auth is disabled, grab all assignments
-    const route = _.isNull(localStorage.getItem(AUTH_TOKEN_ID))
-      ? '/api/v1/assignment'
-      : '/api/v1/assignment/user'
-    $.get(route)
+    $.get('/api/v1/assignment')
       .done(successCallback)
       .fail(failureCallback)
   },
 
-  getAllImages: function(successCallback, failureCallback) {
-    // get all images
-    $.get('/api/v1/image')
+  getNewImages: function(id, successCallback, failureCallback) {
+    // get all images after id
+    $.get('/api/v1/image/all/' + id)
       .done(successCallback)
       .fail(failureCallback)
   }
