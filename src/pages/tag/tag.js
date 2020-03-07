@@ -15,7 +15,7 @@ import ImageTools from './imageTools'
 import { GROUND_SERVER_URL } from '../../constants/links'
 import { TWO_PASS_MODE } from '../../util/config'
 
-import Switch from '../settings/components/Switch.js'
+import Switch from '../settings/components/Switch'
 import './tag.css'
 
 export class Tag extends Component {
@@ -127,7 +127,7 @@ export class Tag extends Component {
     M.Range.init(elems, {})
 
     if (!this.props.assignment.hasIn(['assignment', 'id'])) {
-      this.props.getAllAssignmentsAfter(this.props.assignment.get('currentIndex'))
+      this.props.getAllAssignments(this.props.assignment.get('currentIndex'))
       this.props.getAllSightings()
     }
 
@@ -161,7 +161,7 @@ export class Tag extends Component {
           }
           return false
         })
-        setTimeout(loadImages, 500)
+        setTimeout(loadImages, 5000)
       }
       loadImages()
     })
@@ -292,7 +292,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   getAllSightings: TargetSightingOperations.getAllSightings(dispatch),
   getNewImages: AssignmentOperations.getNewImages(dispatch),
   preloadImage: AssignmentOperations.preloadImage(dispatch),
-  getAllAssignmentsAfter: AssignmentOperations.getAllAssignmentsAfter(dispatch),
+  getAllAssignments: AssignmentOperations.getAllAssignments(dispatch),
   finishAssignment: AssignmentOperations.finishAssignment(dispatch),
   getPrevAssignment: AssignmentOperations.getPrevAssignment(dispatch),
   enableReceiving: AssignmentOperations.enableReceiving(dispatch)
