@@ -65,9 +65,16 @@ const TargetSightingOperations = {
     sighting => {
       dispatch(action.startSaveTargetSighting(sighting.get('localId')))
 
+      // TODO: Make this dynamic
+      const creator = {
+        username: '<NO_USER>',
+        address: 'localhost',
+        userType: 'MDLCTAGGER'
+      }
+
       const sightingToSend = _.assign(
         _.omit(sighting.toJS(), ['localId', 'type']),
-        { creator: 'MDLC' })
+        { creator: creator })
 
       const successCallback = data => {
         SnackbarUtil.render('Succesfully saved target sighting')

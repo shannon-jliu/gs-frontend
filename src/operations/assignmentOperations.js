@@ -139,7 +139,7 @@ const AssignmentOperations = {
       dispatch(tAction.clearState())
       dispatch(tsAction.clearState())
       localforage.clear().then(function() {
-        SnackbarUtil.render('Database is now empty')
+        SnackbarUtil.render('The MDLC tables are now empty')
       }).catch(function(err) {
         SnackbarUtil.render(err)
       })
