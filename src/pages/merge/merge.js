@@ -8,6 +8,8 @@ import MergeTarget from './mergeTarget'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import TargetOperations from '../../operations/targetOperations'
 
+import {MILLISECONDS_BETWEEN_MERGE_PAGE_POLLS} from '../../constants/constants.js'
+
 import './merge.css'
 
 export class Merge extends Component {
@@ -15,10 +17,12 @@ export class Merge extends Component {
     super(props)
 
     this.state = {
+      // if a target sighting is being dragged, the entire object is copied to this variable
+      // when no sighting is being dragged, this is null
       dragSighting: null
     }
 
-    this.newTarget = this.newTarget.bind(this)
+    this.createNewTarget = this.createNewTarget.bind(this)
     this.onDragStart = this.onDragStart.bind(this)
     this.onDragEnd = this.onDragEnd.bind(this)
     this.onDrag = this.onDrag.bind(this)
@@ -27,69 +31,43 @@ export class Merge extends Component {
     this.renderTarget = this.renderTarget.bind(this)
   }
 
+  // every 5 seconds, the page polls the server for the current targets and target sightings
   componentDidMount() {
     const loadNewestContent = () => {
       this.props.getAllTargets()
       this.props.getAllSightings()
     }
-    this.contentLoader = setInterval(loadNewestContent, 5000)
+    this.contentLoader = setInterval(loadNewestContent, MILLISECONDS_BETWEEN_MERGE_PAGE_POLLS)
   }
 
   componentWillUnmount() {
     clearInterval(this.contentLoader)
   }
 
-  newTarget() {
-    const target = fromJS({
-      type: 'alphanum',
-      creator: 'MDLC',
-      shape: '',
-      shapeColor: '',
-      alpha: '',
-      alphaColor: '',
-      thumbnailTSId: 0,
-      offaxis: false,
-      localId: Math.random() + ':' + Math.random() + ':' + Math.random()
-    })
-    this.props.addTarget(target)
+  render() {
+    return (
+      <div className='merge'>
+        {this.renderUnassignedSightingsSidebar()}
+        {this.renderTargetsColumn()}
+      </div>
+    )
   }
 
-  onDragStart(sighting) {
-    this.setState({
-      dragSighting: sighting
-    })
+  renderUnassignedSightingsSidebar() {
+    const unassignedSightings = this.props.sightings.filter(ts => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts))
+    const renderedUnassignedSightings = unassignedSightings.map(this.renderSighting).toJSON()
+
+    return (
+      <div className='sightings'>
+        {renderedUnassignedSightings}
+      </div>
+    )
   }
 
-  onDragEnd() {
-    if (!_.isNil(this.state.dragSighting) && !_.isNil(this.state.dragSighting.get('target'))) {
-      this.props.updateTargetSighting(this.state.dragSighting, fromJS({target: null}))
-    }
-    this.setState({
-      dragSighting: null
-    })
-  }
-
-  onDrop(target) {
-    if (target.has('id')) {
-      const dragTgt = _.isNull(this.state.dragSighting.getIn(['pending', 'target'])) ? undefined :
-        (this.state.dragSighting.getIn(['pending', 'target']) || this.state.dragSighting.get('target'))
-      if (_.isNil(dragTgt) || dragTgt.get('id') !== target.get('id')) {
-        this.props.updateTargetSighting(this.state.dragSighting, fromJS({target}))
-      }
-    }
-    this.setState({
-      dragSighting: null
-    })
-  }
-
-  onDrag(e) {
-    if (e.clientY < 300) {
-      window.scrollBy(0, -7, 'smooth')
-    }
-
-    if (e.clientY > (window.innerHeight - 300)) {
-      window.scrollBy(0, 7, 'smooth')
-    }
+  isSightingAssigned(sighting) {
+    const isSightingBoundToSomeTargetAndNotBeingUnbound = 
+        this.isSightingBoundToSomeTarget(sighting) && !this.isSightingBeingUnboundFromSomeTarget(sighting)
+    return isSightingBoundToSomeTargetAndNotBeingUnbound || this.isSightingBeingBoundToSomeTarget(sighting)
   }
 
   renderSighting(sighting) {
@@ -108,24 +86,69 @@ export class Merge extends Component {
     )
   }
 
-  renderTarget(target, assignedSightings) {
-    const boundSightings = target.has('id') ?
-      assignedSightings.filter(s => {
-        if (s.hasIn(['pending', 'target'])) {
-          //if pending.target === null, this will return false
-          return s.getIn(['pending', 'target', 'id']) === target.get('id') && s.get('type') === target.get('type')
-        } else {
-          return s.getIn(['target', 'id']) === target.get('id') && s.get('type') === target.get('type')
-        }
-      })
-      : fromJS([])
+  // begin dragging a sighting, either from the sidebar or a target
+  onDragStart(sighting) {
+    this.setState({
+      dragSighting: sighting
+    })
+  }
 
-    const dragId = _.isNil(this.state.dragSighting) ? undefined
-      : this.state.dragSighting.get('id')
+  // end dragging a sighting, whether over a target or not. runs after onDrop (if it was over a target)
+  onDragEnd() {
+    if (!_.isNil(this.state.dragSighting) && !_.isNil(this.state.dragSighting.get('target'))) {
+      this.props.updateTargetSighting(this.state.dragSighting, fromJS({target: null}))
+    }
+    this.setState({
+      dragSighting: null
+    })
+  }
+
+  onDrag(e) {
+    if (e.clientY < 300) {
+      window.scrollBy(0, -7, 'smooth')
+    }
+
+    if (e.clientY > (window.innerHeight - 300)) {
+      window.scrollBy(0, 7, 'smooth')
+    }
+  }
+
+  renderTargetsColumn() {
+    const sortedTargets = this.getSortedTargets()
+    const renderedSortedTargets = sortedTargets.map(this.renderTarget).toJSON()
+    const renderedNewTargetButton = this.renderNewTargetButton()
+
+    return (
+      <div className='targets'>
+        {renderedSortedTargets}
+        {renderedNewTargetButton}
+      </div>
+    )
+  }
+
+  getSortedTargets() {
+    // order should be first the emergent target, then the offaxis (will be alphanum with lowest id), then every other alphanum in ascending id order
+    const sortedSavedTargets = this.props.savedTargets.sort((target1, target2) => {
+      if (target1.get('type') === 'emergent') {
+        return -1
+      } else if (target2.get('type') === 'emergent') {
+        return 1
+      } else {
+        return target1.get('id') - target2.get('id')
+      }
+    })
+    // local targets go after, in the order they were created (which is their props order)
+    return sortedSavedTargets.concat(this.props.localTargets)
+  }
+
+  renderTarget(target) {
+    const key = (target.get('id') || target.get('localId')) + '-target-' + target.get('type')
+    const boundSightings = target.has('id') ? this.getSightingsBoundOrBeingBoundToTarget(target) : fromJS([])
+    const dragId = _.isNil(this.state.dragSighting) ? undefined : this.state.dragSighting.get('id')
 
     return (
       <MergeTarget
-        key={(target.get('id') || target.get('localId')) + '-target-' + target.get('type')}
+        key={key}
         target={target}
         sightings={boundSightings}
         onTsDragStart={this.onDragStart}
@@ -136,39 +159,96 @@ export class Merge extends Component {
     )
   }
 
-  render() {
-    //pending's target overrides the normal target. If pending's target is null, the target is deleted; if pending's target is undefined, there is no override
-    //for that reason, this uses both loose and strict equality (!= null checks both - x != null is the same as (x !== null && x !== undefined))
-    //It should also be noted that _.isNil() will check both null and undefined equality.
-    const isAssigned = ts => (!_.isNil(ts.get('target')) && !_.isNull(ts.getIn(['pending', 'target']))) || !_.isNil(ts.getIn(['pending', 'target']))
-    const assignedSightings = this.props.sightings.filter(isAssigned)
-    const unassignedSightings = this.props.sightings.filter(ts => ts.get('type') === 'alphanum' && !isAssigned(ts))
-    const sortedTargets = this.props.savedTargets.sort((target1, target2) => {
-      if (target1.get('type') === 'emergent') {
-        return -1
-      } else if (target2.get('type') === 'emergent') {
-        return 1
+  // called by a target when a target sighting that can be dropped into it is released over it. runs before onDragEnd
+  onDrop(target) {
+    if (target.has('id')) {
+      const currTargetOfDragSighting = this.getTargetBoundOrBeingBoundToSighting(this.state.dragSighting)
+      if (_.isNil(currTargetOfDragSighting) || currTargetOfDragSighting.get('id') !== target.get('id')) {
+        this.props.updateTargetSighting(this.state.dragSighting, fromJS({target}))
+      }
+    }
+    this.setState({
+      dragSighting: null
+    })
+  }
+
+  getTargetBoundOrBeingBoundToSighting(sighting) {
+    if (this.isTargetBoundToSightingBeingChanged(sighting)) {
+      return sighting.getIn(['pending', 'target'])
+    } else {
+      return sighting.get('target')
+    }
+  }
+
+  getSightingsBoundOrBeingBoundToTarget(target) {
+    return this.props.sightings.filter(ts => {
+      if (ts.get('type') === 'emergent') {
+        return target.get('type') === 'emergent'
+      }
+      if (this.isSightingBeingUnboundFromSomeTarget(ts) || !this.isSightingBoundToSomeTarget(ts)) {
+        return false;
+      }
+      if (this.isSightingBeingBoundToSomeTarget(ts)) {
+        return this.isSightingBeingBoundToTarget(ts, target)
       } else {
-        return target1.get('id') - target2.get('id')
+        return this.isSightingBoundToTarget(ts, target)
       }
     })
+  }
 
+  // Note how some functions below use isNil and some use isNull. This is because pending's target overrides the normal target.
+  // If pending's target is undefined (aka the field doesn't exist), then nothing is overridden.
+  // But, if pending's target is set to null, the target is being deleted.
+  // _.isNil() is true for either null or undefined. _.isNull() is only true for null.
+
+  isSightingBoundToSomeTarget(sighting) {
+    return !_.isNil(sighting.get('target'))
+  }
+
+  isSightingBeingUnboundFromSomeTarget(sighting) {
+    return _.isNull(sighting.getIn(['pending', 'target']))
+  }
+
+  isSightingBeingBoundToSomeTarget(sighting) {
+    return !_.isNil(sighting.getIn(['pending', 'target']))
+  }
+
+  isTargetBoundToSightingBeingChanged(sighting) {
+    return !_.isUndefined(sighting.getIn(['pending', 'target']))
+  }
+
+  isSightingBeingBoundToTarget(sighting, target) {
+    return sighting.getIn(['pending', 'target', 'id']) === target.get('id') && sighting.get('type') === target.get('type')
+  }
+
+  isSightingBoundToTarget(sighting, target) {
+    return sighting.getIn(['target', 'id']) === target.get('id') && sighting.get('type') === target.get('type')
+  }
+
+  renderNewTargetButton() {
     return (
-      <div className='merge'>
-        <div className='sightings'>
-          {unassignedSightings.map(this.renderSighting).toJSON()}
-        </div>
-        <div className='targets'>
-          {sortedTargets.map(t => this.renderTarget(t, assignedSightings)).concat(this.props.localTargets.map(this.renderTarget)).toJSON()}
-          <div
-            className='new-target target card'
-            onClick={this.newTarget}
-          >
-            + New Target
-          </div>
-        </div>
+      <div
+        className='new-target target card'
+        onClick={this.createNewTarget}
+      >
+        + New Target
       </div>
     )
+  }
+
+  createNewTarget() {
+    const target = fromJS({
+      type: 'alphanum',
+      creator: 'MDLC',
+      shape: '',
+      shapeColor: '',
+      alpha: '',
+      alphaColor: '',
+      thumbnailTSId: 0,
+      offaxis: false,
+      localId: Math.random() + ':' + Math.random() + ':' + Math.random()
+    })
+    this.props.addTarget(target)
   }
 }
 
