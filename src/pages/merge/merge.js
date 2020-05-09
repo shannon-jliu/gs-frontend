@@ -64,10 +64,11 @@ export class Merge extends Component {
     )
   }
 
+  // aka, is some target assumed for sighting
   isSightingAssigned(sighting) {
-    const isSightingBoundToSomeTargetAndNotBeingUnbound = 
-        this.isSightingBoundToSomeTarget(sighting) && !this.isSightingBeingUnboundFromSomeTarget(sighting)
-    return isSightingBoundToSomeTargetAndNotBeingUnbound || this.isSightingBeingBoundToSomeTarget(sighting)
+    const isSomeTargetConfirmedOrPendingForSighting = 
+        this.isSomeTargetConfirmedForSighting(sighting) || this.isSomeTargetPendingForSighting(sighting)
+    return isSomeTargetConfirmedOrPendingForSighting && !this.isSomeTargetBeingUnboundFromSighting(sighting)
   }
 
   renderSighting(sighting) {
@@ -143,7 +144,7 @@ export class Merge extends Component {
 
   renderTarget(target) {
     const key = (target.get('id') || target.get('localId')) + '-target-' + target.get('type')
-    const boundSightings = target.has('id') ? this.getSightingsBoundOrBeingBoundToTarget(target) : fromJS([])
+    const boundSightings = target.has('id') ? this.getSightingsAssumedForTarget(target) : fromJS([])
     const dragId = _.isNil(this.state.dragSighting) ? undefined : this.state.dragSighting.get('id')
 
     return (
@@ -162,7 +163,7 @@ export class Merge extends Component {
   // called by a target when a target sighting that can be dropped into it is released over it. runs before onDragEnd
   onDrop(target) {
     if (target.has('id')) {
-      const currTargetOfDragSighting = this.getTargetBoundOrBeingBoundToSighting(this.state.dragSighting)
+      const currTargetOfDragSighting = this.getTargetAssumedForSighting(this.state.dragSighting)
       if (_.isNil(currTargetOfDragSighting) || currTargetOfDragSighting.get('id') !== target.get('id')) {
         this.props.updateTargetSighting(this.state.dragSighting, fromJS({target}))
       }
@@ -172,7 +173,7 @@ export class Merge extends Component {
     })
   }
 
-  getTargetBoundOrBeingBoundToSighting(sighting) {
+  getTargetAssumedForSighting(sighting) {
     if (this.isTargetBoundToSightingBeingChanged(sighting)) {
       return sighting.getIn(['pending', 'target'])
     } else {
@@ -180,36 +181,37 @@ export class Merge extends Component {
     }
   }
 
-  getSightingsBoundOrBeingBoundToTarget(target) {
+  getSightingsAssumedForTarget(target) {
     return this.props.sightings.filter(ts => {
       if (ts.get('type') === 'emergent') {
         return target.get('type') === 'emergent'
       }
-      if (this.isSightingBeingUnboundFromSomeTarget(ts) || !this.isSightingBoundToSomeTarget(ts)) {
+      if (this.isSomeTargetBeingUnboundFromSighting(ts) || !this.isSomeTargetConfirmedForSighting(ts)) {
         return false;
       }
-      if (this.isSightingBeingBoundToSomeTarget(ts)) {
-        return this.isSightingBeingBoundToTarget(ts, target)
+      if (this.isSomeTargetPendingForSighting(ts)) {
+        return this.isTargetPendingForSighting(target, ts)
       } else {
-        return this.isSightingBoundToTarget(ts, target)
+        return this.isTargetConfirmedForSighting(target, ts)
       }
     })
   }
 
-  // Note how some functions below use isNil and some use isNull. This is because pending's target overrides the normal target.
-  // If pending's target is undefined (aka the field doesn't exist), then nothing is overridden.
-  // But, if pending's target is set to null, the target is being deleted.
+  // Note how some functions below use isNil and some use isNull. This is because for a sighting's
+  // assumed target, the pending target overrides the confirmed target.
+  // If pending's target is undefined (aka the field doesn't exist), then nothing is overridden (and the assumed target is the confirmed one).
+  // But, if pending's target is set to null, the target is being deleted (and the assumed target is null).
   // _.isNil() is true for either null or undefined. _.isNull() is only true for null.
 
-  isSightingBoundToSomeTarget(sighting) {
+  isSomeTargetConfirmedForSighting(sighting) {
     return !_.isNil(sighting.get('target'))
   }
 
-  isSightingBeingUnboundFromSomeTarget(sighting) {
+  isSomeTargetBeingUnboundFromSighting(sighting) {
     return _.isNull(sighting.getIn(['pending', 'target']))
   }
 
-  isSightingBeingBoundToSomeTarget(sighting) {
+  isSomeTargetPendingForSighting(sighting) {
     return !_.isNil(sighting.getIn(['pending', 'target']))
   }
 
@@ -217,11 +219,11 @@ export class Merge extends Component {
     return !_.isUndefined(sighting.getIn(['pending', 'target']))
   }
 
-  isSightingBeingBoundToTarget(sighting, target) {
+  isTargetPendingForSighting(target, sighting) {
     return sighting.getIn(['pending', 'target', 'id']) === target.get('id') && sighting.get('type') === target.get('type')
   }
 
-  isSightingBoundToTarget(sighting, target) {
+  isTargetConfirmedForSighting(target, sighting) {
     return sighting.getIn(['target', 'id']) === target.get('id') && sighting.get('type') === target.get('type')
   }
 
