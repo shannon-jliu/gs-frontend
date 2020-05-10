@@ -16,10 +16,8 @@ import {NENO_COORDS, PAX_COORDS} from '../../constants/constants.js'
 export class MergeTarget extends Component {
   constructor(props) {
     super(props)
-    let t = this.props.target
-    if (t.has('pending')) {
-      t = t.merge(t.get('pending'))
-    }
+
+    const t = this.getAssumedTargetFromProps()
 
     this.state = {
       shape: t.get('shape') || '',
@@ -43,7 +41,16 @@ export class MergeTarget extends Component {
     this.dragEnter = this.dragEnter.bind(this)
     this.dragLeave = this.dragLeave.bind(this)
     this.drop = this.drop.bind(this)
-    this.selectThumb = this.selectThumb.bind(this)
+    this.renderSightingPreview = this.renderSightingPreview.bind(this)
+    this.selectSightingAsThumbnail = this.selectSightingAsThumbnail.bind(this)
+  }
+
+  getAssumedTargetFromProps() {
+    let t = this.props.target
+    if (t.has('pending')) {
+      t = t.merge(t.get('pending'))
+    }
+    return t
   }
 
   componentDidMount() {
@@ -62,147 +69,171 @@ export class MergeTarget extends Component {
     this.setState(changedState)
   }
 
-  canDelete(showReason) {
-    if (showReason && this.props.target.has('pending')) SnackbarUtil.render('Cannot delete target: target is currently saving')
-    return !this.props.target.has('pending')
+  render() {
+    const targetHasSpecialType = this.isTargetTypeSpecial()
+    return (
+      <div
+        ref='main'
+        className={'target card' + (this.state.dragCtr > 0 ? ' drag-over' : '')}
+        onDragEnter={targetHasSpecialType ? undefined : this.dragEnter}
+        onDragLeave={targetHasSpecialType ? undefined : this.dragLeave}
+        onDragOver={targetHasSpecialType ? undefined : e => e.preventDefault()}
+        onDrop={targetHasSpecialType ? undefined : this.drop}
+      >
+        {this.renderTitleIfSpecialType()}
+        {this.renderAttributesSection()}
+        {this.renderSightingPreviewRow()}
+      </div>
+    )
   }
 
-  canSave(showReason) {
-    const s = this.state
+  renderTitleIfSpecialType() {
+    return (
+      <div className={'type' + (this.isTargetTypeSpecial() ? '' : ' hidden')}>
+        {this.getTargetTypeDisplayTitleIfSpecial()}
+        <div className='border'></div>
+      </div>
+    )
+  }
+
+  getTargetTypeDisplayTitleIfSpecial() {
+    if (this.props.target.get('type') === 'emergent') {
+      return 'Emergent'
+    } else if (this.props.target.get('offaxis')) {
+      return 'Off-axis'
+    } else if (!this.props.target.has('id')) {
+      return 'Unsaved'
+    } else {
+      return ''
+    }
+  }
+
+  renderAttributesSection() {
+    return (
+      <div className='facts'>
+        {this.renderClassificationFields()}
+        {this.renderGeotagFieldsIfApplicable()}
+        {this.renderButtons()}
+      </div>
+    )
+  }
+
+  renderClassificationFields() {
+    let fields
+    if (this.props.target.get('type') === 'alphanum') {
+      fields = this.renderAlphanumClassificationFields()
+    } else if (this.props.target.get('type') === 'emergent') {
+      fields = this.renderEmergentClassificationFields()
+    } else {
+      fields = 'ERROR: target not alphanum or emergent, cannot render fields (please tell someone on Platform this)'
+    }
+
+    return (<div className='row'>{fields}</div>)
+  }
+
+  renderAlphanumClassificationFields() {
+    return (
+      <TargetAlphanumFields
+        shape={this.state.shape}
+        shapeColor={this.state.shapeColor}
+        alpha={this.state.alpha}
+        alphaColor={this.state.alphaColor}
+        getHandler={this.getHandler}
+      />
+    )
+  }
+
+  renderEmergentClassificationFields() {
+    return (
+      <TargetEmergentFields
+        description={this.state.description}
+        getHandler={this.getHandler}
+      />
+    )
+  }
+
+  renderGeotagFieldsIfApplicable() {
+    if (this.props.target.get('type') != 'emergent' && this.props.target.get('offaxis')) {
+      return <div className='hidden' />
+    }
+
+    return (
+      <div className='row'>
+        <TargetGeotagFields
+          latitude={this.state.latitude}
+          longitude={this.state.longitude}
+          getHandler={this.getHandler}
+        />
+      </div>
+    )
+  }
+
+  renderButtons() {
     const t = this.props.target
-
-    if (t.has('pending')) {
-      if (showReason) SnackbarUtil.render('Cannot save target: target is currently saving')
-      return false
-    }
-
-    const allValid =
-      (t.get('type') === 'alphanum' &&
-        s.shape &&
-        s.shapeColor &&
-        s.alpha &&
-        s.alphaColor) ||
-      (t.get('type') === 'emergent' &&
-        s.description.length > 0)
-
-    if (!allValid) {
-      if (showReason) {
-        if (t.get('type') === 'alphanum') {
-          if (!s.shape) {
-            SnackbarUtil.render('Cannot save target: shape field is not set')
-          } else if (!s.shapeColor) {
-            SnackbarUtil.render('Cannot save target: shape color field is not set')
-          } else if (!s.alpha) {
-            SnackbarUtil.render('Cannot save target: alpha field is empty')
-          } else if (!s.alphaColor) {
-            SnackbarUtil.render('Cannot save target: alpha color field is not set')
-          }
-        } else {
-          SnackbarUtil.render('Cannot save target: description is empty')
-        }
-      }
-      return false
-    }
-
-    //0.5 degrees of latitude is longitude is 25-35 miles -- should be used as a sanity check, not a guarantee within bounds
-    const isGeotagValid =
-      (s.latitude === '' && s.longitude === '') ||
-      (!_.isNaN(parseFloat(s.latitude)) && !_.isNaN(parseFloat(s.longitude)) &&
-        (Math.abs(parseFloat(s.latitude) - PAX_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - PAX_COORDS[1]) < 0.5)) ||
-          (Math.abs(parseFloat(s.latitude) - NENO_COORDS[0]) < 0.5 && Math.abs(parseFloat(s.longitude) - NENO_COORDS[1]) < 0.5)
-
-    if (!isGeotagValid) {
-      if (showReason) {
-        if (s.latitude === '' || s.longitude === '') {
-          SnackbarUtil.render('Cannot save target: only one lat/long field is set (both can be empty)')
-        } else if (_.isNaN(parseFloat(s.latitude))) {
-          SnackbarUtil.render('Cannot save target: latitude is not a number')
-        } else if (_.isNaN(parseFloat(s.longitude))) {
-          SnackbarUtil.render('Cannot save target: longitude is not a number')
-        } else {
-          SnackbarUtil.render('Cannot save target: geotag not near PAX (lat: ' + PAX_COORDS[0] +
-              ', long: ' + PAX_COORDS[1] + ') or Neno (lat: ' + NENO_COORDS[0] + ', long: ' + NENO_COORDS[1] + ')')
-        }
-      }
-      return false
-    }
-
-    const fieldsHaveChanged =
-      (t.get('type') === 'alphanum' &&
-        !_.isEqual(
-          _.pick(s, [
-            'shape',
-            'shapeColor',
-            'alpha',
-            'alphaColor',
-            'thumbnailTSId'
-          ]),
-          _.pick(t.toJS(), [
-            'shape',
-            'shapeColor',
-            'alpha',
-            'alphaColor',
-            'thumbnailTSId'
-          ]))) ||
-      (t.get('type') === 'emergent' &&
-        !_.isEqual(
-          _.pick(s, [
-            'description',
-            'thumbnailTSId'
-          ]),
-          _.pick(t.toJS(), [
-            'description',
-            'thumbnailTSId'
-          ])))
-
-    if (fieldsHaveChanged) return true
-
-    //don't need to check isNaN because isGeotagValid must have already be true
-    const geotagHasChanged =
-      s.latitude !== '' && s.longitude !== '' &&
-        (!t.hasIn(['geotag', 'gpsLocation', 'latitude']) ||
-        !t.hasIn(['geotag', 'gpsLocation', 'longitude']) ||
-        t.getIn(['geotag', 'gpsLocation', 'latitude']) !== s.latitude ||
-        t.getIn(['geotag', 'gpsLocation', 'longitude']) !== s.longitude)
-
-    if (geotagHasChanged) return true
-
-    if (showReason) {
-      if (t.get('type') === 'alphanum') SnackbarUtil.render('Cannot save target: no field/thumbnail/geotag changes to save')
-      else SnackbarUtil.render('Cannot save target: no description/thumbnail/geotag changes to save')
-    }
-
-    return false
+    return (
+      <TargetButtonRow
+        type={t.get('type')}
+        offaxis={t.get('offaxis')}
+        isSaved={t.has('id')}
+        saveable={this.canSave()}
+        save={this.save}
+        deletable={this.canDelete()}
+        deleteFn={this.delete}
+      />
+    )
   }
 
-  getHandler(prop) {
-    return e => {
-      let o = {}
-      let val = e.target.value
-      if (prop === 'alpha') {
-        val = val.slice(0, 1).toUpperCase()
-      }
-      o[prop] = val
-      this.setState(o)
-    }
+  renderSightingPreviewRow() {
+    // toJSON is a shallow conversion (preserving immutable html attributes), while toJS would be deep
+    const sightingPreviews = this.props.sightings.map(this.renderSightingPreview).toJSON();
+    return (
+      <div className='sighting-images'>
+        {sightingPreviews}
+      </div>
+    )
+  }
+
+  renderSightingPreview(sighting) {
+    return (
+      <MergeSightingPreview
+        key={this.getSightingPreviewKey(sighting)}
+        onClick={() => this.selectSightingAsThumbnail(ts)}
+        isThumbnail={sighting.get('id') === this.state.thumbnailTSId}
+        isMerged={true}
+        sighting={sighting}
+        onDragStart={this.isTargetTypeSpecial() ? undefined : () => this.props.onTsDragStart(sighting)}
+        onDragEnd={this.isTargetTypeSpecial() ? undefined : this.props.onTsDragEnd}
+        dragging={this.isSightingBeingDragged(sighting)}
+      />
+    )
+  }
+
+  getSightingPreviewKey(sighting) {
+    return sighting.get('id') + '-image-' + sighting.get('type')
+  }
+
+  isSightingBeingDragged(sighting) {
+    return sighting.get('type') === 'alphanum' && sighting.get('id') === this.props.dragId
+  }
+
+  isTargetTypeSpecial() {
+    const t = this.props.target
+    return t.get('type') === 'emergent' || t.get('offaxis') || !t.has('id')
   }
 
   save() {
+    const s = this.state
+    const t = this.props.target
+
     if (this.canSave(true)) {
-      const s = this.state
-      const t = this.props.target
+      const nonGeotagAttributeNames = this.getNonGeotagMutableAttributeNames()
 
-      const validFields = ['thumbnailTSId']
-      const validEmergentFields = ['description']
-      const validAlphanumFields = ['shape', 'shapeColor', 'alpha', 'alphaColor']
+      let updatedVals = 
+          fromJS(_.pick(s, nonGeotagAttributeNames))
+          .filter((value, key) => t.get(key) !== value)
 
-      let newVals = fromJS(_.pick(s, _.concat(validFields, t.get('type') === 'alphanum' ? validAlphanumFields : validEmergentFields)))
-        .filter((value, key) => t.get(key) !== value)
-
-      if (s.longitude !== '' && s.latitude !== '' &&
-          (t.getIn(['geotag', 'gpsLocation', 'longitude']) !== s.longitude ||
-          t.getIn(['geotag', 'gpsLocation', 'latitude']) !== s.latitude)) {
-        newVals = newVals.set('geotag', fromJS({
+      if (this.isValidGeotagModified()) {
+        updatedVals = updatedVals.set('geotag', fromJS({
           gpsLocation: {
             longitude: s.longitude,
             latitude: s.latitude
@@ -211,9 +242,9 @@ export class MergeTarget extends Component {
       }
 
       if (t.has('id')) {
-        this.props.updateTarget(t, newVals)
+        this.props.updateTarget(t, updatedVals)
       } else {
-        this.props.saveTarget(t.merge(newVals), fromJS([]))
+        this.props.saveTarget(t.merge(updatedVals), fromJS([]))
       }
     }
   }
@@ -225,6 +256,165 @@ export class MergeTarget extends Component {
       } else {
         this.props.deleteUnsavedTarget(this.props.target)
       }
+    }
+  }
+
+  canDelete(showReason) {
+    if (this.props.target.has('pending')) {
+      if (showReason) {
+        SnackbarUtil.render('Cannot delete target: target is currently saving')
+      }
+      return false
+    }
+
+    return true
+  }
+
+  canSave(showReason) {
+    return this.areAllFieldsValidToSave(showReason) && this.isAnyFieldModifiedToSave(showReason)
+  }
+
+  areAllFieldsValidToSave(showReason) {
+    return this.isTargetNotCurrentlySavingToSave(showReason) 
+        && this.areClassificationFieldsValidToSave(showReason)
+        && this.isGeotagValidAndSaneToSave(showReason)
+  }
+
+  isTargetNotCurrentlySavingToSave(showReason) {
+    if (this.props.target.has('pending')) {
+      if (showReason) SnackbarUtil.render('Cannot save target: target is currently saving')
+      return false
+    }
+    return true
+  }
+
+  areClassificationFieldsValidToSave(showReason) {
+    const s = this.state
+
+    if (this.props.target.get('type') === 'alphanum') {
+      if (!s.shape) {
+        if (showReason) SnackbarUtil.render('Cannot save target: shape field is not set')
+        return false
+      }
+      if (!s.shapeColor) {
+        if (showReason) SnackbarUtil.render('Cannot save target: shape color field is not set')
+        return false
+      } 
+      if (!s.alpha) {
+        if (showReason) SnackbarUtil.render('Cannot save target: alpha field is empty')
+        return false
+      }
+      if (!s.alphaColor) {
+        if (showReason) SnackbarUtil.render('Cannot save target: alpha color field is not set')
+        return false
+      }
+      return true
+    } else if (this.props.target.get('type') === 'emergent') {
+      if (s.description.length == 0) {
+        if (showReason) SnackbarUtil.render('Cannot save target: description is empty')
+        return false
+      }
+      return true
+    }
+
+    SnackbarUtil.render('ERROR: target not alphanum or emergent, fields not valid to save (please tell someone on Platform this)')
+    return false
+  }
+
+  isGeotagValidAndSaneToSave(showReason) {
+    if (this.state.latitude === '' && this.state.longitude === '') {
+      return true
+    }
+
+    if (!this.isNonEmptyGeotagValidToSave(showReason)) {
+      return false
+    }
+    if (!this.isValidNonEmptyGeotagInSaneLocationToSave(showReason)) {
+      return false
+    }
+
+    return true
+  }
+
+  isNonEmptyGeotagValidToSave(showReason) {
+    const s = this.state
+
+    if (s.latitude === '' || s.longitude === '') {
+      if (showReason) SnackbarUtil.render('Cannot save target: only one lat/long field is set (both can be empty)')
+      return false
+    }
+    if (_.isNaN(parseFloat(s.latitude))) {
+      if (showReason) SnackbarUtil.render('Cannot save target: latitude is not a number')
+      return false
+    }
+    if (_.isNaN(parseFloat(s.longitude))) {
+      if (showReason) SnackbarUtil.render('Cannot save target: longitude is not a number')
+      return false
+    }
+
+    return true
+  }
+
+  // this checks that geotag is within 0.5 degrees of latitude and longitude from Neno or PAX
+  // that's about 25-35 miles -- this is used as a sanity check, not a guarantee within bounds
+  isValidNonEmptyGeotagInSaneLocationToSave(showReason) {
+    const lat = parseFloat(this.state.latitude)
+    const lon = parseFloat(this.state.longitude)
+
+    const isGeotagNearPAX = Math.abs(lat - PAX_COORDS[0]) < 0.5 && Math.abs(lon - PAX_COORDS[1]) < 0.5
+    const isGeotagNearNeno = Math.abs(lat - NENO_COORDS[0]) < 0.5 && Math.abs(lon - NENO_COORDS[1]) < 0.5
+    if (!isGeotagNearPAX && !isGeotagNearNeno) {
+      if (showReason) {
+        SnackbarUtil.render('Cannot save target: geotag not near PAX (lat: ' + PAX_COORDS[0] +
+              ', long: ' + PAX_COORDS[1] + ') or Neno (lat: ' + NENO_COORDS[0] + ', long: ' + NENO_COORDS[1] + ')')
+      }
+      return false
+    }
+
+    return true
+  }
+
+  // assumes all fields (specifically geotag) are valid
+  isAnyFieldModifiedToSave(showReason) {
+    const isAnyFieldModifiedToSave = this.isAnyNonGeotagAttributeModified() || this.isValidGeotagModified()
+
+    if (!isAnyFieldModifiedToSave && showReason) {
+      if (this.props.target.get('type') === 'alphanum') {
+        SnackbarUtil.render('Cannot save target: no field/thumbnail/geotag changes to save')
+      } else if (this.props.target.get('type') === 'emergent') {
+        SnackbarUtil.render('Cannot save target: no description/thumbnail/geotag changes to save')
+      }
+    }
+
+    return isAnyFieldModifiedToSave
+  }
+
+  isAnyNonGeotagAttributeModified() {
+    const fieldsToCompare = this.getNonGeotagMutableAttributeNames()
+
+    const currentFieldsToCompare = _.pick(this.state, fieldsToCompare)
+    const savedFieldsToCompare = _.pick(this.props.target.toJS(), fieldsToCompare)
+
+    return !_.isEqual(currentFieldsToCompare, savedFieldsToCompare)
+  }
+
+  isValidGeotagModified() {
+    if (this.state.latitude === '' || this.state.longitude === '') {
+      return false
+    }
+
+    const savedTargetLatitude = this.props.target.getIn(['geotag', 'gpsLocation', 'latitude'], undefined)
+    const savedTargetLongitude = this.props.target.getIn(['geotag', 'gpsLocation', 'longitude'], undefined)
+    return savedTargetLatitude !== this.state.latitude || savedTargetLongitude !== this.state.longitude
+  }
+
+  getHandler(prop) {
+    return e => {
+      let val = e.target.value
+      if (prop === 'alpha') {
+        val = val.slice(0, 1).toUpperCase()
+      }
+      this.setState({[prop]: val})
     }
   }
 
@@ -247,90 +437,23 @@ export class MergeTarget extends Component {
     this.props.onTsDrop(this.props.target)
   }
 
-  selectThumb(tsId) {
-    this.setState({ thumbnailTSId: tsId })
+  selectSightingAsThumbnail(sighting) {
+    this.setState({thumbnailTSId: sighting.get('id')})
   }
 
-  render() {
-    const t = this.props.target
+  getNonGeotagMutableAttributeNames() {
+    const sharedAttributes = ['thumbnailTSId']
+    const alphanumAttributes = ['shape', 'shapeColor', 'alpha', 'alphaColor']
+    const emergentAttributes = ['description']
 
-    //both for whether ts can be dragged in and whether it has title
-    const canHoldTs = t.get('type') === 'emergent' || t.get('offaxis') || !t.has('id')
-    const title = t.get('type') === 'emergent' ? 'Emergent' :
-      (t.get('offaxis') ? 'Off-axis' : 'Unsaved')
+    let typeAttributes
+    if (this.props.target.get('type') === 'alphanum') {
+      typeAttributes = alphanumAttributes
+    } else if (this.props.target.get('type') === 'emergent') {
+      typeAttributes = emergentAttributes
+    }
 
-    return (
-      <div
-        ref='main'
-        className={'target card' + (this.state.dragCtr > 0 ? ' drag-over' : '')}
-        onDragEnter={canHoldTs ? undefined : this.dragEnter}
-        onDragLeave={canHoldTs ? undefined : this.dragLeave}
-        onDragOver={canHoldTs ? undefined : e => e.preventDefault()}
-        onDrop={canHoldTs ? undefined : this.drop}
-      >
-        <div className={'type' + (canHoldTs ? '' : ' hidden')}>
-          {title}
-          <div className='border'></div>
-        </div>
-        <div className='facts'>
-          <div className={t.get('type') === 'alphanum' ? 'row' : 'hidden'}>
-            <TargetAlphanumFields
-              shape={this.state.shape}
-              shapeColor={this.state.shapeColor}
-              alpha={this.state.alpha}
-              alphaColor={this.state.alphaColor}
-              getHandler={this.getHandler}
-            />
-          </div>
-
-          <div className={t.get('type') === 'emergent' ? 'row' : 'hidden'}>
-            <TargetEmergentFields
-              description={this.state.description}
-              getHandler={this.getHandler}
-            />
-          </div>
-
-          <div className={t.get('type') === 'emergent' || !t.get('offaxis') ? 'row' : 'hidden'}>
-            <TargetGeotagFields
-              latitude={this.state.latitude}
-              longitude={this.state.longitude}
-              getHandler={this.getHandler}
-            />
-          </div>
-
-          <TargetButtonRow
-            type={t.get('type')}
-            offaxis={t.get('offaxis')}
-            isSaved={t.has('id')}
-            saveable={this.canSave()}
-            save={this.save}
-            deletable={this.canDelete()}
-            deleteFn={this.delete}
-          />
-        </div>
-        {/*All images from target sightings */}
-        <div className='sighting-images'>
-          {this.props.sightings.map(ts => (
-            <MergeSightingPreview
-              key={ts.get('id') + '-image-' + ts.get('type')}
-              onClick={() => this.selectThumb(ts.get('id'))}
-              isThumbnail={ts.get('id') === this.state.thumbnailTSId}
-              isMerged={true}
-              sighting={ts}
-              onDragStart={
-                t.get('type') === 'emergent' || t.get('offaxis')
-                  ? undefined : () => this.props.onTsDragStart(ts)
-              }
-              onDragEnd={
-                t.get('type') === 'emergent' || t.get('offaxis')
-                  ? undefined : this.props.onTsDragEnd
-              }
-              dragging={t.get('type') === 'alphanum' && ts.get('id') === this.props.dragId}
-            />
-          )).toJSON() /*toJSON is a shallow conversion while toJS is deep */}
-        </div>
-      </div>
-    )
+    return _.concat(typeAttributes, sharedAttributes)
   }
 }
 

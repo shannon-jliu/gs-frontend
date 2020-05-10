@@ -242,7 +242,7 @@ describe('MergeTarget', () => {
       SnackbarUtil.render = jest.fn()
     })
 
-    it('can save when alpha field changes', () => {
+    it('can save when alpha color field changes', () => {
       wrapper = shallow(<MergeTarget {...props} />)
       wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
 
@@ -294,7 +294,7 @@ describe('MergeTarget', () => {
 
     it('cannot save with empty description', () => {
       wrapper = shallow(<MergeTarget {...eProps} />)
-      wrapper.instance().selectThumb(12)
+      wrapper.instance().selectSightingAsThumbnail(props.sightings.get(1))
       wrapper.instance().getHandler('description')({target: {value: ''}})
 
       expect(wrapper.instance().canSave(true)).toEqual(false)
@@ -304,7 +304,7 @@ describe('MergeTarget', () => {
 
     it('can save when thumbnail changes', () => {
       wrapper = shallow(<MergeTarget {...props} />)
-      wrapper.instance().selectThumb(12)
+      wrapper.instance().selectSightingAsThumbnail(props.sightings.get(1))
 
       expect(wrapper.instance().canSave(true)).toEqual(true)
       expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
@@ -850,10 +850,7 @@ describe('MergeTarget', () => {
       expect(alphaFields.prop('alphaColor')).toEqual('orange')
       expect(alphaFields.prop('getHandler')).toBe(wrapper.instance().getHandler)
 
-      const eDiv = wrapper.find('.facts div').at(1)
-      expect(eDiv.prop('className')).toEqual('hidden')
-
-      const geoDiv = wrapper.find('.facts div').at(2)
+      const geoDiv = wrapper.find('.facts div').at(1)
       expect(geoDiv.prop('className')).toEqual('row')
       const geoFields = geoDiv.find('TargetGeotagFields')
       expect(geoFields.prop('latitude')).toEqual('38.2948294')
@@ -863,16 +860,13 @@ describe('MergeTarget', () => {
 
     it('has correct emergent attributes', () => {
       wrapper = shallow(<MergeTarget {...eProps} />)
-      const alphaDiv = wrapper.find('.facts div').first()
-      expect(alphaDiv.prop('className')).toEqual('hidden')
-
-      const eDiv = wrapper.find('.facts div').at(1)
+      const eDiv = wrapper.find('.facts div').first()
       expect(eDiv.prop('className')).toEqual('row')
       const eFields = eDiv.find('TargetEmergentFields')
       expect(eFields.prop('description')).toEqual('a german shepherd on stilts')
       expect(eFields.prop('getHandler')).toBe(wrapper.instance().getHandler)
 
-      const geoDiv = wrapper.find('.facts div').at(2)
+      const geoDiv = wrapper.find('.facts div').at(1)
       expect(geoDiv.prop('className')).toEqual('row')
       const geoFields = geoDiv.find('TargetGeotagFields')
       expect(geoFields.prop('latitude')).toEqual('38.284920')
@@ -899,10 +893,7 @@ describe('MergeTarget', () => {
       expect(alphaFields.prop('alphaColor')).toEqual('orange')
       expect(alphaFields.prop('getHandler')).toBe(wrapper.instance().getHandler)
 
-      const eDiv = wrapper.find('.facts div').at(1)
-      expect(eDiv.prop('className')).toEqual('hidden')
-
-      const geoDiv = wrapper.find('.facts div').at(2)
+      const geoDiv = wrapper.find('.facts div').at(1)
       expect(geoDiv.prop('className')).toEqual('hidden')
     })
 
@@ -920,10 +911,7 @@ describe('MergeTarget', () => {
       expect(alphaFields.prop('alphaColor')).toEqual('red')
       expect(alphaFields.prop('getHandler')).toBe(wrapper.instance().getHandler)
 
-      const eDiv = wrapper.find('.facts div').at(1)
-      expect(eDiv.prop('className')).toEqual('hidden')
-
-      const geoDiv = wrapper.find('.facts div').at(2)
+      const geoDiv = wrapper.find('.facts div').at(1)
       expect(geoDiv.prop('className')).toEqual('row')
       const geoFields = geoDiv.find('TargetGeotagFields')
       expect(geoFields.prop('latitude')).toEqual('38.2948294')
@@ -965,13 +953,13 @@ describe('MergeTarget', () => {
       expect(sightings.at(0).prop('isThumbnail')).toEqual(true)
       expect(sightings.at(1).prop('isThumbnail')).toEqual(false)
 
-      wrapper.instance().selectThumb(12)
+      wrapper.instance().selectSightingAsThumbnail(props.sightings.get(1))
 
       sightings = wrapper.find('div.sighting-images MergeSightingPreview')
       expect(sightings.at(0).prop('isThumbnail')).toEqual(false)
       expect(sightings.at(1).prop('isThumbnail')).toEqual(true)
 
-      wrapper.instance().selectThumb(11)
+      wrapper.instance().selectSightingAsThumbnail(props.sightings.get(0))
 
       sightings = wrapper.find('div.sighting-images MergeSightingPreview')
       expect(sightings.at(0).prop('isThumbnail')).toEqual(true)
