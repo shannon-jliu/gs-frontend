@@ -185,7 +185,7 @@ export class MergeTarget extends Component {
 
   renderSightingPreviewRow() {
     // toJSON is a shallow conversion (preserving immutable html attributes), while toJS would be deep
-    const sightingPreviews = this.props.sightings.map(this.renderSightingPreview).toJSON();
+    const sightingPreviews = this.props.sightings.map(this.renderSightingPreview).toJSON()
     return (
       <div className='sighting-images'>
         {sightingPreviews}
@@ -197,7 +197,7 @@ export class MergeTarget extends Component {
     return (
       <MergeSightingPreview
         key={this.getSightingPreviewKey(sighting)}
-        onClick={() => this.selectSightingAsThumbnail(ts)}
+        onClick={() => this.selectSightingAsThumbnail(sighting)}
         isThumbnail={sighting.get('id') === this.state.thumbnailTSId}
         isMerged={true}
         sighting={sighting}
@@ -228,9 +228,9 @@ export class MergeTarget extends Component {
     if (this.canSave(true)) {
       const nonGeotagAttributeNames = this.getNonGeotagMutableAttributeNames()
 
-      let updatedVals = 
+      let updatedVals =
           fromJS(_.pick(s, nonGeotagAttributeNames))
-          .filter((value, key) => t.get(key) !== value)
+            .filter((value, key) => t.get(key) !== value)
 
       if (this.isValidGeotagModified()) {
         updatedVals = updatedVals.set('geotag', fromJS({
@@ -275,7 +275,7 @@ export class MergeTarget extends Component {
   }
 
   areAllFieldsValidToSave(showReason) {
-    return this.isTargetNotCurrentlySavingToSave(showReason) 
+    return this.isTargetNotCurrentlySavingToSave(showReason)
         && this.areClassificationFieldsValidToSave(showReason)
         && this.isGeotagValidAndSaneToSave(showReason)
   }
@@ -299,7 +299,7 @@ export class MergeTarget extends Component {
       if (!s.shapeColor) {
         if (showReason) SnackbarUtil.render('Cannot save target: shape color field is not set')
         return false
-      } 
+      }
       if (!s.alpha) {
         if (showReason) SnackbarUtil.render('Cannot save target: alpha field is empty')
         return false

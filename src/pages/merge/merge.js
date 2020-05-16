@@ -66,7 +66,7 @@ export class Merge extends Component {
 
   // aka, is some target assumed for sighting
   isSightingAssigned(sighting) {
-    const isSomeTargetConfirmedOrPendingForSighting = 
+    const isSomeTargetConfirmedOrPendingForSighting =
         this.isSomeTargetConfirmedForSighting(sighting) || this.isSomeTargetPendingForSighting(sighting)
     return isSomeTargetConfirmedOrPendingForSighting && !this.isSomeTargetBeingUnboundFromSighting(sighting)
   }
@@ -187,7 +187,7 @@ export class Merge extends Component {
         return target.get('type') === 'emergent'
       }
       if (this.isSomeTargetBeingUnboundFromSighting(ts) || !this.isSomeTargetConfirmedForSighting(ts)) {
-        return false;
+        return false
       }
       if (this.isSomeTargetPendingForSighting(ts)) {
         return this.isTargetPendingForSighting(target, ts)
