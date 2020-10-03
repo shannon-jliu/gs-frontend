@@ -4,32 +4,22 @@ import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
 import $ from 'jquery'
 
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import { persistStore, persistReducer } from 'redux-persist'
+import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
-import immutableTransform from 'redux-persist-transform-immutable'
-import storageSession from 'redux-persist/lib/storage/session'
-
-import rootReducer from './reducers'
 
 import App from './App.js'
 import Login from './pages/login/login.js'
+import Logout from './pages/logout/logout.js'
 import Tag from './pages/tag/tag.js'
 import Settings from './pages/settings/settings.js'
 import Merge from './pages/merge/merge.js'
 import Logs from './pages/logs/logs.js'
 
+import store from './store.js'
 import AuthUtil from './util/authUtil.js'
 import {GROUND_SERVER_URL} from './constants/links.js'
 import {AUTH_TOKEN_ID} from './constants/constants.js'
 
-const config = {
-  transforms: [immutableTransform()], // required to convert localstorage to immutable
-  key: 'root',
-  storage: storageSession
-}
-const persistedReducer = persistReducer(config, rootReducer)
-const store = createStore(persistedReducer)
 const persistor = persistStore(store)
 
 $.ajaxSetup({
@@ -44,10 +34,12 @@ $.ajaxSetup({
       options.data = JSON.stringify(options.data)
     }
     options.url = GROUND_SERVER_URL + options.url
-    jqXHR.setRequestHeader(
-      'X-AUTH-TOKEN',
-      localStorage.getItem(AUTH_TOKEN_ID)
-    )
+    if (localStorage.getItem(AUTH_TOKEN_ID)) {
+      jqXHR.setRequestHeader(
+        'Username',
+        JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).username
+      )
+    }
   }
 })
 
@@ -68,6 +60,7 @@ const GroundServerRouter = () =>
         <BrowserRouter>
           <Switch>
             <Route path="/login" render={() => <App main={<Login/>}/>}/>
+            <Route path="/logout" render={() => requireAuth(<Logout/>)}/>
             <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
             <Route path="/settings" render={() => requireAuth(<Settings/>)}/>
             <Route path="/merge" render={() => requireAuth(<Merge/>)}/>

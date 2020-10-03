@@ -8,7 +8,8 @@ import MergeTarget from './mergeTarget'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import TargetOperations from '../../operations/targetOperations'
 
-import {MILLISECONDS_BETWEEN_MERGE_PAGE_POLLS} from '../../constants/constants.js'
+import { MILLISECONDS_BETWEEN_MERGE_PAGE_POLLS } from '../../constants/constants.js'
+import { AUTH_TOKEN_ID } from '../../constants/constants.js'
 
 import './merge.css'
 
@@ -239,9 +240,16 @@ export class Merge extends Component {
   }
 
   createNewTarget() {
+    const creator = {
+      id: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).id,
+      username: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).username,
+      address: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).address,
+      userType: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).userType
+    }
+
     const target = fromJS({
       type: 'alphanum',
-      creator: 'MDLC',
+      creator: creator,
       shape: '',
       shapeColor: '',
       alpha: '',

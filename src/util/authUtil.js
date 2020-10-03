@@ -1,39 +1,35 @@
 import $ from 'jquery'
-import md5 from 'md5'
 
 import {AUTH_TOKEN_ID} from '../constants/constants.js'
-import {REQUIRE_AUTH} from './config.js'
 
 var authenticated = !!localStorage.getItem(AUTH_TOKEN_ID)
 var confirmedAuthentication = false
-var admin = false
+var operator = false
 
 function confirmAuthentication() {
+  let usernameObj = (localStorage.getItem(AUTH_TOKEN_ID) === null || localStorage.getItem(AUTH_TOKEN_ID) === undefined) ? {} : { Username: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).username }
   var res = $.ajax({
-    url: '/api/v1/auth',
+    url: '/api/v1/odlcuser/create/mdlc',
     type: 'GET',
-    headers: {
-      'X-AUTH-TOKEN': localStorage.getItem(AUTH_TOKEN_ID)
-    },
+    headers: usernameObj,
     async: false
   })
-  if (res.status !== 200) authenticated = false
-  if (res.responseText === 'admin') admin = true
+  if (res && res.status && res.status !== 200) authenticated = false
+  if (res && res.responseJSON && res.responseJSON.userType === 'MDLCOPERATOR') operator = true
 }
 
 const AuthUtil = {
   // sends the auth request to obtain the auth token from ground-server
-  login: function(username, password, callback) {
+  login: function(username, callback) {
     $.ajax({
-      url: '/api/v1/auth',
+      url: '/api/v1/odlcuser/create/mdlc',
       type: 'GET',
       headers: {
-        Authorization: md5(password),
         Username: username
       },
       complete: jqXHR => {
         if (jqXHR.status !== 200) return callback(false, jqXHR.responseText)
-        AuthUtil.storeToken(JSON.parse(jqXHR.responseText).token)
+        AuthUtil.storeToken(jqXHR.responseText)
         callback(true)
       }
     })
@@ -44,21 +40,29 @@ const AuthUtil = {
     localStorage.setItem(AUTH_TOKEN_ID, token)
   },
   // determine if the user is already authenticated
-  authenticated: function() {
+  authenticated: function(usersEnabled) {
     // if the user does not have a token or it has logged in this session
-    if (!REQUIRE_AUTH) return true
+    if (!usersEnabled) return true
     if (!authenticated || confirmedAuthentication) return authenticated
     confirmAuthentication()
     confirmedAuthentication = true
     return authenticated
   },
-  // determine if this user is an admin use
-  admin: function() {
-    if (!REQUIRE_AUTH) return true
-    if (confirmedAuthentication) return admin
+  // determine if this user is an operator user
+  operator: function(usersEnabled) {
+    if (!usersEnabled) return true
+    if (confirmedAuthentication) return operator
     confirmAuthentication()
     confirmedAuthentication = true
-    return admin
+    return operator
+  },
+  logout: function() {
+    sessionStorage.clear()
+    localStorage.clear()
+    authenticated = false
+    confirmedAuthentication = false
+    operator = false
+    window.location.assign('/login')
   }
 }
 

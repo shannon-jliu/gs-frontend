@@ -37,8 +37,8 @@ describe('MergeTarget', () => {
         alpha: 'Q',
         mdlcClassConf: 'HIGH',
         offaxis: false,
-        pixelX: 980,
-        pixelY: 527,
+        pixelx: 980,
+        pixely: 527,
         radiansFromTop: 2.5051419954498755,
         width: 20,
         assignment: {
@@ -56,8 +56,8 @@ describe('MergeTarget', () => {
         alpha: 'Q',
         mdlcClassConf: 'LOW',
         offaxis: false,
-        pixelX: 34,
-        pixelY: 183,
+        pixelx: 34,
+        pixely: 183,
         radiansFromTop: 1.02343842934829032,
         width: 17,
         assignment: {
@@ -90,8 +90,8 @@ describe('MergeTarget', () => {
         type: 'emergent',
         shapeColor: 'a dog on stilts',
         mdlcClassConf: 'HIGH',
-        pixelX: 980,
-        pixelY: 527,
+        pixelx: 980,
+        pixely: 527,
         radiansFromTop: 2.5051419954498755,
         width: 20,
         assignment: {
@@ -105,8 +105,8 @@ describe('MergeTarget', () => {
         type: 'emergent',
         shapeColor: 'circus canine',
         mdlcClassConf: 'LOW',
-        pixelX: 34,
-        pixelY: 183,
+        pixelx: 34,
+        pixely: 183,
         radiansFromTop: 1.02343842934829032,
         width: 17,
         assignment: {

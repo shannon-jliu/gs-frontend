@@ -15,13 +15,12 @@ describe('login', () => {
   var retText = undefined
 
   it('should call the auth path with the correct params', () => {
-    AuthUtil.login('test', 'password', dummyCallback)
+    AuthUtil.login('test', dummyCallback)
     expect($.ajax).toHaveBeenCalledWith({
       complete: expect.any(Function),
       type: 'GET',
-      url: '/api/v1/auth',
+      url: '/api/v1/odlcuser/create/mdlc',
       headers: {
-        Authorization: md5('password'),
         Username: 'test'
       }
     })
@@ -30,13 +29,23 @@ describe('login', () => {
   it('should return true and store the token if it succeeds with 200', async (done) => {
     const response = {
       status: 200,
-      responseText: JSON.stringify({token: 'ecksdee'})
+      responseText: JSON.stringify({
+        id: 1,
+        username: '<NO_USER>',
+        address: 'localhost',
+        userType:'MDLCOPERATOR'
+      })
     }
     $.ajax.mock.calls[0][0].complete(response)
 
     // wait for the call to finish
-    await AuthUtil.login('test', 'password', dummyCallback)
-    expect(localStorage.getItem(AUTH_TOKEN_ID)).toEqual('ecksdee')
+    await AuthUtil.login('test', dummyCallback)
+    expect(localStorage.getItem(AUTH_TOKEN_ID)).toEqual(JSON.stringify({
+      id: 1,
+      username: '<NO_USER>',
+      address: 'localhost',
+      userType:'MDLCOPERATOR'
+    }))
     expect(retVal).toEqual(true)
     done()
   })
@@ -49,7 +58,7 @@ describe('login', () => {
     $.ajax.mock.calls[0][0].complete(response)
 
     // wait for the call to finish
-    await AuthUtil.login('test', 'password', dummyCallback)
+    await AuthUtil.login('test', dummyCallback)
     expect(localStorage.getItem(AUTH_TOKEN_ID)).toBeNull()
     expect(retVal).toEqual(false)
     done()

@@ -6,6 +6,10 @@ import { TargetSightingGetRequests as GetRequests } from '../../util/receiveApi.
 import TargetSightingOperations from '../../operations/targetSightingOperations.js'
 import * as action from '../../actions/targetSightingActionCreator.js'
 import SnackbarUtil from '../../util/snackbarUtil.js'
+import AuthUtil from '../../util/authUtil.js'
+
+jest.mock('jquery')
+const $ = require('jquery')
 
 describe('TargetSightingOperations', () => {
   const assignment = fromJS({
@@ -38,6 +42,13 @@ describe('TargetSightingOperations', () => {
     mdlcClassConf: 'low',
     assignment: assignment,
     geotag: {id: 21}
+  })
+
+  const creator = fromJS({
+    id: 1,
+    address: 'localhost',
+    userType: 'MDLCOPERATOR',
+    username: '<NO_USER>'
   })
 
   let dispatch
@@ -160,8 +171,23 @@ describe('TargetSightingOperations', () => {
   })
 
   describe('saveTargetSighting', () => {
-    it('saves successfully correctly', () => {
-      const expected = localTs.delete('type').delete('localId').set('creator', 'MDLC')
+    it('saves successfully correctly', async (done) => {
+      const dummyCallback = (val, text) => {retVal = val}
+      var retVal = undefined
+      var retText = undefined
+      AuthUtil.login('<NO_USER>', dummyCallback)
+      const response = {
+        status: 200,
+        responseText: JSON.stringify({
+          id: 1,
+          username: '<NO_USER>',
+          address: 'localhost',
+          userType:'MDLCOPERATOR'
+        })
+      }
+      $.ajax.mock.calls[0][0].complete(response)
+
+      const expected = localTs.delete('type').delete('localId').set('creator', creator)
       const returned = expected.set('id', 2)
       TargetSightingRequests.saveTargetSighting = jest.fn((isAlphanum, assignmentId, sighting, successCallback, failureCallback) => successCallback(returned.toJS()))
 
@@ -178,10 +204,11 @@ describe('TargetSightingOperations', () => {
 
       expect(SnackbarUtil.render).toHaveBeenCalledWith('Succesfully saved target sighting')
       expect(SnackbarUtil.render).toHaveBeenCalledTimes(1)
+      done()
     })
 
     it('fails to save correctly', () => {
-      const expected = localTs.delete('type').delete('localId').set('creator', 'MDLC')
+      const expected = localTs.delete('type').delete('localId').set('creator', creator)
       TargetSightingRequests.saveTargetSighting = jest.fn((isAlphanum, assignmentId, sighting, successCallback, failureCallback) => failureCallback())
 
       TargetSightingOperations.saveTargetSighting(dispatch)(localTs)
@@ -204,9 +231,9 @@ describe('TargetSightingOperations', () => {
     const attrib = fromJS({color: 'green'})
 
     it('updates target sighting correctly', () => {
-      const savedTs = ts.set('localTargetId', '23:63:2048').set('creator', 'MDLC')
+      const savedTs = ts.set('localTargetId', '23:63:2048').set('creator', creator)
       const sentTs = ts.set('color', 'green').delete('type').delete('geotag').delete('id')
-      const returned = ts.set('color', 'green').delete('type').set('creator', 'MDLC')
+      const returned = ts.set('color', 'green').delete('type').set('creator', creator)
       const final = savedTs.set('color', 'green')
 
       TargetSightingRequests.updateTargetSighting = jest.fn((isAlphanum, id, sighting, successCallback, failureCallback) => successCallback(returned.toJS()))
@@ -230,9 +257,9 @@ describe('TargetSightingOperations', () => {
       const tgt = fromJS({id: 30})
       const tgtAttrib = attrib.set('target', tgt)
 
-      const savedTs = ts.set('localTargetId', '23:63:2048').set('creator', 'MDLC')
+      const savedTs = ts.set('localTargetId', '23:63:2048').set('creator', creator)
       const sentTs = ts.set('color', 'green').delete('type').delete('geotag').delete('id').set('target', tgt)
-      const returned = ts.set('color', 'green').delete('type').set('creator', 'MDLC').set('target', tgt)
+      const returned = ts.set('color', 'green').delete('type').set('creator', creator).set('target', tgt)
       const final = returned.set('type', ts.get('type')).update('target', t => t.set('type', ts.get('type')))
 
       TargetSightingRequests.updateTargetSighting = jest.fn((isAlphanum, id, sighting, successCallback, failureCallback) => successCallback(returned.toJS()))
@@ -253,7 +280,7 @@ describe('TargetSightingOperations', () => {
     })
 
     it('fails to update target sighting correctly', () => {
-      const savedTs = ts.set('localTargetId', '23:63:2048').set('creator', 'MDLC')
+      const savedTs = ts.set('localTargetId', '23:63:2048').set('creator', creator)
       const sentTs = ts.set('color', 'green').delete('type').delete('geotag').delete('id')
 
       TargetSightingRequests.updateTargetSighting = jest.fn((isAlphanum, id, sighting, successCallback, failureCallback) => failureCallback())
@@ -285,16 +312,16 @@ describe('TargetSightingOperations', () => {
       mdlcClassConf: 'low',
       height: 100,
       width: 100,
-      pixelX: 123,
-      pixelY: 321,
+      pixelx: 123,
+      pixely: 321,
       assignment: assignment
     })
 
     const expectedToSend = fromJS({
-      pixelX: 123,
-      pixelY: 321,
+      pixelx: 123,
+      pixely: 321,
       assignment: assignment,
-      creator: 'MDLC'
+      creator: creator
     })
 
     it('saves successfully correctly', () => {

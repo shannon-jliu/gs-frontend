@@ -41,8 +41,8 @@ class MergeSightingPreview extends Component {
     const iwidth = testWidth === undefined ? this.state.iwidth : testWidth
     const iheight = testHeight === undefined ? this.state.iheight : testHeight
     const bgSize = iwidth * imgscale + 'px ' + iheight * imgscale + 'px'
-    const x = 50 - this.props.sighting.get('pixelX') * imgscale
-    const y = 50 - this.props.sighting.get('pixelY') * imgscale
+    const x = 50 - this.props.sighting.get('pixelx') * imgscale
+    const y = 50 - this.props.sighting.get('pixely') * imgscale
     let style = {
       backgroundImage: 'url(' + GROUND_SERVER_URL + imageUrl + ')',
       backgroundSize: bgSize,

@@ -20,8 +20,8 @@ describe('MergeSightingPreview', () => {
       mdlcClassConf: 'low',
       offaxis: false,
       localId: '979.6291390728477:526.5298013245033:702.620099040495:0.0006300101418243997',
-      pixelX: 980,
-      pixelY: 527,
+      pixelx: 980,
+      pixely: 527,
       radiansFromTop: 2.5051419954498755,
       width: 20,
       assignment: {

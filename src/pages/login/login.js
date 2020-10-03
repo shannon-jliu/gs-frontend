@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import AuthUtil from '../../util/authUtil.js'
 import SnackbarUtil from '../../util/snackbarUtil.js'
 
 import './login.css'
 
-class Login extends Component {
+export class Login extends Component {
   constructor(props){
     super(props)
     this.state = {
-      username: '',
-      password: ''
+      username: ''
     }
     this.redirect = this.redirect.bind(this)
     this.handleInput = this.handleInput.bind(this)
@@ -26,8 +26,10 @@ class Login extends Component {
   // append #force if you want to access login page once
   // already authenticated
   redirect(currentHref) {
+    let usersEnabled = this.props.utilSettings.get('usersEnabled')
     if (
-      AuthUtil.authenticated() &&
+      usersEnabled !== undefined &&
+      AuthUtil.authenticated(usersEnabled) &&
       !currentHref.endsWith('#force') &&
       !currentHref.endsWith('#force/') &&
       !currentHref.endsWith('#forced') &&
@@ -56,7 +58,7 @@ class Login extends Component {
   }
 
   login() {
-    AuthUtil.login(this.state.username, this.state.password, (success, res) => {
+    AuthUtil.login(this.state.username, (success, res) => {
       this.loginCallback(success, res)
     })
   }
@@ -99,20 +101,6 @@ class Login extends Component {
                     </div>
                   </div>
 
-                  <div className="row">
-                    <div className="password input-field col s12">
-                      <input
-                        id="password-input"
-                        onChange={this.handleInput('password')}
-                        onKeyPress={this.handleKeyPress}
-                        type="password"
-                        className="validate"
-                        value={this.state.password}
-                      />
-                      <label htmlFor="password">Password</label>
-                    </div>
-                  </div>
-
                   <button
                     to="/tag"
                     onClick={this.login}
@@ -132,4 +120,8 @@ class Login extends Component {
   }
 }
 
-export default Login
+const mapStateToProps = state => ({
+  utilSettings: state.utilReducer
+})
+
+export default connect(mapStateToProps, null)(Login)

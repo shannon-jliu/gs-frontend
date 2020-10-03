@@ -73,3 +73,11 @@ export const SettingsGetRequests = {
     SettingsGetRequests.getSetting('/api/v1/settings/gimbal/recent', successCallback, failureCallback)
   }
 }
+
+export const UtilGetRequests = {
+  getUsersEnabled: function(successCallback, failureCallback) {
+    $.get('/api/v1/odlcuser/enabled')
+      .done(successCallback)
+      .fail(failureCallback)
+  }
+}

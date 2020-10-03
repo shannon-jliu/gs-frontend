@@ -11,8 +11,8 @@ Enzyme.configure({ adapter: new Adapter() })
 const sighting = fromJS({
   height: 1405,
   localId: '979.6291390728477:526.5298013245033:702.620099040495:0.0006300101418243997',
-  pixelX: 980,
-  pixelY: 527,
+  pixelx: 980,
+  pixely: 527,
   radiansFromTop: 2.5051419954498755,
   width: 1405,
 })
@@ -20,8 +20,8 @@ const sighting = fromJS({
 const savedSighting = fromJS({
   height: 1405,
   id: 50,
-  pixelX: 980,
-  pixelY: 527,
+  pixelx: 980,
+  pixely: 527,
   radiansFromTop: 2.5051419954498755,
   width: 1405,
   shape: 'cross',
@@ -35,8 +35,8 @@ const savedSighting = fromJS({
 
 const pendingSighting = fromJS({
   height: 1405,
-  pixelX: 980,
-  pixelY: 527,
+  pixelx: 980,
+  pixely: 527,
   radiansFromTop: 2.5051419954498755,
   width: 1405,
   pending: {}

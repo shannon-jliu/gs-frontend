@@ -14,6 +14,7 @@ import ImageTools from './imageTools'
 
 import { GROUND_SERVER_URL } from '../../constants/links'
 import { TWO_PASS_MODE } from '../../util/config'
+import { AUTH_TOKEN_ID } from '../../constants/constants.js'
 
 import Switch from '../settings/components/Switch'
 import './tag.css'
@@ -161,7 +162,7 @@ export class Tag extends Component {
           }
           return false
         })
-        setTimeout(loadImages, 5000)
+        setTimeout(loadImages, 500)
       }
       loadImages()
     })
@@ -199,13 +200,13 @@ export class Tag extends Component {
     const sightings = this.props.sightings
 
     const mdlcSightings = sightings.filter(
-      s => !(s.has('creator')) || s.get('creator') === 'MDLC'
+      s => !(s.has('creator')) || s.get('creator').userType !== 'ADLC'
     )
 
     const preImageUrl = assignment.getIn(['assignment', 'image', 'imageUrl'])
 
     // extract the gimbalMode to determine if it is an ROI image (if fixed) or regular (tracking)
-    const gimbalMode = assignment.getIn(['assignment', 'image', 'camGimMode'])
+    const gimbalMode = assignment.getIn(['assignment', 'image', 'imgMode'])
     const isTracking = (gimbalMode && gimbalMode === 'tracking') || !TWO_PASS_MODE
     const name = preImageUrl ? preImageUrl.substring(
       preImageUrl.lastIndexOf('/') + 1,

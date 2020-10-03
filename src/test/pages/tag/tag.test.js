@@ -14,8 +14,8 @@ Enzyme.configure({ adapter: new Adapter() })
 const mockStore = configureMockStore()
 
 const sighting = fromJS({
-  pixelX: 400,
-  pixelY: 427,
+  pixelx: 400,
+  pixely: 427,
   width: 141,
   height: 141,
   radiansFromTop: 2.848003666181043,
@@ -43,7 +43,7 @@ const mappedAssignment = fromJS({
       id: 1,
       imageUrl: 'image.png',
       timestamp: 1,
-      camGimMode: 'tracking'
+      imgMode: 'tracking'
     }
   },
   currentIndex: 0,
@@ -129,7 +129,7 @@ describe('Basic tests with ROI images', () => {
   const props = {
     assignment: mappedAssignment.set('loading', true)
       .set('currentIndex', 1)
-      .setIn(['assignment', 'image', 'camGimMode'], 'fixed'),
+      .setIn(['assignment', 'image', 'imgMode'], 'fixed'),
     sightings: fromJS([sighting])
   }
 
@@ -233,7 +233,7 @@ describe('mapStateToProps', () => {
   })
 
   it('initializes the assignment props correctly', () => {
-    const assignmentProp = wrapper.props().assignment
+    const assignmentProp = wrapper.props().children.props.assignment
     expect(assignmentProp.get('total')).toEqual(2)
     expect(assignmentProp.get('loading')).toEqual(false)
     expect(assignmentProp.get('assignment')).toEqual(firstAssignment)
@@ -241,9 +241,9 @@ describe('mapStateToProps', () => {
   })
 
   it('initializes the sightings props correctly', () => {
-    const sightingsProp = wrapper.props().sightings
+    const sightingsProp = wrapper.props().children.props.sightings
     expect(sightingsProp.size).toEqual(1)
-    expect(sightingsProp.first().get('pixelX')).toEqual(400)
+    expect(sightingsProp.first().get('pixelx')).toEqual(400)
     expect(sightingsProp.first().get('assignment').get('id')).toEqual(1)
   })
 })

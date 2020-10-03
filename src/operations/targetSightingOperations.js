@@ -5,6 +5,7 @@ import * as action from '../actions/targetSightingActionCreator.js'
 import { TargetSightingRequests } from '../util/sendApi.js'
 import { TargetSightingGetRequests as GetRequests } from '../util/receiveApi.js'
 import SnackbarUtil from '../util/snackbarUtil.js'
+import { AUTH_TOKEN_ID } from '../constants/constants.js'
 
 const TargetSightingOperations = {
   getAllSightings: dispatch => (
@@ -65,9 +66,16 @@ const TargetSightingOperations = {
     sighting => {
       dispatch(action.startSaveTargetSighting(sighting.get('localId')))
 
+      const creator = {
+        id: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).id,
+        username: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).username,
+        address: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).address,
+        userType: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).userType
+      }
+
       const sightingToSend = _.assign(
         _.omit(sighting.toJS(), ['localId', 'type']),
-        { creator: 'MDLC' })
+        { creator: creator })
 
       const successCallback = data => {
         SnackbarUtil.render('Succesfully saved target sighting')
@@ -103,9 +111,17 @@ const TargetSightingOperations = {
   saveROISighting: dispatch => (
     sighting => {
       dispatch(action.startSaveTargetSighting(sighting.get('localId')))
+
+      const creator = {
+        id: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).id,
+        username: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).username,
+        address: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).address,
+        userType: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).userType
+      }
+
       const sightingToSend = _.assign(
-        _.pick(sighting.toJS(), ['pixelX', 'pixelY', 'assignment']),
-        { creator: 'MDLC' })
+        _.pick(sighting.toJS(), ['pixelx', 'pixely', 'assignment']),
+        { creator: creator })
 
       const successCallback = data => {
         SnackbarUtil.render('Succesfully saved ROI sighting')

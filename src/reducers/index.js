@@ -9,6 +9,7 @@ import airdropReducer from './airdropReducer.js'
 import cameraReducer from './cameraReducer.js'
 import cameraGimbalReducer from './cameraGimbalReducer.js'
 import gimbalSettingsReducer from './gimbalSettingsReducer.js'
+import utilReducer from './utilReducer.js'
 
 export default combineReducers({
   imageReducer,
@@ -18,5 +19,6 @@ export default combineReducers({
   targetReducer,
   cameraReducer,
   cameraGimbalReducer,
-  gimbalSettingsReducer
+  gimbalSettingsReducer,
+  utilReducer
 })
