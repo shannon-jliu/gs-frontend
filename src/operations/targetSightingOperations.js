@@ -121,7 +121,7 @@ const TargetSightingOperations = {
 
       const sightingToSend = _.assign(
         _.pick(sighting.toJS(), ['pixelx', 'pixely', 'assignment']),
-        { creator: creator })
+        { creator: creator, averaged: false })
 
       const successCallback = data => {
         SnackbarUtil.render('Succesfully saved ROI sighting')

@@ -321,7 +321,8 @@ describe('TargetSightingOperations', () => {
       pixelx: 123,
       pixely: 321,
       assignment: assignment,
-      creator: creator
+      creator: creator,
+      averaged: false
     })
 
     it('saves successfully correctly', () => {
