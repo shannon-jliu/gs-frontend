@@ -86,10 +86,6 @@ export const SettingsRequest = {
       .fail(failureCallback)
   },
 
-  updateAirdropSetting: function(settings, successCallback, failureCallback) {
-    SettingsRequest.updateSetting('/api/v1/settings/airdrop', settings, successCallback, failureCallback)
-  },
-
   updateCameraSetting: function(settings, successCallback, failureCallback) {
     SettingsRequest.updateSetting('/api/v1/settings/camera', settings, successCallback, failureCallback)
   },

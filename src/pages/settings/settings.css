@@ -17,7 +17,7 @@
     display: flex;
 }
 
-.camera, .gimbal, .airdrop {
+.camera, .gimbal {
     flex-grow: 1;
     flex-wrap: wrap;
 }
@@ -26,12 +26,12 @@
     padding: 1em;
 }
 
-.gimbal, .airdrop {
+.gimbal {
     justify-content: center;
     padding: 1em 1em 1em 0;
 }
 
-.camera > div, .gimbal > div, .airdrop > div {
+.camera > div, .gimbal > div, {
     width: 100%;
 }
 

@@ -4,12 +4,10 @@ import { connect } from 'react-redux'
 import CameraSettings from './cameraSettings.js'
 import CameraGimbalSettings from './cameraGimbalSettings.js'
 import GimbalSettings from './gimbalSettings.js'
-import AirdropSettings from './airdropSettings.js'
 
 import cameraOperations from '../../operations/cameraOperations.js'
 import cameraGimbalOperations from '../../operations/cameraGimbalOperations.js'
 import gimbalSettingsOperations from '../../operations/gimbalSettingsOperations.js'
-import airdropOperations from '../../operations/airdropOperations.js'
 import assignmentOperations from '../../operations/assignmentOperations.js'
 
 import Modes from './components/Modes.js'
@@ -34,7 +32,6 @@ export class Settings extends Component {
         this.props.getCameraZoom()
         this.props.getCameraGimbalSettings()
         this.props.getGimbalSettingSettings()
-        this.props.getAirdropSettings()
         setTimeout(loadNewestContent, 1000)
       }
       loadNewestContent()
@@ -65,7 +62,6 @@ export class Settings extends Component {
             <CameraSettings/>
             <CameraGimbalSettings changeCameraGimbalMode={this.changeCameraGimbalMode}/>
             <GimbalSettings cameraGimbalMode={this.state.cameraGimbalMode}/>
-            <AirdropSettings/>
           </div>
         </div>
       </React.Fragment>
@@ -78,7 +74,6 @@ const mapDispatchToProps = dispatch => ({
   getCameraZoom: data => cameraOperations.getZoom(dispatch),
   getCameraGimbalSettings: data => cameraGimbalOperations.getSetting(dispatch),
   getGimbalSettingSettings: data => gimbalSettingsOperations.getSetting(dispatch),
-  getAirdropSettings: data => airdropOperations.getSetting(dispatch),
   clearMdlc: data => assignmentOperations.clearMdlc(dispatch)
 })
 

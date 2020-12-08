@@ -53,10 +53,6 @@ export const SettingsGetRequests = {
     if (GET_SETTINGS) $.get(route).done(successCallback).fail(failureCallback)
   },
 
-  getAirdropSetting: function(successCallback, failureCallback) {
-    SettingsGetRequests.getSetting('/api/v1/settings/airdrop/recent', successCallback, failureCallback)
-  },
-
   getCameraSettingCapturing: function(successCallback, failureCallback) {
     SettingsGetRequests.getSetting('/api/continuous-capture', successCallback, failureCallback)
   },
