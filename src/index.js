@@ -13,11 +13,12 @@ import Logout from './pages/logout/logout.js'
 import Tag from './pages/tag/tag.js'
 import Settings from './pages/settings/settings.js'
 import Merge from './pages/merge/merge.js'
+import PlaneSystem from './pages/planeSystem/planeSystem.js'
 import Logs from './pages/logs/logs.js'
 
 import store from './store.js'
 import AuthUtil from './util/authUtil.js'
-import {GROUND_SERVER_URL} from './constants/links.js'
+import {GROUND_SERVER_URL, PLANE_SERVER_URL} from './constants/links.js'
 import {AUTH_TOKEN_ID} from './constants/constants.js'
 
 const persistor = persistStore(store)
@@ -33,12 +34,16 @@ $.ajaxSetup({
     ) {
       options.data = JSON.stringify(options.data)
     }
-    options.url = GROUND_SERVER_URL + options.url
-    if (localStorage.getItem(AUTH_TOKEN_ID)) {
-      jqXHR.setRequestHeader(
-        'Username',
-        JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).username
-      )
+    if (options.url === '/api/test') {
+      options.url = PLANE_SERVER_URL + options.url
+    } else {
+      options.url = GROUND_SERVER_URL + options.url
+      if (localStorage.getItem(AUTH_TOKEN_ID)) {
+        jqXHR.setRequestHeader(
+          'Username',
+          JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).username
+        )
+      }
     }
   }
 })
@@ -64,6 +69,7 @@ const GroundServerRouter = () =>
             <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
             <Route path="/settings" render={() => requireAuth(<Settings/>)}/>
             <Route path="/merge" render={() => requireAuth(<Merge/>)}/>
+            <Route path="/plane-system" render={() => requireAuth(<PlaneSystem/>)}/>
             <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
             <Redirect from="*" to="/login"/>
           </Switch>

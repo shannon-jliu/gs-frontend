@@ -70,6 +70,13 @@ export const SettingsGetRequests = {
   }
 }
 
+export const PlaneSystemGetRequests = {
+  getImage: function(successCallback) {
+    $.get('/api/test')
+      .always(successCallback)
+  }
+}
+
 export const UtilGetRequests = {
   getUsersEnabled: function(successCallback, failureCallback) {
     $.get('/api/v1/odlcuser/enabled')

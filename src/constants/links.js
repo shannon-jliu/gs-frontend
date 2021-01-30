@@ -5,6 +5,7 @@ export const TAGGING_PAGE_ID = 'TAGGING'
 export const MERGING_PAGE_ID = 'MERGING'
 export const ADLC_PAGE_ID = 'ADLC'
 export const SETTINGS_PAGE_ID = 'SETTINGS'
+export const PLANE_SYSTEM_PAGE_ID = 'PLANE_SYSTEM'
 export const LOGS_PAGE_ID = 'LOGS'
 
 export const GROUND_SERVER_URL =
@@ -13,3 +14,10 @@ export const GROUND_SERVER_URL =
       process.env.NODE_ENV === 'development' ?
         'http://127.0.0.1:9000' :
         'http://192.168.0.22:9000'
+
+export const PLANE_SERVER_URL =
+    process.env.REACT_APP_GS_IP ?
+      `http://${process.env.REACT_APP_GS_IP}:8080` :
+      process.env.NODE_ENV === 'development' ?
+        'http://127.0.0.1:8080' :
+        'http://192.168.0.22:8080'

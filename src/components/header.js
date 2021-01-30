@@ -11,7 +11,8 @@ import {
   MERGING_PAGE_ID,
   ADLC_PAGE_ID,
   SETTINGS_PAGE_ID,
-  LOGS_PAGE_ID
+  PLANE_SYSTEM_PAGE_ID,
+  LOGS_PAGE_ID,
 } from '../constants/links.js'
 
 const LINKS = Object.freeze({
@@ -21,6 +22,7 @@ const LINKS = Object.freeze({
   'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'operator': true},
   'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'operator': false},
   'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false},
+  'Plane System': {name: 'Plane System', key: PLANE_SYSTEM_PAGE_ID, href: '/plane-system', 'operator': false},
   'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false},
 })
 
