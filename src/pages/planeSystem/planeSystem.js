@@ -35,10 +35,29 @@ export class PlaneSystem extends Component {
   componentDidMount() {
     window.addEventListener('load', () => {
       let loadImages = () => {
-        this.props.getImage()
+        /*
+         * The first thing you'll need to do is call a function that actually asks the
+         * plane system for the image. You don't have to make the function, but you will
+         * have to call it here. In fact, the function is made accessible by
+         * mapDispatchToProps down at the bottom of the file. This starts to get more into
+         * Redux specifics, and I can totally go more in depth if you want! Basically,
+         * the function gets tied to this component's "props," which you can access through
+         * this.props.THE_PROP_YOU_WANT. (Btw, a "component" is a React
+         * term that basically means a chunk of HTML and Javascript code that usually
+         * represent a page, or a button, or a checkbox, etc. React is a JavaScript library
+         * that makes frontend development easier. One of its main ideas are components.
+         * Components are nice because you can compartmentalize and then re-use code you made
+         * for a specific UI element, much like how you would put a piece of regular code into
+         * a function so that you could easily call that same piece of code in different places.
+         * Another cool thing about React is that you can pass data between components. That's
+         * actually what a "prop" is: Data passed into a component by a parent component. Redux
+         * helps with these props and does some other fancy things to make data management in you
+         * app a bit easier.)
+         */
+
+
         var i = new Image()
 
-        // To avoid "tained canvas"/CORS issue
         i.crossOrigin = 'Anonymous'
 
         var classThis = this
@@ -48,7 +67,18 @@ export class PlaneSystem extends Component {
             imgSrc: 'data:image;base64,' + imgData
           })
         }
-        i.src = PLANE_SERVER_URL + '/api/test'
+
+        /*
+         * This is a little trick that basically forces the image to be loaded in. Thing is,
+         * it has to be loaded in from somewhere, namely the route you made ont the plane server.
+         * Much like how you would test the route using Postman, you'll have to complete the URL
+         * below with the custom route you made. Once this source for the image is set, we wait
+         * in the above "onLoad" function for the image to load in. Once it gets loaded in, we
+         * grab the image data and store it in this component's "state." Component state is another
+         * React concept and just means the set of data a component keeps track of. For our purposes,
+         * that's just the image data.
+         */
+        i.src = PLANE_SERVER_URL
 
         setTimeout(loadImages, 500)
       }
@@ -61,9 +91,16 @@ export class PlaneSystem extends Component {
   }
 
   render() {
+    /*
+     * The final step: Actually making the image show up on your screen. All you gotta do
+     * is provide the src tag (the "source" for the image) with the correct data. In our case,
+     * that's just the data we stored in the state in the "onLoad" function above! So, how do
+     * access the state? Much like how we accessed something in the components props, we access
+     * something in the component's state by this.state.THE_THING_YOU_WANT.
+     */
     return (
       <div className='container'>
-        <img className='image' src={this.state.imgSrc}/>
+        <img className='image' src={''}/>
       </div>
     )
   }
