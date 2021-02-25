@@ -10,7 +10,7 @@ import { PLANE_SERVER_URL } from '../../constants/links'
 import './planeSystem.css'
 
 export class PlaneSystem extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       imgSrc: null
@@ -55,13 +55,14 @@ export class PlaneSystem extends Component {
          * app a bit easier.)
          */
 
+        this.props.getImage()
 
         var i = new Image()
 
         i.crossOrigin = 'Anonymous'
 
         var classThis = this
-        i.onload = function() {
+        i.onload = function () {
           var imgData = classThis.getBase64Image(i)
           classThis.setState({
             imgSrc: 'data:image;base64,' + imgData
@@ -78,7 +79,7 @@ export class PlaneSystem extends Component {
          * React concept and just means the set of data a component keeps track of. For our purposes,
          * that's just the image data.
          */
-        i.src = PLANE_SERVER_URL
+        i.src = PLANE_SERVER_URL + '/api/image'
 
         setTimeout(loadImages, 500)
       }
@@ -100,7 +101,7 @@ export class PlaneSystem extends Component {
      */
     return (
       <div className='container'>
-        <img className='image' src={''}/>
+        <img className='image' src={this.state.imgSrc} />
       </div>
     )
   }
