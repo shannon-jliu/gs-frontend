@@ -5,6 +5,7 @@ export const TAGGING_PAGE_ID = 'TAGGING'
 export const MERGING_PAGE_ID = 'MERGING'
 export const ADLC_PAGE_ID = 'ADLC'
 export const SETTINGS_PAGE_ID = 'SETTINGS'
+export const STREAM_PAGE_ID = 'STREAM'
 export const LOGS_PAGE_ID = 'LOGS'
 
 export const GROUND_SERVER_URL =

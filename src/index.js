@@ -12,6 +12,7 @@ import Login from './pages/login/login.js'
 import Logout from './pages/logout/logout.js'
 import Tag from './pages/tag/tag.js'
 import Settings from './pages/settings/settings.js'
+import Stream from './pages/stream/stream.js'
 import Merge from './pages/merge/merge.js'
 import Logs from './pages/logs/logs.js'
 
@@ -63,6 +64,7 @@ const GroundServerRouter = () =>
             <Route path="/logout" render={() => requireAuth(<Logout/>)}/>
             <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
             <Route path="/settings" render={() => requireAuth(<Settings/>)}/>
+            <Route path="/stream" render={() => requireAuth(<Stream/>)}/>
             <Route path="/merge" render={() => requireAuth(<Merge/>)}/>
             <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
             <Redirect from="*" to="/login"/>
