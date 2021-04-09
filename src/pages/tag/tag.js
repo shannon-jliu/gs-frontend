@@ -75,7 +75,8 @@ export class Tag extends Component {
 
         let options = {
           maxSizeMB: 0.5,
-          useWebWorker: false
+          useWebWorker: false,
+          exifOrientation: 1 // This is so that it doesn't read the EXIF orientation data
         }
 
         imageCompression(theFile, options).then(compressedFile => {
