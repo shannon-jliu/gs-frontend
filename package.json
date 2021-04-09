@@ -7,6 +7,7 @@
     "gulp": "^4.0.2",
     "immutable": "^4.0.0-rc.12",
     "jquery": "^3.5.1",
+    "json2csv": "^5.0.6",
     "localforage": "^1.7.3",
     "lodash": "^4.17.20",
     "materialize-css": "^1.0.0",

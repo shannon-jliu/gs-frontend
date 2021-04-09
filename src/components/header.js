@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
+import ImageUpload from './ImageUpload'
+import CSVDownload from './CSVDownload'
 import AuthUtil from '../util/authUtil'
 
 import {
@@ -64,6 +66,16 @@ export class Header extends Component {
                   }
                 }
                 )}
+              {
+                <li key='ImageSelect'>
+                  <ImageUpload />
+                </li>
+              }
+              {
+                <li key='CSVDownload'>
+                  <CSVDownload />
+                </li>
+              }
             </ul>
           </div>
         </nav>

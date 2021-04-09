@@ -107,3 +107,19 @@ export const UtilRequests = {
       .fail(failureCallback)
   }
 }
+
+export const ImageRequests = {
+    sendImage: function (image, jsonData, successCallback, failureCallback) {
+      let fd = new FormData()
+      fd.append('files', image, image.name)
+      fd.append('json', jsonData)
+      $.post({
+        url: '/api/v1/image',
+        data: fd,
+        processData: false,
+        contentType: false,
+      })
+        .done(successCallback())
+        .fail(xhr => failureCallback(image.name, xhr.responseText))
+    }
+  }
