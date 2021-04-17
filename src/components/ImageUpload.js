@@ -14,13 +14,13 @@ class ImageUpload extends Component {
 
   readJSON(file) {
     return new Promise((resolve, reject) => {
-      const fr = new FileReader();
-      fr.onerror = reject;
+      const fr = new FileReader()
+      fr.onerror = reject
       fr.onload = function () {
-        resolve(fr.result);
+        resolve(fr.result)
       }
-      fr.readAsText(file);
-    });
+      fr.readAsText(file)
+    })
   }
 
   onFileUpload(files) {
@@ -30,14 +30,14 @@ class ImageUpload extends Component {
 
     let successfulImages = 0
     let promises = []
-    let jsonFiles = Object.values(files).filter(f => f.type == "application/json")
-    let imgFiles = Object.values(files).filter(f => f.type != "application/json")
+    let jsonFiles = Object.values(files).filter(f => f.type == 'application/json')
+    let imgFiles = Object.values(files).filter(f => f.type != 'application/json')
 
     _.forEach(imgFiles, file => {
       const fn = file.name.substring(0, file.name.lastIndexOf('.'))
 
       // Get the corresponding json file
-      let jsonFile = jsonFiles.filter(f => f.name == fn + ".json")
+      let jsonFile = jsonFiles.filter(f => f.name == fn + '.json')
       jsonFile = jsonFile.length > 0 ? jsonFile[0] : null
 
 
