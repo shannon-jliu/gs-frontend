@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const ImageSighting = ({ heightWidth, imageUrl, imgWidth, imgHeight, sighting }) => {
   const radius = heightWidth / 2
-  const imgscale = heightWidth / (2*Math.sqrt(2)*sighting.get('width'))
+  const imgscale = heightWidth / sighting.get('width')
   const bgSize = imgWidth * imgscale + 'px ' + imgHeight * imgscale + 'px'
   /* The following calculations for x and y are calculating the offset of the fully-sized/uncompressed image that
     will be displayed as the background image for the actual image sighting. The ratio involved a compressed dimension
