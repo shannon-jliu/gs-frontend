@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import $ from 'jquery'
 import _ from 'lodash'
-import localforage from 'localforage'
 
 import './stylesheets/imageViewer.css'
 
@@ -28,7 +27,6 @@ class ImageViewer extends Component {
         scale: 1
       },
       img: { // img height and width
-        src: null,
         width: 0,
         height: 0
       },
@@ -244,12 +242,12 @@ class ImageViewer extends Component {
 
   // loads the given image into the state
   loadImage(imageUrl) {
+    if (imageUrl === undefined) imageUrl = DEFAULT_IMG
     let i = new Image()
     i.onload = () => {
       this.setState({
         loaded: true,
         img: {
-          src: i.src,
           width: i.width,
           height: i.height
         },
@@ -260,14 +258,7 @@ class ImageViewer extends Component {
         }
       })
     }
-
-    localforage.getItem(imageUrl).then(data => {
-      if (data !== null) {
-        i.src = data
-      } else {
-        i.src = DEFAULT_IMG
-      }
-    })
+    i.src = imageUrl
   }
 
   componentDidMount() {
@@ -293,7 +284,6 @@ class ImageViewer extends Component {
           scale: 1
         },
         img: {
-          src: null,
           width: 0,
           height: 0
         }
@@ -337,7 +327,7 @@ class ImageViewer extends Component {
   render() {
     const p = this.props
     let style = {
-      backgroundImage: 'url("' + this.state.img.src + '")',
+      backgroundImage: 'url("' + p.imageUrl + '")'
     }
     if (!_.isUndefined(p.brightness) &&
       !_.isUndefined(p.contrast) &&

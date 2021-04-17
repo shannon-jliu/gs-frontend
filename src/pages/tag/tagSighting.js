@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { fromJS } from 'immutable'
 import M from 'materialize-css'
 import _ from 'lodash'
-import localforage from 'localforage'
 
 import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting } from './components'
 import { TypeSelect } from '../../components/target'
@@ -23,11 +22,8 @@ export class TagSighting extends Component {
       alphaColor: sighting.get('alphaColor') || '',
       offaxis: sighting.get('offaxis') || false,
       mdlcClassConf: sighting.get('mdlcClassConf') || '',
-      imgSrc: '',
       imgWidth: -1,
       imgHeight: -1,
-      compressedWidth: -1,
-      compressedHeight: -1
     }
     this.save = this.save.bind(this)
     this.canSave = this.canSave.bind(this)
@@ -153,40 +149,11 @@ export class TagSighting extends Component {
     let i = new Image()
     i.onload = () => {
       this.setState({
-        imgSrc: i.src,
         imgWidth: i.width,
         imgHeight: i.height
       })
     }
-
-    let imgUrlFull = imageUrl + '_full'
-
-    localforage.getItem(imgUrlFull).then(data => {
-      if (data !== null) {
-        i.src = 'data:image/png;base64,' + data
-      } else {
-        // Display compressed version
-        localforage.getItem(imageUrl).then(data => {
-          if (data !== null) {
-            i.src = data
-          }
-        })
-      }
-    })
-
-    let iCompressed = new Image()
-    iCompressed.onload = () => {
-      this.setState({
-        compressedWidth: iCompressed.width,
-        compressedHeight: iCompressed.height
-      })
-    }
-
-    localforage.getItem(imageUrl).then(data => {
-      if (data !== null) {
-        iCompressed.src = data
-      }
-    })
+    i.src = imageUrl
   }
 
   save() {
@@ -250,11 +217,9 @@ export class TagSighting extends Component {
       <div className={this.state.saved ? 'hidden' : 'sighting card'}>
         <ImageSighting
           heightWidth={height_width}
-          imageUrl={this.state.imgSrc}
+          imageUrl={this.props.imageUrl}
           imgWidth={this.state.imgWidth}
           imgHeight={this.state.imgHeight}
-          compressedWidth={this.state.compressedWidth}
-          compressedHeight={this.state.compressedHeight}
           sighting={this.props.sighting}
         />
 
