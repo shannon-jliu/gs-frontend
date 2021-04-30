@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {BrowserRouter, Route, Redirect, Switch} from 'react-router-dom'
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
 import $ from 'jquery'
 
 import { Provider } from 'react-redux'
@@ -18,8 +18,8 @@ import Logs from './pages/logs/logs.js'
 
 import store from './store.js'
 import AuthUtil from './util/authUtil.js'
-import {GROUND_SERVER_URL} from './constants/links.js'
-import {AUTH_TOKEN_ID} from './constants/constants.js'
+import { GROUND_SERVER_URL } from './constants/links.js'
+import { AUTH_TOKEN_ID } from './constants/constants.js'
 
 const persistor = persistStore(store)
 
@@ -27,7 +27,7 @@ $.ajaxSetup({
   dataType: 'json',
   contentType: 'application/json',
   processData: false,
-  beforeSend: function(jqXHR, options) {
+  beforeSend: function (jqXHR, options) {
     if (
       options.contentType === 'application/json' &&
       typeof options.data !== 'string'
@@ -48,7 +48,7 @@ var requireAuth = Class => {
   if (AuthUtil.authenticated()) {
     return <App main={Class} />
   } else {
-    return <Redirect to="/login"/>
+    return <Redirect to="/login" />
   }
 }
 
@@ -60,14 +60,14 @@ const GroundServerRouter = () =>
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <Switch>
-            <Route path="/login" render={() => <App main={<Login/>}/>}/>
-            <Route path="/logout" render={() => requireAuth(<Logout/>)}/>
-            <Route path="/tag" render={() => requireAuth(<Tag/>)}/>
-            <Route path="/settings" render={() => requireAuth(<Settings/>)}/>
-            <Route path="/stream" render={() => requireAuth(<Stream/>)}/>
-            <Route path="/merge" render={() => requireAuth(<Merge/>)}/>
-            <Route path="/logs" render={() => requireAuth(<Logs/>)}/>
-            <Redirect from="*" to="/login"/>
+            <Route path="/login" render={() => <App main={<Login />} />} />
+            <Route path="/logout" render={() => requireAuth(<Logout />)} />
+            <Route path="/tag" render={() => requireAuth(<Tag />)} />
+            <Route path="/settings" render={() => requireAuth(<Settings />)} />
+            <Route path="/stream" render={() => requireAuth(<Stream />)} />
+            <Route path="/merge" render={() => requireAuth(<Merge />)} />
+            <Route path="/logs" render={() => requireAuth(<Logs />)} />
+            <Redirect from="*" to="/login" />
           </Switch>
         </BrowserRouter>
       </PersistGate>

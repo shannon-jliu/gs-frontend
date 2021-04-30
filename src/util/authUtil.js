@@ -1,9 +1,9 @@
 import $ from 'jquery'
 
-import {AUTH_TOKEN_ID} from '../constants/constants.js'
+import { AUTH_TOKEN_ID } from '../constants/constants.js'
 
 var authenticated = !!localStorage.getItem(AUTH_TOKEN_ID)
-var confirmedAuthentication = false
+var confirmedAuthentication = true
 var operator = false
 
 function confirmAuthentication() {
@@ -20,7 +20,7 @@ function confirmAuthentication() {
 
 const AuthUtil = {
   // sends the auth request to obtain the auth token from ground-server
-  login: function(username, callback) {
+  login: function (username, callback) {
     $.ajax({
       url: '/api/v1/odlcuser/create/mdlc',
       type: 'GET',
@@ -34,13 +34,13 @@ const AuthUtil = {
       }
     })
   },
-  storeToken: function(token) {
+  storeToken: function (token) {
     // clear previous storage as the token is overwritten
     sessionStorage.clear()
     localStorage.setItem(AUTH_TOKEN_ID, token)
   },
   // determine if the user is already authenticated
-  authenticated: function(usersEnabled) {
+  authenticated: function (usersEnabled) {
     // if the user does not have a token or it has logged in this session
     if (!usersEnabled) return true
     if (!authenticated || confirmedAuthentication) return authenticated
@@ -49,14 +49,14 @@ const AuthUtil = {
     return authenticated
   },
   // determine if this user is an operator user
-  operator: function(usersEnabled) {
+  operator: function (usersEnabled) {
     if (!usersEnabled) return true
     if (confirmedAuthentication) return operator
     confirmAuthentication()
     confirmedAuthentication = true
     return operator
   },
-  logout: function() {
+  logout: function () {
     sessionStorage.clear()
     localStorage.clear()
     authenticated = false
