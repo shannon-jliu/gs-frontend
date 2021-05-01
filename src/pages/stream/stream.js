@@ -70,7 +70,7 @@ export class Stream extends Component {
   render() {
     return (
       <div>
-        <video-js id="vid1" width="600" height="300" class="vjs-default-skin" >
+        <video-js id="vid1" width="600" height="300" class="vjs-default-skin" controls>
           <source src="http://localhost:9000/api/v1/stream/playlist" type="application/x-mpegURL" />
         </video-js>
       </div>
