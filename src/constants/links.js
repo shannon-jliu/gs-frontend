@@ -6,10 +6,11 @@ export const MERGING_PAGE_ID = 'MERGING'
 export const ADLC_PAGE_ID = 'ADLC'
 export const SETTINGS_PAGE_ID = 'SETTINGS'
 export const LOGS_PAGE_ID = 'LOGS'
+export const SEGMENTER_PAGE_ID = 'SEGMENTER'
 
 export const GROUND_SERVER_URL =
-    process.env.REACT_APP_GS_IP ?
-      `http://${process.env.REACT_APP_GS_IP}:9000` :
-      process.env.NODE_ENV === 'development' ?
-        'http://127.0.0.1:9000' :
-        'http://192.168.0.22:9000'
+  process.env.REACT_APP_GS_IP ?
+    `http://${process.env.REACT_APP_GS_IP}:9000` :
+    process.env.NODE_ENV === 'development' ?
+      'http://127.0.0.1:9000' :
+      'http://192.168.0.22:9000'

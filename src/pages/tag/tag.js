@@ -18,7 +18,7 @@ import Switch from '../settings/components/Switch'
 import './tag.css'
 
 export class Tag extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -182,7 +182,7 @@ export class Tag extends Component {
     const imageUrl = this.props.assignment.getIn(['assignment', 'image', 'imageUrl'])
     // TODO once gimbal settings is set in stone do this
     const showOffaxis = /* mode === 'angle' || mode === undefined || mode === null*/ true
-
+    console.log("s " + s)
     return (
       <TagSighting
         key={s.get('id') + s.get('type') || s.get('localId')}
