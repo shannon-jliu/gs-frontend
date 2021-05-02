@@ -62,11 +62,11 @@ export class TagSighting extends Component {
       if (s.type === 'roi') return true
       if (s.type === 'emergent') {
         return (s.description.length > 0 &&
-        s.mdlcClassConf.length > 0 &&
-        !_.isEqual(
-          _.pick(s, ['description', 'mdlcClassConf']),
-          _.pick(sighting.toJS(), ['description', 'mdlcClassConf'])
-        ))
+          s.mdlcClassConf.length > 0 &&
+          !_.isEqual(
+            _.pick(s, ['description', 'mdlcClassConf']),
+            _.pick(sighting.toJS(), ['description', 'mdlcClassConf'])
+          ))
       }
       if (s.type === 'alphanum') {
         return (
@@ -179,7 +179,7 @@ export class TagSighting extends Component {
             alpha: s.alpha,
             alphaColor: s.alphaColor,
             offaxis: s.offaxis,
-            mdlcClassConf: s.mdlcClassConf
+            mdlcClassConf: s.mdlcClassConf,
           })
           attr = this.findDifference([
             'shape',

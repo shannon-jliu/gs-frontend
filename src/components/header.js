@@ -13,17 +13,19 @@ import {
   MERGING_PAGE_ID,
   ADLC_PAGE_ID,
   SETTINGS_PAGE_ID,
-  LOGS_PAGE_ID
+  LOGS_PAGE_ID,
+  SEGMENTER_PAGE_ID
 } from '../constants/links.js'
 
 const LINKS = Object.freeze({
-  'Login': {name: 'Login', key: LOGIN_PAGE_ID, href: '/login', 'operator': false},
-  'Logout': {name: 'Logout', key: LOGOUT_PAGE_ID, 'operator': false},
-  'Tag': {name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag', 'operator': false},
-  'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'operator': true},
-  'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'operator': false},
-  'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false},
-  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false},
+  'Login': { name: 'Login', key: LOGIN_PAGE_ID, href: '/login', 'operator': false },
+  'Logout': { name: 'Logout', key: LOGOUT_PAGE_ID, 'operator': false },
+  'Tag': { name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag', 'operator': false },
+  'Merging': { name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'operator': true },
+  'ADLC': { name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'operator': false },
+  'Settings': { name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false },
+  'Logs': { name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false },
+  'Segmenter': { name: 'Segmenter', key: SEGMENTER_PAGE_ID, href: '/segmenter', 'operator': false },
 })
 
 
@@ -42,7 +44,7 @@ export class Header extends Component {
       <div>
         <nav>
           <div className="red nav-wrapper">
-            <div className="brand-logo" style={{marginLeft:10}}>
+            <div className="brand-logo" style={{ marginLeft: 10 }}>
               <a href="/#"><img src={require('../img/cuair_logo.png')} alt='' /></a>
             </div>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
