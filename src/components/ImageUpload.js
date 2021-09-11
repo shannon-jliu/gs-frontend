@@ -42,7 +42,7 @@ class ImageUpload extends Component {
 
 
       const imgName = Number(file.name.substring(0, file.name.indexOf('.')))
-      this.readJSON(jsonFile).then(data => promises.push(
+      promises.push(this.readJSON(jsonFile).then(data =>
         ImageRequests.sendImage(
           file,
           data,
