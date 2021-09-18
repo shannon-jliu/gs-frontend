@@ -14,6 +14,8 @@ import { connect } from 'react-redux'
 
 import './stream.css'
 
+const NUM_CAMERAS = 26
+
 export class Stream extends Component {
   constructor() {
     super()
@@ -29,6 +31,7 @@ export class Stream extends Component {
     let script = document.createElement('script')
     script.src = 'https://unpkg.com/video.js/dist/video.js'
     script.id = 'videoScript1'
+    // script.innerHTML = 'videojs.Hls.xhr.beforeRequest = function(options) { options.uri = options.uri+"?number=0"; return options;}; '
     document.body.appendChild(script)
 
     document.getElementById('videoScript1').addEventListener('load', () => {
@@ -68,11 +71,20 @@ export class Stream extends Component {
   }
 
   render() {
+    const items = []
+
+    for (var i = 0; i < NUM_CAMERAS; i++) {
+      var url = "http://localhost:9000/api/v1/stream/playlist?number=" + i
+      items.push(
+        <video-js id="vid1" width="600" height="300" class="vjs-default-skin" controls data-setup='{"fluid": false}'>
+          <source src={url} type="application/x-mpegURL" />
+        </video-js>
+      )
+    }
+
     return (
       <div>
-        <video-js id="vid1" width="600" height="300" class="vjs-default-skin" controls>
-          <source src="http://localhost:9000/api/v1/stream/playlist" type="application/x-mpegURL" />
-        </video-js>
+        {items}
       </div>
     )
   }
