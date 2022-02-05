@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@videojs/http-streaming": "^2.6.2",
+    "axios": "^0.21.4",
     "browser-image-compression": "^1.0.6",
     "eventsource": "^1.0.7",
     "gulp": "^4.0.2",
