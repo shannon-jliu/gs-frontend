@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import $ from 'jquery'
 
@@ -66,11 +66,10 @@ export class Stream extends Component {
         type: 'GET',
         async: false
       })
-      if (res.status == 200)
-        items.push(
-          <video-js id="vid1" width="600" height="300" class="vjs-default-skin" controls data-setup='{"fluid": false}'>
-            <source src={url} type="application/x-mpegURL" />
-          </video-js>)
+      items.push(
+        <video-js id="vid1" width="600" height="300" class="vjs-default-skin" controls data-setup='{"fluid": false}'>
+          <source src={url} type="application/x-mpegURL" />
+        </video-js>)
     }
 
     return (
