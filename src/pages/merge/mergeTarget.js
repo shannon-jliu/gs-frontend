@@ -11,7 +11,7 @@ import { TargetAlphanumFields, TargetEmergentFields, TargetGeotagFields, TargetB
 import MergeSightingPreview from './mergeSightingPreview.js'
 import TargetOperations from '../../operations/targetOperations'
 import SnackbarUtil from '../../util/snackbarUtil.js'
-import {NENO_COORDS, PAX_COORDS} from '../../constants/constants.js'
+import { NENO_COORDS, PAX_COORDS } from '../../constants/constants.js'
 
 export class MergeTarget extends Component {
   constructor(props) {
@@ -160,8 +160,8 @@ export class MergeTarget extends Component {
     return (
       <div className='row'>
         <TargetGeotagFields
-          latitude={this.state.latitude}
-          longitude={this.state.longitude}
+          latitude={'' + this.state.latitude}
+          longitude={'' + this.state.longitude}
           getHandler={this.getHandler}
         />
       </div>
@@ -229,8 +229,8 @@ export class MergeTarget extends Component {
       const nonGeotagAttributeNames = this.getNonGeotagMutableAttributeNames()
 
       let updatedVals =
-          fromJS(_.pick(s, nonGeotagAttributeNames))
-            .filter((value, key) => t.get(key) !== value)
+        fromJS(_.pick(s, nonGeotagAttributeNames))
+          .filter((value, key) => t.get(key) !== value)
 
       if (this.isValidGeotagModified()) {
         updatedVals = updatedVals.set('geotag', fromJS({
@@ -276,8 +276,8 @@ export class MergeTarget extends Component {
 
   areAllFieldsValidToSave(showReason) {
     return this.isTargetNotCurrentlySavingToSave(showReason)
-        && this.areClassificationFieldsValidToSave(showReason)
-        && this.isGeotagValidAndSaneToSave(showReason)
+      && this.areClassificationFieldsValidToSave(showReason)
+      && this.isGeotagValidAndSaneToSave(showReason)
   }
 
   isTargetNotCurrentlySavingToSave(showReason) {
@@ -366,7 +366,7 @@ export class MergeTarget extends Component {
     if (!isGeotagNearPAX && !isGeotagNearNeno) {
       if (showReason) {
         SnackbarUtil.render('Cannot save target: geotag not near PAX (lat: ' + PAX_COORDS[0] +
-              ', long: ' + PAX_COORDS[1] + ') or Neno (lat: ' + NENO_COORDS[0] + ', long: ' + NENO_COORDS[1] + ')')
+          ', long: ' + PAX_COORDS[1] + ') or Neno (lat: ' + NENO_COORDS[0] + ', long: ' + NENO_COORDS[1] + ')')
       }
       return false
     }
@@ -414,7 +414,7 @@ export class MergeTarget extends Component {
       if (prop === 'alpha') {
         val = val.slice(0, 1).toUpperCase()
       }
-      this.setState({[prop]: val})
+      this.setState({ [prop]: val })
     }
   }
 
@@ -438,7 +438,7 @@ export class MergeTarget extends Component {
   }
 
   selectSightingAsThumbnail(sighting) {
-    this.setState({thumbnailTSId: sighting.get('id')})
+    this.setState({ thumbnailTSId: sighting.get('id') })
   }
 
   getNonGeotagMutableAttributeNames() {
