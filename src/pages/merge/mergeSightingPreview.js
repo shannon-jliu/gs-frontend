@@ -16,6 +16,8 @@ class MergeSightingPreview extends Component {
     this.getStyle = this.getStyle.bind(this)
   }
 
+  // Note, the image loaded is the uncompressed image, so width/height will
+  // be larger than the compressed image used for tagging
   loadImage(imageUrl) {
     let i = new Image()
     i.onload = () => {
@@ -69,8 +71,8 @@ class MergeSightingPreview extends Component {
         onDragEnd={this.props.onDragEnd}
         onDrag={this.props.onDrag}
         draggable={this.props.onDragStart !== undefined}
-        style={this.getStyle()}>
-      &nbsp;
+        style={this.getStyle(1900, 1263)}>
+        &nbsp;
       </div>
     )
   }
