@@ -34,9 +34,6 @@ export class Tag extends Component {
     this.onTag = this.onTag.bind(this)
     this.onNext = this.onNext.bind(this)
     this.onPrev = this.onPrev.bind(this)
-    this.getBase64Image = this.getBase64Image.bind(this)
-    this.preloadForage = this.preloadForage.bind(this)
-    this.preloadForageFull = this.preloadForageFull.bind(this)
     this.getHandler = this.getHandler.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
     this.updateReceiving = this.updateReceiving.bind(this)
@@ -52,54 +49,6 @@ export class Tag extends Component {
 
   onPrev() {
     this.props.getPrevAssignment(this.props.assignment)
-  }
-
-  getBase64Image(img) {
-    var canvas = document.createElement('canvas')
-    canvas.width = img.width
-    canvas.height = img.height
-
-    var ctx = canvas.getContext('2d')
-    ctx.drawImage(img, 0, 0)
-
-    var dataURL = canvas.toDataURL()
-
-    return dataURL.replace(/^data:image\/(png|jpg);base64,/, '')
-  }
-
-  preloadForage(imgUrl) {
-    fetch(GROUND_SERVER_URL + imgUrl)
-      .then(res => res.blob())
-      .then(blob => {
-        let theFile = new File([blob], 'toCompress.png', {type: 'image/png'})
-
-        let options = {
-          maxSizeMB: 0.5,
-          useWebWorker: false,
-          exifOrientation: 1 // This is so that it doesn't read the EXIF orientation data
-        }
-
-        imageCompression(theFile, options).then(compressedFile => {
-          imageCompression.getDataUrlFromFile(compressedFile).then(base64 => {
-            localforage.setItem(imgUrl, base64)
-          })
-        })
-      })
-  }
-
-  preloadForageFull(imgUrl) {
-    var i = new Image()
-
-    // To avoid "tained canvas"/CORS issue
-    i.crossOrigin = 'Anonymous'
-
-    var classThis = this
-    i.onload = function() {
-      var imgData = classThis.getBase64Image(i)
-      let imgUrlFull = imgUrl + '_full'
-      localforage.setItem(imgUrlFull, imgData)
-    }
-    i.src = GROUND_SERVER_URL + imgUrl
   }
 
   getHandler(prop) {
@@ -143,21 +92,6 @@ export class Tag extends Component {
           if (value.get('id') > mostRecentPreloadedId) {
             let imgUrl = value.get('imageUrl')
             let imgUrlFull = imgUrl + '_full'
-
-            var classThis = this
-            // Checking if compressed version has been cached
-            localforage.getItem(imgUrl).then(value => {
-              if (value === null) {
-                classThis.preloadForage(imgUrl)
-              }
-            })
-
-            // Checking if full/uncompressed version has been cached
-            localforage.getItem(imgUrlFull).then(value => {
-              if (value === null) {
-                classThis.preloadForageFull(imgUrl)
-              }
-            })
 
             this.props.preloadImage(value)
           }
@@ -204,14 +138,14 @@ export class Tag extends Component {
       s => !(s.has('creator')) || s.get('creator').userType !== 'ADLC'
     )
 
-    const preImageUrl = assignment.getIn(['assignment', 'image', 'imageUrl'])
+    const imageUrl = this.props.assignment.getIn(['assignment', 'image', 'imageUrl'])
 
     // extract the gimbalMode to determine if it is an ROI image (if fixed) or regular (tracking)
     const gimbalMode = assignment.getIn(['assignment', 'image', 'imgMode'])
     const isTracking = (gimbalMode && gimbalMode === 'tracking') || !TWO_PASS_MODE
-    const name = preImageUrl ? preImageUrl.substring(
-      preImageUrl.lastIndexOf('/') + 1,
-      preImageUrl.lastIndexOf('.')
+    const name = imageUrl ? imageUrl.substring(
+      imageUrl.lastIndexOf('/') + 1,
+      imageUrl.lastIndexOf('.')
     ) + (isTracking ? ' (TARGET)' : ' (ROI)') : ' none'
     const count = (assignment.get('currentIndex') + 1) + '/' + assignment.get('total')
     const btnClass = 'waves-effect waves-light btn-floating btn-large red'
@@ -238,7 +172,7 @@ export class Tag extends Component {
         <div className='detect'>
           <div className='tag-image card'>
             <ImageViewer
-              imageUrl={preImageUrl ? preImageUrl : undefined}
+              imageUrl={imageUrl ? imageUrl : undefined}
               taggable={true}
               onTag={this.onTag}
             />
