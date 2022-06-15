@@ -12,7 +12,7 @@ const etgt = fromJS({
   id: 1,
   type: 'emergent',
   description: 'cat pajamas',
-  thumbnailTSId: 1,
+  thumbnailTsid: 1,
   geotag: null
 })
 const otgt = fromJS({
@@ -22,7 +22,7 @@ const otgt = fromJS({
   shape: 'star',
   alphaColor: 'blue',
   alpha: 'L',
-  thumbnailTSId: 4,
+  thumbnailTsid: 4,
   geotag: null,
   offaxis: true
 })
@@ -33,9 +33,9 @@ const tgt1 = fromJS({
   shape: 'circle',
   alphaColor: 'orange',
   alpha: 'Q',
-  thumbnailTSId: 2,
+  thumbnailTsid: 2,
   offaxis: false,
-  geotag:{
+  geotag: {
     gpsLocation: {
       latitude: '42.447833',
       longitude: '-76.612096'
@@ -49,9 +49,9 @@ const tgt2 = fromJS({
   shape: 'trapezoid',
   alphaColor: 'white',
   alpha: 'J',
-  thumbnailTSId: 2,
+  thumbnailTsid: 2,
   offaxis: false,
-  geotag:{
+  geotag: {
     gpsLocation: {
       latitude: '42.423552',
       longitude: '-76.76584792'
@@ -65,7 +65,7 @@ const localTgt = fromJS({
   shape: 'circle',
   alphaColor: '',
   alpha: '',
-  thumbnailTSId: 0,
+  thumbnailTsid: 0,
   offaxis: false
 })
 
@@ -268,7 +268,7 @@ describe('basic rendering tests', () => {
   })
 
   it('renders with no saved targets', () => {
-    wrapper = shallow(<Merge {...props.merge({savedTargets: fromJS([]), sightings: fromJS([sighting1])}).toJSON()} />)
+    wrapper = shallow(<Merge {...props.merge({ savedTargets: fromJS([]), sightings: fromJS([sighting1]) }).toJSON()} />)
     expect(wrapper).toBeDefined()
 
     const sightingsDiv = wrapper.childAt(0)
@@ -287,7 +287,7 @@ describe('basic rendering tests', () => {
   })
 
   it('renders with no targets', () => {
-    wrapper = shallow(<Merge {...props.merge({savedTargets: fromJS([]), localTargets: fromJS([]), sightings: fromJS([sighting1])}).toJSON()} />)
+    wrapper = shallow(<Merge {...props.merge({ savedTargets: fromJS([]), localTargets: fromJS([]), sightings: fromJS([sighting1]) }).toJSON()} />)
     expect(wrapper).toBeDefined()
 
     const sightingsDiv = wrapper.childAt(0)
@@ -305,7 +305,7 @@ describe('basic rendering tests', () => {
   })
 
   it('renders with nothing', () => {
-    wrapper = shallow(<Merge {...props.merge({savedTargets: fromJS([]), localTargets: fromJS([]), sightings: fromJS([])}).toJSON()} />)
+    wrapper = shallow(<Merge {...props.merge({ savedTargets: fromJS([]), localTargets: fromJS([]), sightings: fromJS([]) }).toJSON()} />)
     expect(wrapper).toBeDefined()
 
     const sightingsDiv = wrapper.childAt(0)
@@ -395,8 +395,8 @@ describe('dragging and dropping', () => {
       expect(tgtDiv.children().length).toEqual(6)
     }
 
-    expectCorrect(sighting2.set('pending', fromJS({target: null})))
-    expect(updateTS).toHaveBeenCalledWith(sighting2, fromJS({target: null}))
+    expectCorrect(sighting2.set('pending', fromJS({ target: null })))
+    expect(updateTS).toHaveBeenCalledWith(sighting2, fromJS({ target: null }))
     expect(updateTS).toHaveBeenCalledTimes(1)
 
     wrapper.setProps(props.set('sightings', wrapper.instance().props.sightings.map(ts => {
@@ -446,8 +446,8 @@ describe('dragging and dropping', () => {
       expect(tgtDiv.children().length).toEqual(6)
     }
 
-    expectCorrect(sighting1.set('pending', fromJS({target: tgt1})))
-    expect(updateTS).toHaveBeenCalledWith(sighting1, fromJS({target: tgt1}))
+    expectCorrect(sighting1.set('pending', fromJS({ target: tgt1 })))
+    expect(updateTS).toHaveBeenCalledWith(sighting1, fromJS({ target: tgt1 }))
     expect(updateTS).toHaveBeenCalledTimes(1)
 
     wrapper.setProps(props.set('sightings', wrapper.instance().props.sightings.map(ts => {
@@ -503,8 +503,8 @@ describe('dragging and dropping', () => {
       expect(tgtDiv.children().length).toEqual(6)
     }
 
-    expectCorrect(sighting2.set('pending', fromJS({target: tgt2})))
-    expect(updateTS).toHaveBeenCalledWith(sighting2, fromJS({target: tgt2}))
+    expectCorrect(sighting2.set('pending', fromJS({ target: tgt2 })))
+    expect(updateTS).toHaveBeenCalledWith(sighting2, fromJS({ target: tgt2 }))
     expect(updateTS).toHaveBeenCalledTimes(1)
 
     wrapper.setProps(props.set('sightings', wrapper.instance().props.sightings.map(ts => {

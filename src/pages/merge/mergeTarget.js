@@ -24,7 +24,7 @@ export class MergeTarget extends Component {
       shapeColor: t.get('shapeColor') || '',
       alpha: t.get('alpha') || '',
       alphaColor: t.get('alphaColor') || '',
-      thumbnailTSId: t.get('thumbnailTSId') || 0,
+      thumbnailTsid: t.get('thumbnailTsid') || 0,
       description: t.get('description') || '',
       longitude: t.getIn(['geotag', 'gpsLocation', 'longitude']) || '',
       latitude: t.getIn(['geotag', 'gpsLocation', 'latitude']) || '',
@@ -198,7 +198,7 @@ export class MergeTarget extends Component {
       <MergeSightingPreview
         key={this.getSightingPreviewKey(sighting)}
         onClick={() => this.selectSightingAsThumbnail(sighting)}
-        isThumbnail={sighting.get('id') === this.state.thumbnailTSId}
+        isThumbnail={sighting.get('id') === this.state.thumbnailTsid}
         isMerged={true}
         sighting={sighting}
         onDragStart={this.isTargetTypeSpecial() ? undefined : () => this.props.onTsDragStart(sighting)}
@@ -438,11 +438,12 @@ export class MergeTarget extends Component {
   }
 
   selectSightingAsThumbnail(sighting) {
-    this.setState({ thumbnailTSId: sighting.get('id') })
+    this.setState({ thumbnailTsid: sighting.get('id') })
+    this.save()
   }
 
   getNonGeotagMutableAttributeNames() {
-    const sharedAttributes = ['thumbnailTSId']
+    const sharedAttributes = ['thumbnailTsid']
     const alphanumAttributes = ['shape', 'shapeColor', 'alpha', 'alphaColor']
     const emergentAttributes = ['description']
 

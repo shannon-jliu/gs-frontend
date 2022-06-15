@@ -79,7 +79,7 @@ const TargetOperations = {
         dispatch(action.succeedSaveTarget(recievedTarget, target.get('localId')))
 
         sightings.filter(ts => ts.get('localTargetId') === target.get('localId')).forEach(ts => {
-          TargetSightingOperations.updateTargetSighting(dispatch)(ts, fromJS({target: recievedTarget}))
+          TargetSightingOperations.updateTargetSighting(dispatch)(ts, fromJS({ target: recievedTarget }))
         })
       }
 
@@ -103,7 +103,7 @@ const TargetOperations = {
         'alphaColor',
         'description',
         'geotag',
-        'thumbnailTSId'
+        'thumbnailTsid'
       ])
 
       const successCallback = (data) => {

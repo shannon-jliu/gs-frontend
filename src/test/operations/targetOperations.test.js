@@ -182,8 +182,8 @@ describe('TargetOperations', () => {
       expect(dispatch).toHaveBeenCalledWith(action.succeedSaveTarget(tgt, localTgt.get('localId')))
       expect(dispatch).toHaveBeenCalledTimes(2)
 
-      expect(updateTs).toHaveBeenCalledWith(ts1, fromJS({target: tgt}))
-      expect(updateTs).toHaveBeenCalledWith(ts2, fromJS({target: tgt}))
+      expect(updateTs).toHaveBeenCalledWith(ts1, fromJS({ target: tgt }))
+      expect(updateTs).toHaveBeenCalledWith(ts2, fromJS({ target: tgt }))
       expect(updateTs).toHaveBeenCalledTimes(2)
 
       expect(targetRequests.saveTarget.mock.calls[0][0]).toEqual(localTgt.delete('type').delete('offaxis').delete('localId').toJS())
@@ -216,13 +216,13 @@ describe('TargetOperations', () => {
   })
 
   describe('updateTarget', () => {
-    const attribute = fromJS({thumbnailTSId: 11, alphaColor: 'green'})
+    const attribute = fromJS({ thumbnailTsid: 11, alphaColor: 'green' })
     const sentTgt = fromJS({
       shape: 'trapezoid',
       shapeColor: 'red',
       alpha: 'r',
       alphaColor: 'green',
-      thumbnailTSId: 11
+      thumbnailTsid: 11
     })
 
     it('updates target successfully correctly', () => {

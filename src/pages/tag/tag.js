@@ -20,7 +20,7 @@ import Switch from '../settings/components/Switch'
 import './tag.css'
 
 export class Tag extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -71,7 +71,7 @@ export class Tag extends Component {
     fetch(GROUND_SERVER_URL + imgUrl)
       .then(res => res.blob())
       .then(blob => {
-        let theFile = new File([blob], 'toCompress.png', {type: 'image/png'})
+        let theFile = new File([blob], 'toCompress.png', { type: 'image/png' })
 
         let options = {
           maxSizeMB: 0.5,
@@ -84,6 +84,7 @@ export class Tag extends Component {
             localforage.setItem(imgUrl, base64)
           })
         })
+
       })
   }
 
@@ -94,7 +95,7 @@ export class Tag extends Component {
     i.crossOrigin = 'Anonymous'
 
     var classThis = this
-    i.onload = function() {
+    i.onload = function () {
       var imgData = classThis.getBase64Image(i)
       let imgUrlFull = imgUrl + '_full'
       localforage.setItem(imgUrlFull, imgData)
@@ -226,13 +227,6 @@ export class Tag extends Component {
             brightness={this.state.brightness}
             contrast={this.state.contrast}
             saturation={this.state.saturation}
-          />
-          <Switch offState={'Not Receiving'}
-            myRef={ref => (this.isReceiving = ref)}
-            onChange={this.updateReceiving}
-            id={'ad-receiving'}
-            checked={this.state.isReceiving}
-            onState={'Receiving'}
           />
         </div>
         <div className='detect'>
