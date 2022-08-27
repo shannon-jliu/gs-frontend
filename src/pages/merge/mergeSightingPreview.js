@@ -48,7 +48,8 @@ class MergeSightingPreview extends Component {
     let style = {
       backgroundImage: 'url(' + GROUND_SERVER_URL + imageUrl + ')',
       backgroundSize: bgSize,
-      backgroundPosition: x + 'px ' + y + 'px'
+      backgroundPosition: x + 'px ' + y + 'px',
+      imageOrientation: 'none'
     }
     if (this.props.dragging) {
       style['opacity'] = 0.15
