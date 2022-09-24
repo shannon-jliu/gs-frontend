@@ -2,3 +2,7 @@
      position: relative;
      transform: perspective(1px) translateY(50%);
 }
+
+.username-label{
+     pointer-events: none;
+}
