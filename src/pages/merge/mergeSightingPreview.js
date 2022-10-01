@@ -16,6 +16,8 @@ class MergeSightingPreview extends Component {
     this.getStyle = this.getStyle.bind(this)
   }
 
+  // Note, the image loaded is the uncompressed image, so width/height will
+  // be larger than the compressed image used for tagging
   loadImage(imageUrl) {
     let i = new Image()
     i.onload = () => {
@@ -46,7 +48,8 @@ class MergeSightingPreview extends Component {
     let style = {
       backgroundImage: 'url(' + GROUND_SERVER_URL + imageUrl + ')',
       backgroundSize: bgSize,
-      backgroundPosition: x + 'px ' + y + 'px'
+      backgroundPosition: x + 'px ' + y + 'px',
+      imageOrientation: 'none'
     }
     if (this.props.dragging) {
       style['opacity'] = 0.15
@@ -70,7 +73,7 @@ class MergeSightingPreview extends Component {
         onDrag={this.props.onDrag}
         draggable={this.props.onDragStart !== undefined}
         style={this.getStyle()}>
-      &nbsp;
+        &nbsp;
       </div>
     )
   }

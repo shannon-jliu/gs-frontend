@@ -7,6 +7,7 @@ import localforage from 'localforage'
 import './stylesheets/imageViewer.css'
 
 import DEFAULT_IMG from '../img/cuair_default.png'
+import { GROUND_SERVER_URL } from '../constants/links'
 
 class ImageViewer extends Component {
   constructor(props) {
@@ -261,13 +262,7 @@ class ImageViewer extends Component {
       })
     }
 
-    localforage.getItem(imageUrl).then(data => {
-      if (data !== null) {
-        i.src = data
-      } else {
-        i.src = DEFAULT_IMG
-      }
-    })
+    i.src = GROUND_SERVER_URL + imageUrl
   }
 
   componentDidMount() {

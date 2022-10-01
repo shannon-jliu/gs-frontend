@@ -14,7 +14,7 @@ import { AUTH_TOKEN_ID } from '../../constants/constants.js'
 import './merge.css'
 
 export class Merge extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -68,13 +68,13 @@ export class Merge extends Component {
   // aka, is some target assumed for sighting
   isSightingAssigned(sighting) {
     const isSomeTargetConfirmedOrPendingForSighting =
-        this.isSomeTargetConfirmedForSighting(sighting) || this.isSomeTargetPendingForSighting(sighting)
+      this.isSomeTargetConfirmedForSighting(sighting) || this.isSomeTargetPendingForSighting(sighting)
     return isSomeTargetConfirmedOrPendingForSighting && !this.isSomeTargetBeingUnboundFromSighting(sighting)
   }
 
   renderSighting(sighting) {
     const isDragging = !_.isNil(this.state.dragSighting) &&
-        sighting.get('id') === this.state.dragSighting.get('id')
+      sighting.get('id') === this.state.dragSighting.get('id')
 
     return (
       <MergeSighting
@@ -98,7 +98,7 @@ export class Merge extends Component {
   // end dragging a sighting, whether over a target or not. runs after onDrop (if it was over a target)
   onDragEnd() {
     if (!_.isNil(this.state.dragSighting) && !_.isNil(this.state.dragSighting.get('target'))) {
-      this.props.updateTargetSighting(this.state.dragSighting, fromJS({target: null}))
+      this.props.updateTargetSighting(this.state.dragSighting, fromJS({ target: null }))
     }
     this.setState({
       dragSighting: null
@@ -166,7 +166,7 @@ export class Merge extends Component {
     if (target.has('id')) {
       const currTargetOfDragSighting = this.getTargetAssumedForSighting(this.state.dragSighting)
       if (_.isNil(currTargetOfDragSighting) || currTargetOfDragSighting.get('id') !== target.get('id')) {
-        this.props.updateTargetSighting(this.state.dragSighting, fromJS({target}))
+        this.props.updateTargetSighting(this.state.dragSighting, fromJS({ target }))
       }
     }
     this.setState({
@@ -254,7 +254,7 @@ export class Merge extends Component {
       shapeColor: '',
       alpha: '',
       alphaColor: '',
-      thumbnailTSId: 0,
+      thumbnailTsid: 0,
       offaxis: false,
       localId: Math.random() + ':' + Math.random() + ':' + Math.random()
     })

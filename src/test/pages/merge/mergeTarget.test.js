@@ -18,9 +18,9 @@ describe('MergeTarget', () => {
       shape: 'circle',
       alphaColor: 'orange',
       alpha: 'Q',
-      thumbnailTSId: 11,
+      thumbnailTsid: 11,
       offaxis: false,
-      geotag:{
+      geotag: {
         gpsLocation: {
           latitude: '38.2948294',
           longitude: '-76.4296673'
@@ -76,7 +76,7 @@ describe('MergeTarget', () => {
       id: 3,
       type: 'emergent',
       description: 'a german shepherd on stilts',
-      thumbnailTSId: 11,
+      thumbnailTsid: 11,
       geotag: {
         gpsLocation: {
           latitude: '38.284920',
@@ -137,7 +137,7 @@ describe('MergeTarget', () => {
         shapeColor: props.target.get('shapeColor'),
         alpha: props.target.get('alpha'),
         alphaColor: props.target.get('alphaColor'),
-        thumbnailTSId: props.target.get('thumbnailTSId'),
+        thumbnailTsid: props.target.get('thumbnailTsid'),
         description: '',
         longitude: props.target.getIn(['geotag', 'gpsLocation', 'longitude']),
         latitude: props.target.getIn(['geotag', 'gpsLocation', 'latitude']),
@@ -150,7 +150,7 @@ describe('MergeTarget', () => {
 
     it('constructs correctly with pending', () => {
       const newProps = {
-        target: props.target.set('pending', {shape: 'square', alpha: 'd'}),
+        target: props.target.set('pending', { shape: 'square', alpha: 'd' }),
         sightings: props.sightings,
         onTsDragStart: props.onTsDragStart,
         onTsDragEnd: props.onTsDragEnd,
@@ -163,7 +163,7 @@ describe('MergeTarget', () => {
         shapeColor: props.target.get('shapeColor'),
         alpha: 'd',
         alphaColor: props.target.get('alphaColor'),
-        thumbnailTSId: props.target.get('thumbnailTSId'),
+        thumbnailTsid: props.target.get('thumbnailTsid'),
         description: '',
         longitude: props.target.getIn(['geotag', 'gpsLocation', 'longitude']),
         latitude: props.target.getIn(['geotag', 'gpsLocation', 'latitude']),
@@ -178,13 +178,13 @@ describe('MergeTarget', () => {
   describe('componentWillReceiveProps', () => {
     it('has correct componentWillReceiveProps', () => {
       wrapper = shallow(<MergeTarget {...props} />)
-      wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-      wrapper.instance().getHandler('latitude')({target: {value: '38.26012'}})
-      wrapper.instance().getHandler('shape')({target: {value: 'trapezoid'}})
-      wrapper.instance().getHandler('shape')({target: {value: props.target.get('shape')}})
+      wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+      wrapper.instance().getHandler('latitude')({ target: { value: '38.26012' } })
+      wrapper.instance().getHandler('shape')({ target: { value: 'trapezoid' } })
+      wrapper.instance().getHandler('shape')({ target: { value: props.target.get('shape') } })
 
       const newProps = {
-        target: props.target.merge({alphaColor: 'green', shapeColor: 'yellow', shape: 'square', thumbnailTSId: 12}),
+        target: props.target.merge({ alphaColor: 'green', shapeColor: 'yellow', shape: 'square', thumbnailTsid: 12 }),
         sightings: props.sightings,
         onTsDragStart: props.onTsDragStart,
         onTsDragEnd: props.onTsDragEnd,
@@ -197,7 +197,7 @@ describe('MergeTarget', () => {
         shapeColor: 'yellow',
         alpha: props.target.get('alpha'),
         alphaColor: 'red',
-        thumbnailTSId: 12,
+        thumbnailTsid: 12,
         description: '',
         longitude: props.target.getIn(['geotag', 'gpsLocation', 'longitude']),
         latitude: '38.26012',
@@ -216,7 +216,7 @@ describe('MergeTarget', () => {
 
     it('cannot delete when updating', () => {
       const newProps = {
-        target: props.target.set('pending', {shape: 'square', alpha: 'd'}),
+        target: props.target.set('pending', { shape: 'square', alpha: 'd' }),
         sightings: props.sightings,
         onTsDragStart: props.onTsDragStart,
         onTsDragEnd: props.onTsDragEnd,
@@ -244,7 +244,7 @@ describe('MergeTarget', () => {
 
     it('can save when alpha color field changes', () => {
       wrapper = shallow(<MergeTarget {...props} />)
-      wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
+      wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
 
       expect(wrapper.instance().canSave(true)).toEqual(true)
       expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
@@ -252,7 +252,7 @@ describe('MergeTarget', () => {
 
     it('runs correctly when called with no args', () => {
       wrapper = shallow(<MergeTarget {...props} />)
-      wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
+      wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
 
       expect(wrapper.instance().canSave()).toEqual(true)
       expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
@@ -260,14 +260,14 @@ describe('MergeTarget', () => {
 
     it('cannot save when updating', () => {
       const newProps = {
-        target: props.target.set('pending', {shape: 'square', alpha: 'd'}),
+        target: props.target.set('pending', { shape: 'square', alpha: 'd' }),
         sightings: props.sightings,
         onTsDragStart: props.onTsDragStart,
         onTsDragEnd: props.onTsDragEnd,
         onTsDrop: props.onTsDrop
       }
       wrapper = shallow(<MergeTarget {...newProps} />)
-      wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
+      wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
 
       expect(wrapper.instance().canSave(true)).toEqual(false)
       expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: target is currently saving')
@@ -276,8 +276,8 @@ describe('MergeTarget', () => {
 
     it('cannot save with empty shape field', () => {
       wrapper = shallow(<MergeTarget {...props} />)
-      wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-      wrapper.instance().getHandler('shape')({target: {value: ''}})
+      wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+      wrapper.instance().getHandler('shape')({ target: { value: '' } })
 
       expect(wrapper.instance().canSave(true)).toEqual(false)
       expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: shape field is not set')
@@ -286,7 +286,7 @@ describe('MergeTarget', () => {
 
     it('can save when description changes', () => {
       wrapper = shallow(<MergeTarget {...eProps} />)
-      wrapper.instance().getHandler('description')({target: {value: 'a cat in a trapeze'}})
+      wrapper.instance().getHandler('description')({ target: { value: 'a cat in a trapeze' } })
 
       expect(wrapper.instance().canSave(true)).toEqual(true)
       expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
@@ -295,7 +295,7 @@ describe('MergeTarget', () => {
     it('cannot save with empty description', () => {
       wrapper = shallow(<MergeTarget {...eProps} />)
       wrapper.instance().selectSightingAsThumbnail(props.sightings.get(1))
-      wrapper.instance().getHandler('description')({target: {value: ''}})
+      wrapper.instance().getHandler('description')({ target: { value: '' } })
 
       expect(wrapper.instance().canSave(true)).toEqual(false)
       expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: description is empty')
@@ -316,7 +316,7 @@ describe('MergeTarget', () => {
 
       it('does save because latitude is changed', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('latitude')({target: {value: pax[0]}})
+        wrapper.instance().getHandler('latitude')({ target: { value: pax[0] } })
 
         expect(wrapper.instance().canSave(true)).toEqual(true)
         expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
@@ -324,7 +324,7 @@ describe('MergeTarget', () => {
 
       it('does save because longitude is changed', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('longitude')({target: {value: pax[1]}})
+        wrapper.instance().getHandler('longitude')({ target: { value: pax[1] } })
 
         expect(wrapper.instance().canSave(true)).toEqual(true)
         expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
@@ -332,8 +332,8 @@ describe('MergeTarget', () => {
 
       it('does save because geotag is changed', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('longitude')({target: {value: pax[1]}})
-        wrapper.instance().getHandler('latitude')({target: {value: pax[0]}})
+        wrapper.instance().getHandler('longitude')({ target: { value: pax[1] } })
+        wrapper.instance().getHandler('latitude')({ target: { value: pax[0] } })
 
         expect(wrapper.instance().canSave(true)).toEqual(true)
         expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
@@ -341,9 +341,9 @@ describe('MergeTarget', () => {
 
       it('can save when geotag is empty', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('latitude')({target: {value: ''}})
-        wrapper.instance().getHandler('longitude')({target: {value: ''}})
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('latitude')({ target: { value: '' } })
+        wrapper.instance().getHandler('longitude')({ target: { value: '' } })
 
         expect(wrapper.instance().canSave(true)).toEqual(true)
         expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
@@ -351,8 +351,8 @@ describe('MergeTarget', () => {
 
       it('does not save because geotag is empty', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('latitude')({target: {value: ''}})
-        wrapper.instance().getHandler('longitude')({target: {value: ''}})
+        wrapper.instance().getHandler('latitude')({ target: { value: '' } })
+        wrapper.instance().getHandler('longitude')({ target: { value: '' } })
 
         expect(wrapper.instance().canSave(true)).toEqual(false)
         expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: no field/thumbnail/geotag changes to save')
@@ -361,8 +361,8 @@ describe('MergeTarget', () => {
 
       it('cannot save when longitude is NaN', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('longitude')({target: {value: 'blah'}})
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('longitude')({ target: { value: 'blah' } })
 
         expect(wrapper.instance().canSave(true)).toEqual(false)
         expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: longitude is not a number')
@@ -371,8 +371,8 @@ describe('MergeTarget', () => {
 
       it('cannot save when latitude is NaN', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('latitude')({target: {value: 'blah'}})
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('latitude')({ target: { value: 'blah' } })
 
         expect(wrapper.instance().canSave(true)).toEqual(false)
         expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: latitude is not a number')
@@ -381,8 +381,8 @@ describe('MergeTarget', () => {
 
       it('cannot save when just longitude is empty', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('longitude')({target: {value: ''}})
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('longitude')({ target: { value: '' } })
 
         expect(wrapper.instance().canSave(true)).toEqual(false)
         expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: only one lat/long field is set (both can be empty)')
@@ -391,8 +391,8 @@ describe('MergeTarget', () => {
 
       it('cannot save when just latitude is empty', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('latitude')({target: {value: ''}})
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('latitude')({ target: { value: '' } })
 
         expect(wrapper.instance().canSave(true)).toEqual(false)
         expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: only one lat/long field is set (both can be empty)')
@@ -401,9 +401,9 @@ describe('MergeTarget', () => {
 
       it('cannot save when not near PAX or neno', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('latitude')({target: {value: '-76.6'}})
-        wrapper.instance().getHandler('longitude')({target: {value: '42.5'}})
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('latitude')({ target: { value: '-76.6' } })
+        wrapper.instance().getHandler('longitude')({ target: { value: '42.5' } })
 
         expect(wrapper.instance().canSave(true)).toEqual(false)
         expect(SnackbarUtil.render).toHaveBeenCalledWith('Cannot save target: geotag not near PAX (lat: 38.145, long: ' +
@@ -413,9 +413,9 @@ describe('MergeTarget', () => {
 
       it('can save when at Neno', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('latitude')({target: {value: neno[0]}})
-        wrapper.instance().getHandler('longitude')({target: {value: neno[1]}})
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('latitude')({ target: { value: neno[0] } })
+        wrapper.instance().getHandler('longitude')({ target: { value: neno[1] } })
 
         expect(wrapper.instance().canSave(true)).toEqual(true)
         expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
@@ -423,9 +423,9 @@ describe('MergeTarget', () => {
 
       it('can save when at PAX', () => {
         wrapper = shallow(<MergeTarget {...props} />)
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('latitude')({target: {value: pax[0]}})
-        wrapper.instance().getHandler('longitude')({target: {value: pax[1]}})
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('latitude')({ target: { value: pax[0] } })
+        wrapper.instance().getHandler('longitude')({ target: { value: pax[1] } })
 
         expect(wrapper.instance().canSave(true)).toEqual(true)
         expect(SnackbarUtil.render).toHaveBeenCalledTimes(0)
@@ -436,21 +436,21 @@ describe('MergeTarget', () => {
   describe('getHandler', () => {
     it('updates normal field', () => {
       wrapper = shallow(<MergeTarget {...props} />)
-      wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
+      wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
 
       expect(wrapper.instance().state.alphaColor).toEqual('red')
     })
 
     it('updates and slices alpha field', () => {
       wrapper = shallow(<MergeTarget {...props} />)
-      wrapper.instance().getHandler('alpha')({target: {value: 'a letter a'}})
+      wrapper.instance().getHandler('alpha')({ target: { value: 'a letter a' } })
 
       expect(wrapper.instance().state.alpha).toEqual('A')
     })
 
     it('allows numeric alpha field', () => {
       wrapper = shallow(<MergeTarget {...props} />)
-      wrapper.instance().getHandler('alpha')({target: {value: '2'}})
+      wrapper.instance().getHandler('alpha')({ target: { value: '2' } })
 
       expect(wrapper.instance().state.alpha).toEqual('2')
     })
@@ -487,12 +487,12 @@ describe('MergeTarget', () => {
       })
 
       it('updates correct alpha fields', () => {
-        wrapper.instance().getHandler('alpha')({target: {value: 'D'}})
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('shape')({target: {value: 'triangle'}})
-        wrapper.instance().getHandler('shapeColor')({target: {value: 'green'}})
-        wrapper.instance().getHandler('thumbnailTSId')({target: {value: 12}})
-        wrapper.instance().getHandler('description')({target: {value: 'a dog riding a horse'}})
+        wrapper.instance().getHandler('alpha')({ target: { value: 'D' } })
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('shape')({ target: { value: 'triangle' } })
+        wrapper.instance().getHandler('shapeColor')({ target: { value: 'green' } })
+        wrapper.instance().getHandler('thumbnailTsid')({ target: { value: 12 } })
+        wrapper.instance().getHandler('description')({ target: { value: 'a dog riding a horse' } })
 
         wrapper.instance().save()
 
@@ -505,7 +505,7 @@ describe('MergeTarget', () => {
           alphaColor: 'red',
           shape: 'triangle',
           shapeColor: 'green',
-          thumbnailTSId: 12
+          thumbnailTsid: 12
         }))
         expect(updateTarget).toHaveBeenCalledTimes(1)
       })
@@ -523,12 +523,12 @@ describe('MergeTarget', () => {
           deleteUnsavedTarget
         }
         wrapper = shallow(<MergeTarget {...newEProps} />)
-        wrapper.instance().getHandler('alpha')({target: {value: 'D'}})
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('shape')({target: {value: 'triangle'}})
-        wrapper.instance().getHandler('shapeColor')({target: {value: 'green'}})
-        wrapper.instance().getHandler('thumbnailTSId')({target: {value: 12}})
-        wrapper.instance().getHandler('description')({target: {value: 'a dog riding a horse'}})
+        wrapper.instance().getHandler('alpha')({ target: { value: 'D' } })
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('shape')({ target: { value: 'triangle' } })
+        wrapper.instance().getHandler('shapeColor')({ target: { value: 'green' } })
+        wrapper.instance().getHandler('thumbnailTsid')({ target: { value: 12 } })
+        wrapper.instance().getHandler('description')({ target: { value: 'a dog riding a horse' } })
 
         wrapper.instance().save()
 
@@ -538,16 +538,16 @@ describe('MergeTarget', () => {
 
         expect(updateTarget).toHaveBeenCalledWith(eProps.target, fromJS({
           description: 'a dog riding a horse',
-          thumbnailTSId: 12
+          thumbnailTsid: 12
         }))
         expect(updateTarget).toHaveBeenCalledTimes(1)
       })
 
       it('only updates changed fields', () => {
-        wrapper.instance().getHandler('alpha')({target: {value: 'D'}})
-        wrapper.instance().getHandler('alphaColor')({target: {value: props.target.get('alphaColor')}})
-        wrapper.instance().getHandler('shape')({target: {value: 'triangle'}})
-        wrapper.instance().getHandler('thumbnailTSId')({target: {value: 12}})
+        wrapper.instance().getHandler('alpha')({ target: { value: 'D' } })
+        wrapper.instance().getHandler('alphaColor')({ target: { value: props.target.get('alphaColor') } })
+        wrapper.instance().getHandler('shape')({ target: { value: 'triangle' } })
+        wrapper.instance().getHandler('thumbnailTsid')({ target: { value: 12 } })
 
         wrapper.instance().save()
 
@@ -558,14 +558,14 @@ describe('MergeTarget', () => {
         expect(updateTarget).toHaveBeenCalledWith(props.target, fromJS({
           alpha: 'D',
           shape: 'triangle',
-          thumbnailTSId: 12
+          thumbnailTsid: 12
         }))
         expect(updateTarget).toHaveBeenCalledTimes(1)
       })
 
       it('includes geotag in update when changed', () => {
-        wrapper.instance().getHandler('shape')({target: {value: 'triangle'}})
-        wrapper.instance().getHandler('latitude')({target: {value: '38.314252'}})
+        wrapper.instance().getHandler('shape')({ target: { value: 'triangle' } })
+        wrapper.instance().getHandler('latitude')({ target: { value: '38.314252' } })
 
         wrapper.instance().save()
 
@@ -586,7 +586,7 @@ describe('MergeTarget', () => {
       })
 
       it('updates when only geotag changed', () => {
-        wrapper.instance().getHandler('longitude')({target: {value: '-76.41241'}})
+        wrapper.instance().getHandler('longitude')({ target: { value: '-76.41241' } })
 
         wrapper.instance().save()
 
@@ -614,7 +614,7 @@ describe('MergeTarget', () => {
           alphaColor: '',
           shape: '',
           shapeColor: '',
-          thumbnailTSId: 0,
+          thumbnailTsid: 0,
           localId: '534262436:452345:45324',
           offaxis: false
         }),
@@ -633,12 +633,12 @@ describe('MergeTarget', () => {
       })
 
       it('saves correct alpha fields', () => {
-        wrapper.instance().getHandler('alpha')({target: {value: 'D'}})
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('shape')({target: {value: 'triangle'}})
-        wrapper.instance().getHandler('shapeColor')({target: {value: 'green'}})
-        wrapper.instance().getHandler('thumbnailTSId')({target: {value: 12}})
-        wrapper.instance().getHandler('description')({target: {value: 'a dog riding a horse'}})
+        wrapper.instance().getHandler('alpha')({ target: { value: 'D' } })
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('shape')({ target: { value: 'triangle' } })
+        wrapper.instance().getHandler('shapeColor')({ target: { value: 'green' } })
+        wrapper.instance().getHandler('thumbnailTsid')({ target: { value: 12 } })
+        wrapper.instance().getHandler('description')({ target: { value: 'a dog riding a horse' } })
 
         wrapper.instance().save()
 
@@ -651,7 +651,7 @@ describe('MergeTarget', () => {
           alphaColor: 'red',
           shape: 'triangle',
           shapeColor: 'green',
-          thumbnailTSId: 12,
+          thumbnailTsid: 12,
           type: 'alphanum',
           localId: newProps.target.get('localId'),
           offaxis: false
@@ -660,13 +660,13 @@ describe('MergeTarget', () => {
       })
 
       it('includes geotag when set', () => {
-        wrapper.instance().getHandler('alpha')({target: {value: 'D'}})
-        wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-        wrapper.instance().getHandler('shape')({target: {value: 'triangle'}})
-        wrapper.instance().getHandler('shapeColor')({target: {value: 'green'}})
-        wrapper.instance().getHandler('thumbnailTSId')({target: {value: 12}})
-        wrapper.instance().getHandler('latitude')({target: {value: '38.314252'}})
-        wrapper.instance().getHandler('longitude')({target: {value: '-76.41241'}})
+        wrapper.instance().getHandler('alpha')({ target: { value: 'D' } })
+        wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+        wrapper.instance().getHandler('shape')({ target: { value: 'triangle' } })
+        wrapper.instance().getHandler('shapeColor')({ target: { value: 'green' } })
+        wrapper.instance().getHandler('thumbnailTsid')({ target: { value: 12 } })
+        wrapper.instance().getHandler('latitude')({ target: { value: '38.314252' } })
+        wrapper.instance().getHandler('longitude')({ target: { value: '-76.41241' } })
 
         wrapper.instance().save()
 
@@ -679,7 +679,7 @@ describe('MergeTarget', () => {
           alphaColor: 'red',
           shape: 'triangle',
           shapeColor: 'green',
-          thumbnailTSId: 12,
+          thumbnailTsid: 12,
           geotag: {
             gpsLocation: {
               latitude: '38.314252',
@@ -740,7 +740,7 @@ describe('MergeTarget', () => {
           alphaColor: '',
           shape: '',
           shapeColor: '',
-          thumbnailTSId: 0,
+          thumbnailTsid: 0,
           localId: '534262436:452345:45324',
           offaxis: false
         }),
@@ -899,8 +899,8 @@ describe('MergeTarget', () => {
 
     it('has correct attributes after update', () => {
       wrapper = shallow(<MergeTarget {...props} />)
-      wrapper.instance().getHandler('alphaColor')({target: {value: 'red'}})
-      wrapper.instance().getHandler('longitude')({target: {value: '-76.4138419'}})
+      wrapper.instance().getHandler('alphaColor')({ target: { value: 'red' } })
+      wrapper.instance().getHandler('longitude')({ target: { value: '-76.4138419' } })
 
       const alphaDiv = wrapper.find('.facts div').first()
       expect(alphaDiv.prop('className')).toEqual('row')

@@ -8,6 +8,7 @@ import localforage from 'localforage'
 
 import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting } from './components'
 import { TypeSelect } from '../../components/target'
+import { GROUND_SERVER_URL } from '../../constants/links'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 
 export class TagSighting extends Component {
@@ -160,33 +161,7 @@ export class TagSighting extends Component {
     }
 
     let imgUrlFull = imageUrl + '_full'
-
-    localforage.getItem(imgUrlFull).then(data => {
-      if (data !== null) {
-        i.src = 'data:image/png;base64,' + data
-      } else {
-        // Display compressed version
-        localforage.getItem(imageUrl).then(data => {
-          if (data !== null) {
-            i.src = data
-          }
-        })
-      }
-    })
-
-    let iCompressed = new Image()
-    iCompressed.onload = () => {
-      this.setState({
-        compressedWidth: iCompressed.width,
-        compressedHeight: iCompressed.height
-      })
-    }
-
-    localforage.getItem(imageUrl).then(data => {
-      if (data !== null) {
-        iCompressed.src = data
-      }
-    })
+    i.src = GROUND_SERVER_URL + imageUrl
   }
 
   save() {
@@ -253,8 +228,6 @@ export class TagSighting extends Component {
           imageUrl={this.state.imgSrc}
           imgWidth={this.state.imgWidth}
           imgHeight={this.state.imgHeight}
-          compressedWidth={this.state.compressedWidth}
-          compressedHeight={this.state.compressedHeight}
           sighting={this.props.sighting}
         />
 
