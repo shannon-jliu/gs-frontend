@@ -93,6 +93,9 @@ export class Login extends Component {
                       <input
                         id="username-input"
                         onChange={this.handleInput('username')}
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {this.login()}
+                        }}
                         type="text"
                         className="validate"
                         value={this.state.username}
