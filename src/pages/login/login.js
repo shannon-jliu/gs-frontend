@@ -16,7 +16,6 @@ export class Login extends Component {
     this.handleInput = this.handleInput.bind(this)
     this.login = this.login.bind(this)
     this.loginCallback = this.loginCallback.bind(this)
-    this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
   componentDidMount() {
@@ -75,9 +74,6 @@ export class Login extends Component {
     }
   }
 
-  handleKeyPress(e) {
-    if (e.key === 'Enter') this.login()
-  }
 
   render(e) {
     return (
@@ -93,6 +89,9 @@ export class Login extends Component {
                       <input
                         id="username-input"
                         onChange={this.handleInput('username')}
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {this.login()}
+                        }}
                         type="text"
                         className="validate"
                         value={this.state.username}
