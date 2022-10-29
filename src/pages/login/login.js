@@ -96,7 +96,7 @@ export class Login extends Component {
                         className="validate"
                         value={this.state.username}
                       />
-                      <label htmlFor="username">Username</label>
+                      <label className="username-label" htmlFor="username">Username</label>
                     </div>
                   </div>
 
