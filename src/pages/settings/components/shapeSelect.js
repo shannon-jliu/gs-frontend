@@ -24,6 +24,7 @@ const ShapeSelect = ({ value, onChange, className, title }) => (
     onChange={onChange}
     className={className}
     title={title}
+    id={title}
     options={shapes}
   />
 )

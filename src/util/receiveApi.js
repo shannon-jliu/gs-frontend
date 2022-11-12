@@ -67,6 +67,10 @@ export const SettingsGetRequests = {
 
   getGimbalSettingsSetting: function(successCallback, failureCallback) {
     SettingsGetRequests.getSetting('/api/v1/settings/gimbal/recent', successCallback, failureCallback)
+  },
+
+  getFiveTargetsSettings: function(successCallback, failureCallback) {
+    SettingsGetRequests.getSetting('/api/v1/settings/fiveTargets', successCallback, failureCallback)
   }
 }
 
