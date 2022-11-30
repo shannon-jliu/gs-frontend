@@ -11,11 +11,13 @@ const Selector = ({ value, onChange, className, title, options }) => {
   const fullClassName = (_.isUndefined(className) ? '' : className)
   const finalValue = _.isNil(value) ? '' : value
   return (
-    <div className={fullClassName}>
+    <div className ="selector">
+    <div className={fullClassName}> 
       <select onChange={onChange} value={finalValue} className='browser-default'>
         <option key='' value='' disabled>{title}</option>
         {opts}
       </select>
+    </div>
     </div>
   )
 }

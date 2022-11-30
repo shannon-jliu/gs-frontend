@@ -135,7 +135,7 @@ export class CameraSettings extends Component {
                 />
               </div>
               <br/>
-              <h6>Zoom:</h6>
+              <h5>Zoom:</h5>
               <div className="row">
                 <Radio onChange={this.updateSettingsOnInputChange}
                   id={'g-minZoom'}

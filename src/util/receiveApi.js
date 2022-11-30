@@ -70,7 +70,7 @@ export const SettingsGetRequests = {
   },
 
   getFiveTargetsSettings: function(successCallback, failureCallback) {
-    SettingsGetRequests.getSetting('/api/v1/settings/fiveTargets', successCallback, failureCallback)
+    SettingsGetRequests.getSetting('/api/v1/settings/five_targets/recent', successCallback, failureCallback)
   }
 }
 

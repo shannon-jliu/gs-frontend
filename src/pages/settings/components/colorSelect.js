@@ -22,7 +22,6 @@ const ColorSelect = ({ className, onChange, value, title }) => (
     onChange={onChange}
     className={className}
     title={title}
-    id={title}
     options={colors}
   />
 )
