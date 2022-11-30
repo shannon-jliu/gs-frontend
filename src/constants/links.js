@@ -7,7 +7,7 @@ export const ADLC_PAGE_ID = 'ADLC'
 export const SETTINGS_PAGE_ID = 'SETTINGS'
 export const LOGS_PAGE_ID = 'LOGS'
 
-export const GROUND_SERVER_URL = 
+export const GROUND_SERVER_URL =
     process.env.REACT_APP_GS_IP ?
       `http://${process.env.REACT_APP_GS_IP}:9000` :
       process.env.NODE_ENV === 'development' ?

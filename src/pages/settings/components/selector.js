@@ -12,12 +12,12 @@ const Selector = ({ value, onChange, className, title, options }) => {
   const finalValue = _.isNil(value) ? '' : value
   return (
     <div className ="selector">
-    <div className={fullClassName}> 
-      <select onChange={onChange} value={finalValue} className='browser-default'>
-        <option key='' value='' disabled>{title}</option>
-        {opts}
-      </select>
-    </div>
+      <div className={fullClassName}>
+        <select onChange={onChange} value={finalValue} className='browser-default'>
+          <option key='' value='' disabled>{title}</option>
+          {opts}
+        </select>
+      </div>
     </div>
   )
 }
