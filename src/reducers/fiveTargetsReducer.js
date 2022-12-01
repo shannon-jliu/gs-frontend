@@ -1,38 +1,41 @@
 import {fromJS, Map} from 'immutable'
 
+/*
+ * Notes on state representation:
+ * - settings - (object) the current camera settings from the server. See API for reference.
+ *   - contains a timestamp of the latest camera settings, -1 if none
+ * - pending - (object) object in 'queue' to send to the ground server. If success, this will reset to {}.
+*/
+
 const initialState = fromJS({
   settings: fromJS({
     timestamp: -1,
-    FirstTarget: {
+    targets: [{
       shape: '',
       shapeColor: '',
       letter: '',
       letterColor: ''
-    },
-    SecondTarget: {
-      shape: 0,
-      shapeColor: 0,
-      letter: 0,
-      letterColor: 0
-    },
-    ThirdTarget: {
-      shape: 0,
-      shapeColor: 0,
-      letter: 0,
-      letterColor: 0
-    },
-    FourthTarget: {
-      shape: 0,
-      shapeColor: 0,
-      letter: 0,
-      letterColor: 0
-    },
-    FifthTarget: {
-      shape: 0,
-      shapeColor: 0,
-      letter: 0,
-      letterColor: 0
-    }
+    }, {
+      shape: '',
+      shapeColor: '',
+      letter: '',
+      letterColor: ''
+    }, {
+      shape: '',
+      shapeColor: '',
+      letter: '',
+      letterColor: ''
+    }, {
+      shape: '',
+      shapeColor: '',
+      letter: '',
+      letterColor: ''
+    }, {
+      shape: '',
+      shapeColor: '',
+      letter: '',
+      letterColor: ''
+    }]
   }),
   pending: {}
 })
