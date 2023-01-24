@@ -11,7 +11,8 @@ import {
   MERGING_PAGE_ID,
   ADLC_PAGE_ID,
   SETTINGS_PAGE_ID,
-  LOGS_PAGE_ID
+  LOGS_PAGE_ID,
+  INTSYS_PAGE_ID
 } from '../constants/links.js'
 
 const LINKS = Object.freeze({
@@ -22,8 +23,8 @@ const LINKS = Object.freeze({
   'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'operator': false},
   'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false},
   'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false},
+  'Intsys': {name: 'Intsys', key: INTSYS_PAGE_ID, href: '/intsys', 'operator': false},
 })
-
 
 export class Header extends Component {
   // try to pass in the current page as a prop so we can set its property to 'active'
