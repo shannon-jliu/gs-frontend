@@ -96,6 +96,10 @@ export const SettingsRequest = {
 
   updateGimbalSettingsSetting: function(settings, successCallback, failureCallback) {
     SettingsRequest.updateSetting('/api/v1/settings/gimbal', settings, successCallback, failureCallback)
+  },
+
+  updateFiveTargetsSetting: function(settings, successCallback, failureCallback) {
+    SettingsRequest.updateSetting('api/v1/settings/five_targets', settings, successCallback, failureCallback)
   }
 }
 

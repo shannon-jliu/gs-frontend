@@ -15,24 +15,12 @@
 
 #container {
     display: flex;
-}
-
-.camera, .gimbal {
-    flex-grow: 1;
     flex-wrap: wrap;
 }
 
-.camera {
+.camera, .gimbal, .targets {
+    width: 50%;
     padding: 1em;
-}
-
-.gimbal {
-    justify-content: center;
-    padding: 1em 1em 1em 0;
-}
-
-.camera > div, .gimbal > div, {
-    width: 100%;
 }
 
 .card {
@@ -46,4 +34,18 @@ h3 {
 .row {
     margin-bottom: 0;
     margin-top: 20px;
+}
+
+.smallerRow {
+    margin-bottom: 30px;
+    margin-top: 5px;
+}
+
+.selector {
+    margin: 5px;
+}
+
+.shape, .shapeColor, .letter, .letterColor {
+    display: inline-grid;
+    width: 50%;
 }

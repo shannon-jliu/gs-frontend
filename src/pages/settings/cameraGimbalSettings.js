@@ -117,7 +117,7 @@ export class CameraGimbalSettings extends Component {
           <div className="card-content">
             <h3>Camera/Gimbal</h3>
             <div className="content">
-              <h6>Mode:</h6>
+              <h5>Mode:</h5>
               <div className="row">
                 <Radio onChange={this.updateSettingsOnInputChange}
                   id={'g-idle'}
