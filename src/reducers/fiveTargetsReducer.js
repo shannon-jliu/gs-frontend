@@ -1,4 +1,4 @@
-import { fromJS, Map } from "immutable";
+import { fromJS, Map } from 'immutable'
 
 /*
  * Notes on state representation:
@@ -12,63 +12,63 @@ const initialState = fromJS({
     timestamp: -1,
     targets: [
       {
-        shape: "",
-        shapeColor: "",
-        letter: "",
-        letterColor: "",
+        shape: '',
+        shapeColor: '',
+        letter: '',
+        letterColor: '',
       },
       {
-        shape: "",
-        shapeColor: "",
-        letter: "",
-        letterColor: "",
+        shape: '',
+        shapeColor: '',
+        letter: '',
+        letterColor: '',
       },
       {
-        shape: "",
-        shapeColor: "",
-        letter: "",
-        letterColor: "",
+        shape: '',
+        shapeColor: '',
+        letter: '',
+        letterColor: '',
       },
       {
-        shape: "",
-        shapeColor: "",
-        letter: "",
-        letterColor: "",
+        shape: '',
+        shapeColor: '',
+        letter: '',
+        letterColor: '',
       },
       {
-        shape: "",
-        shapeColor: "",
-        letter: "",
-        letterColor: "",
+        shape: '',
+        shapeColor: '',
+        letter: '',
+        letterColor: '',
       },
     ],
   }),
   pending: {},
-});
+})
 
 const fiveTargetsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "UPDATE_FIVE_TARGETS_SETTINGS_SUCCESS":
-      state = state.set("pending", Map());
-      return receiveFiveTargetsSettings(state, action);
-    case "RECEIVE_FIVE_TARGETS_SETTINGS":
-      return receiveFiveTargetsSettings(state, action);
-    case "UPDATE_FIVE_TARGETS_SETTINGS_STARTED":
-      return state.set("pending", action.settings);
-    case "UPDATE FIVE_TARGETS_SETTINGS_FAILED":
-      return state.set("pending", Map());
-    default:
-      return state;
-  }
-};
-
-function receiveFiveTargetsSettings(state, action) {
-  const settings = action.settings;
-  if (state.getIn(["settings", "timestamp"]) < settings.get("timestamp")) {
-    return state.set("settings", settings);
-  } else {
-    return state;
+  case 'UPDATE_FIVE_TARGETS_SETTINGS_SUCCESS':
+    state = state.set('pending', Map())
+    return receiveFiveTargetsSettings(state, action)
+  case 'RECEIVE_FIVE_TARGETS_SETTINGS':
+    return receiveFiveTargetsSettings(state, action)
+  case 'UPDATE_FIVE_TARGETS_SETTINGS_STARTED':
+    return state.set('pending', action.settings)
+  case 'UPDATE FIVE_TARGETS_SETTINGS_FAILED':
+    return state.set('pending', Map())
+  default:
+    return state
   }
 }
 
-export default fiveTargetsReducer;
+function receiveFiveTargetsSettings(state, action) {
+  const settings = action.settings
+  if (state.getIn(['settings', 'timestamp']) < settings.get('timestamp')) {
+    return state.set('settings', settings)
+  } else {
+    return state
+  }
+}
+
+export default fiveTargetsReducer

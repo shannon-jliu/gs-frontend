@@ -8,11 +8,11 @@ import imageCompression from 'browser-image-compression'
 
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import AssignmentOperations from '../../operations/assignmentOperations'
+import ThumbnailOperations from '../../operations/thumbnailOperations'
 import ImageViewer from '../../components/imageViewer'
 import TagSighting from './tagSighting'
 import ImageTools from './imageTools'
 
-import { GROUND_SERVER_URL } from '../../constants/links'
 import { TWO_PASS_MODE } from '../../util/config'
 import { AUTH_TOKEN_ID } from '../../constants/constants.js'
 
@@ -27,7 +27,7 @@ export class Tag extends Component {
       brightness: 100,
       contrast: 100,
       saturation: 100,
-      isReceiving: true
+      isReceiving: true,
     }
 
     this.reset = this.reset.bind(this)
@@ -40,7 +40,10 @@ export class Tag extends Component {
   }
 
   onTag(tagged) {
-    this.props.addTargetSighting(fromJS(tagged), this.props.assignment.get('assignment'))
+    this.props.addTargetSighting(
+      fromJS(tagged),
+      this.props.assignment.get('assignment')
+    )
   }
 
   onNext() {
@@ -52,7 +55,7 @@ export class Tag extends Component {
   }
 
   getHandler(prop) {
-    return e => {
+    return (e) => {
       let propToUpdate = {}
       // for some reason e.target.value is a string so have to cast
       propToUpdate[prop] = Number(e.target.value)
@@ -64,7 +67,7 @@ export class Tag extends Component {
     this.setState({
       brightness: 100,
       contrast: 100,
-      saturation: 100
+      saturation: 100,
     })
   }
 
@@ -85,9 +88,12 @@ export class Tag extends Component {
     window.addEventListener('load', () => {
       let loadImages = () => {
         let recentImage = this.props.imageState.get('recent')
-        this.props.getNewImages((recentImage.get('timestamp') === -1 ? 0 : recentImage.get('id')))
+        this.props.getNewImages(
+          recentImage.get('timestamp') === -1 ? 0 : recentImage.get('id')
+        )
         let images = this.props.imageState.get('all')
-        let mostRecentPreloadedId = this.props.imageState.get('lastIdPreloaded')
+        let mostRecentPreloadedId =
+          this.props.imageState.get('lastIdPreloaded')
         images.map((value, key) => {
           if (value.get('id') > mostRecentPreloadedId) {
             let imgUrl = value.get('imageUrl')
@@ -106,16 +112,22 @@ export class Tag extends Component {
   componentDidUpdate(prevProps) {
     M.updateTextFields()
 
-    if (!_.isEqual(prevProps, this.props) &&
-      this.props.isReceiving !== this.state.isReceiving) {
+    if (
+      !_.isEqual(prevProps, this.props) &&
+      this.props.isReceiving !== this.state.isReceiving
+    ) {
       this.setState({
-        isReceiving: this.props.isReceiving
+        isReceiving: this.props.isReceiving,
       })
     }
   }
 
   renderSighting(s, isTracking) {
-    const imageUrl = this.props.assignment.getIn(['assignment', 'image', 'imageUrl'])
+    const imageUrl = this.props.assignment.getIn([
+      'assignment',
+      'image',
+      'imageUrl',
+    ])
     // TODO once gimbal settings is set in stone do this
     const showOffaxis = /* mode === 'angle' || mode === undefined || mode === null*/ true
 
@@ -135,25 +147,37 @@ export class Tag extends Component {
     const sightings = this.props.sightings
 
     const mdlcSightings = sightings.filter(
-      s => !(s.has('creator')) || s.get('creator').userType !== 'ADLC'
+      (s) => !s.has('creator') || s.get('creator').userType !== 'ADLC'
     )
 
-    const imageUrl = this.props.assignment.getIn(['assignment', 'image', 'imageUrl'])
+    const imageUrl = this.props.assignment.getIn([
+      'assignment',
+      'image',
+      'imageUrl',
+    ])
 
     // extract the gimbalMode to determine if it is an ROI image (if fixed) or regular (tracking)
     const gimbalMode = assignment.getIn(['assignment', 'image', 'imgMode'])
-    const isTracking = (gimbalMode && gimbalMode === 'tracking') || !TWO_PASS_MODE
-    const name = imageUrl ? imageUrl.substring(
-      imageUrl.lastIndexOf('/') + 1,
-      imageUrl.lastIndexOf('.')
-    ) + (isTracking ? ' (TARGET)' : ' (ROI)') : ' none'
-    const count = (assignment.get('currentIndex') + 1) + '/' + assignment.get('total')
+    const isTracking =
+      (gimbalMode && gimbalMode === 'tracking') || !TWO_PASS_MODE
+    const name = imageUrl
+      ? imageUrl.substring(
+        imageUrl.lastIndexOf('/') + 1,
+        imageUrl.lastIndexOf('.')
+      ) + (isTracking ? ' (TARGET)' : ' (ROI)')
+      : ' none'
+    const count =
+      assignment.get('currentIndex') + 1 + '/' + assignment.get('total')
     const btnClass = 'waves-effect waves-light btn-floating btn-large red'
-    const backClass = 'prev ' + btnClass + (assignment.get('currentIndex') <= 0 ? ' disabled' : '')
-    const nextClass = 'next ' + btnClass + (assignment.get('loading') ? ' disabled' : '')
+    const backClass =
+      'prev ' +
+      btnClass +
+      (assignment.get('currentIndex') <= 0 ? ' disabled' : '')
+    const nextClass =
+      'next ' + btnClass + (assignment.get('loading') ? ' disabled' : '')
     return (
-      <div className='tag'>
-        <div className='flex-row'>
+      <div className="tag">
+        <div className="flex-row">
           <ImageTools
             getHandler={this.getHandler}
             reset={this.reset}
@@ -162,39 +186,41 @@ export class Tag extends Component {
             saturation={this.state.saturation}
           />
         </div>
-        <div className='detect'>
-          <div className='tag-image card'>
+        <div className="detect">
+          <div className="tag-image card">
             <ImageViewer
               imageUrl={imageUrl ? imageUrl : undefined}
               taggable={true}
               onTag={this.onTag}
             />
           </div>
-          <div className='name'><span> {name} </span></div>
-        </div>
-        <div className='classify'>
-          <div className='sightings'>
-            {mdlcSightings.map(s => this.renderSighting(s, isTracking))}
+          <div className="name">
+            <span> {name} </span>
           </div>
         </div>
-        <div className='count'> {count} </div>
+        <div className="classify">
+          <div className="sightings">
+            {mdlcSightings.map((s) => this.renderSighting(s, isTracking))}
+          </div>
+        </div>
+        <div className="count"> {count} </div>
         <button className={backClass} onClick={this.onPrev}>
-          <i className='material-icons'>arrow_back</i>
+          <i className="material-icons">arrow_back</i>
         </button>
         <button className={nextClass} onClick={this.onNext}>
-          <i className='material-icons'>arrow_forward</i>
+          <i className="material-icons">arrow_forward</i>
         </button>
       </div>
     )
   }
 }
 
-const getCurrentAssignment = a => {
+const getCurrentAssignment = (a) => {
   return fromJS({
     assignment: a.getIn(['assignments', a.get('current')]) || null,
     loading: a.get('loading'),
     currentIndex: a.get('current'),
-    total: a.get('assignments').size
+    total: a.get('assignments').size,
   })
 }
 
@@ -203,17 +229,22 @@ const getSightingsForAssignment = (a, ts) => {
   var assignmentId = a.getIn(['assignments', a.get('current'), 'id'])
   return ts
     .get('local')
-    .filter(s => s.getIn(['assignment', 'id']) === assignmentId)
+    .filter((s) => s.getIn(['assignment', 'id']) === assignmentId)
     .concat(
-      ts.get('saved').filter(s => s.getIn(['assignment', 'id']) === assignmentId)
+      ts
+        .get('saved')
+        .filter((s) => s.getIn(['assignment', 'id']) === assignmentId)
     )
 }
 
 const mapStateToProps = (state) => ({
   assignment: getCurrentAssignment(state.assignmentReducer),
-  sightings: getSightingsForAssignment(state.assignmentReducer, state.targetSightingReducer),
+  sightings: getSightingsForAssignment(
+    state.assignmentReducer,
+    state.targetSightingReducer
+  ),
   imageState: state.imageReducer,
-  isReceiving: state.assignmentReducer.isReceiving
+  isReceiving: state.assignmentReducer.isReceiving,
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -224,7 +255,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   getAllAssignments: AssignmentOperations.getAllAssignments(dispatch),
   finishAssignment: AssignmentOperations.finishAssignment(dispatch),
   getPrevAssignment: AssignmentOperations.getPrevAssignment(dispatch),
-  enableReceiving: AssignmentOperations.enableReceiving(dispatch)
+  enableReceiving: AssignmentOperations.enableReceiving(dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tag)
