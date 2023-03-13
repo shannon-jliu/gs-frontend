@@ -259,12 +259,6 @@ export class TagSighting extends Component {
 
   render() {
     const height_width = 300;
-    let oneSelected = this.state.target === 1 ? true : false;
-    let twoSelected = this.state.target === 2 ? true : false;
-    let threeSelected = this.state.target === 3 ? true : false;
-    let fourSelected = this.state.target === 4 ? true : false;
-    let fiveSelected = this.state.target === 5 ? true : false;
-
     return (
       <div className={this.state.saved ? "hidden" : "sighting card"}>
         <ImageSighting
@@ -296,15 +290,6 @@ export class TagSighting extends Component {
             getHandler={this.getHandler}
           /> */}
           <TargetSelector setTargetSighting={this.setTargetSighting} />
-        </div>
-        <div className={this.state.type === "alphanum" ? "" : "hidden"}>
-          <Radio
-            onChange={this.updateSettingsOnInputChange}
-            id={"g-one"}
-            myRef={(ref) => (this.one_targetRadio = ref)}
-            value="One"
-            checked={oneSelected}
-          />
         </div>
 
         <div className={this.state.type === "emergent" ? "" : "hidden"}>

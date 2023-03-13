@@ -61,11 +61,34 @@ export class Merge extends Component {
     const unassignedSightings = this.props.sightings.filter(
       (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts)
     )
+    this.assignUnassignedSighting()
     const renderedUnassignedSightings = unassignedSightings
       .map(this.renderSighting)
       .toJSON()
 
     return <div className="sightings">{renderedUnassignedSightings}</div>
+  }
+
+  assignUnassignedSighting() {
+    const unassignedSightings = this.props.sightings.filter(
+      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts)
+    )
+    unassignedSightings.map((sighting) => this.matchSightingToTarget(sighting, this.props.savedTargets))
+  }
+
+  matchSightingToTarget(sighting, targets) {
+    targets.map((target) => {
+      if (sighting.get('shape') == target.get('shape')
+        && sighting.get('shapeColor') == target.get('shapeColor')
+        && sighting.get('alpha') == target.get('alpha')
+        && sighting.get('alphaColor') == target.get('alphaColor')) {
+        this.props.updateTargetSighting(
+          sighting,
+          fromJS({ target: target })
+        )
+        // sighting.set('target', target)
+      }
+    })
   }
 
   // aka, is some target assumed for sighting
@@ -109,10 +132,9 @@ export class Merge extends Component {
       !_.isNil(this.state.dragSighting) &&
       !_.isNil(this.state.dragSighting.get('target'))
     ) {
-      this.props.updateTargetSighting(
-        this.state.dragSighting,
-        fromJS({ target: null })
-      )
+      if (this.state.dragSighting.has('id') && this.state.dragSighting.has('type')) {
+        this.props.deleteSavedTargetSighting(this.state.dragSighting)
+      }
     }
     this.setState({
       dragSighting: null,
@@ -132,12 +154,12 @@ export class Merge extends Component {
   renderTargetsColumn() {
     const sortedTargets = this.getSortedTargets()
     const renderedSortedTargets = sortedTargets.map(this.renderTarget).toJSON()
-    const renderedNewTargetButton = this.renderNewTargetButton()
+    // const renderedNewTargetButton = this.renderNewTargetButton()
 
     return (
       <div className="targets">
         {renderedSortedTargets}
-        {renderedNewTargetButton}
+        {/* {renderedNewTargetButton} */}
       </div>
     )
   }
@@ -194,6 +216,7 @@ export class Merge extends Component {
         _.isNil(currTargetOfDragSighting) ||
         currTargetOfDragSighting.get('id') !== target.get('id')
       ) {
+        // this.props.deleteSavedTargetSighting(target)
         this.props.updateTargetSighting(
           this.state.dragSighting,
           fromJS({ target })
@@ -311,6 +334,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   addTarget: TargetOperations.addTarget(dispatch),
   getAllSightings: TargetSightingOperations.getAllSightings(dispatch),
   getAllTargets: TargetOperations.getAllTargets(dispatch),
+  deleteSavedTargetSighting: TargetSightingOperations.deleteSavedTargetSighting(dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Merge)

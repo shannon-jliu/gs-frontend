@@ -32,6 +32,7 @@ const TargetSelector = ({ setTargetSighting }) => {
           >
             <img
               src={GROUND_SERVER_URL + "/api/v1/thumbnail/" + id}
+              alt={id}
               width="100"
             />
           </button>

@@ -127,7 +127,7 @@ const TargetSightingOperations = {
         SnackbarUtil.render('Succesfully saved ROI sighting')
 
         // need to add back in height and width fields for ImageSighting component
-        const sightingToSave = fromJS(data).merge({type: 'roi', height: sighting.get('height'), width: sighting.get('width')})
+        const sightingToSave = fromJS(data).merge({ type: 'roi', height: sighting.get('height'), width: sighting.get('width') })
         dispatch(action.succeedSaveTargetSighting(sightingToSave, sighting.get('localId')))
       }
 
@@ -148,7 +148,7 @@ const TargetSightingOperations = {
         TargetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
       }
 
-      TargetSightingRequests.deleteROISighting(sighting.get('id'), () => {}, failureCallback)
+      TargetSightingRequests.deleteROISighting(sighting.get('id'), () => { }, failureCallback)
     }
   ),
 

@@ -13,7 +13,7 @@ const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd, onDrag }) =
   return (
     <div
       className="sighting card z-depth-2"
-      style={dragging ? {opacity: 0.15} : {}}>
+      style={dragging ? { opacity: 0.15 } : {}}>
       <MergeSightingPreview
         isThumbnail={false}
         isMerged={false}

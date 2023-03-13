@@ -17,6 +17,7 @@ import MergeSightingPreview from './mergeSightingPreview.js'
 import TargetOperations from '../../operations/targetOperations'
 import SnackbarUtil from '../../util/snackbarUtil.js'
 import { NENO_COORDS, PAX_COORDS } from '../../constants/constants.js'
+import { GROUND_SERVER_URL } from '../../constants/links'
 
 export class MergeTarget extends Component {
   constructor(props) {
@@ -35,7 +36,7 @@ export class MergeTarget extends Component {
       latitude: t.getIn(['geotag', 'gpsLocation', 'latitude']) || '',
       dragCtr: 0, //counter rather than boolean to allow hovering over child elements
       iwidth: -1,
-      iheight: -1,
+      iheight: -1
     }
 
     this.canDelete = this.canDelete.bind(this)
@@ -145,15 +146,26 @@ export class MergeTarget extends Component {
 
   renderAlphanumClassificationFields() {
     return (
-      <TargetAlphanumFields
-        shape={this.state.shape}
-        shapeColor={this.state.shapeColor}
-        alpha={this.state.alpha}
-        alphaColor={this.state.alphaColor}
-        getHandler={this.getHandler}
+      <img
+        // src={require('./penot.png')}
+        alt={"target image"}
+        src={GROUND_SERVER_URL + '/api/v1/thumbnail/' + this.props.target.get('target')}
+      // width="200"
       />
     )
   }
+
+  // renderAlphanumClassificationFields() {
+  //   return (
+  //     <TargetAlphanumFields
+  //       shape={this.state.shape}
+  //       shapeColor={this.state.shapeColor}
+  //       alpha={this.state.alpha}
+  //       alphaColor={this.state.alphaColor}
+  //       getHandler={this.getHandler}
+  //     />
+  //   )
+  // }
 
   renderEmergentClassificationFields() {
     return (
@@ -419,14 +431,14 @@ export class MergeTarget extends Component {
       if (showReason) {
         SnackbarUtil.render(
           'Cannot save target: geotag not near PAX (lat: ' +
-            PAX_COORDS[0] +
-            ', long: ' +
-            PAX_COORDS[1] +
-            ') or Neno (lat: ' +
-            NENO_COORDS[0] +
-            ', long: ' +
-            NENO_COORDS[1] +
-            ')'
+          PAX_COORDS[0] +
+          ', long: ' +
+          PAX_COORDS[1] +
+          ') or Neno (lat: ' +
+          NENO_COORDS[0] +
+          ', long: ' +
+          NENO_COORDS[1] +
+          ')'
         )
       }
       return false
