@@ -32,7 +32,7 @@ export class Merge extends Component {
     this.renderTarget = this.renderTarget.bind(this)
   }
 
-  // every 5 seconds, the page polls the server for the current targets and target sightings
+  // every 3 seconds, the page polls the server for the current targets and target sightings
   componentDidMount() {
     const loadNewestContent = () => {
       this.props.getAllTargets()
@@ -334,7 +334,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   addTarget: TargetOperations.addTarget(dispatch),
   getAllSightings: TargetSightingOperations.getAllSightings(dispatch),
   getAllTargets: TargetOperations.getAllTargets(dispatch),
-  deleteSavedTargetSighting: TargetSightingOperations.deleteSavedTargetSighting(dispatch)
+  deleteSavedTargetSighting: TargetSightingOperations.deleteSavedTargetSighting(dispatch),
+  deleteUnsavedTargetSighting: TargetSightingOperations.deleteUnsavedTargetSighting(dispatch)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Merge)

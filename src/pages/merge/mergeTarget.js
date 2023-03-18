@@ -147,10 +147,9 @@ export class MergeTarget extends Component {
   renderAlphanumClassificationFields() {
     return (
       <img
-        // src={require('./penot.png')}
-        alt={"target image"}
-        src={GROUND_SERVER_URL + '/api/v1/thumbnail/' + this.props.target.get('target')}
-      // width="200"
+        alt={'target image'}
+        src={GROUND_SERVER_URL + '/api/v1/thumbnail/' + this.props.target.get('airdropId')}
+        width="100"
       />
     )
   }
@@ -185,12 +184,16 @@ export class MergeTarget extends Component {
     }
 
     return (
+      // <div className="row">
+      //   <TargetGeotagFields
+      //     latitude={'' + this.state.latitude}
+      //     longitude={'' + this.state.longitude}
+      //     getHandler={this.getHandler}
+      //   />
+      // </div>
       <div className="row">
-        <TargetGeotagFields
-          latitude={'' + this.state.latitude}
-          longitude={'' + this.state.longitude}
-          getHandler={this.getHandler}
-        />
+        latitude: {this.state.latitude}
+        longitude: {this.state.longitude}
       </div>
     )
   }
@@ -317,9 +320,9 @@ export class MergeTarget extends Component {
 
   areAllFieldsValidToSave(showReason) {
     return (
-      this.isTargetNotCurrentlySavingToSave(showReason) &&
-      this.areClassificationFieldsValidToSave(showReason) &&
-      this.isGeotagValidAndSaneToSave(showReason)
+      this.isTargetNotCurrentlySavingToSave(showReason)
+      // this.areClassificationFieldsValidToSave(showReason) &&
+      // this.isGeotagValidAndSaneToSave(showReason)
     )
   }
 
@@ -449,8 +452,8 @@ export class MergeTarget extends Component {
 
   // assumes all fields (specifically geotag) are valid
   isAnyFieldModifiedToSave(showReason) {
-    const isAnyFieldModifiedToSave =
-      this.isAnyNonGeotagAttributeModified() || this.isValidGeotagModified()
+    const isAnyFieldModifiedToSave = true
+    // this.isAnyNonGeotagAttributeModified() || this.isValidGeotagModified()
 
     if (!isAnyFieldModifiedToSave && showReason) {
       if (this.props.target.get('type') === 'alphanum') {

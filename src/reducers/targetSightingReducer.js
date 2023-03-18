@@ -19,32 +19,32 @@ const initialState = fromJS({
 
 const targetSightingReducer = (state = initialState, action) => {
   switch (action.type) {
-  case 'ADD_TARGET_SIGHTING':
-    return addTargetSighting(state, action.sighting, action.assignment)
-  case 'DELETE_TARGET_SIGHTING':
-    return deleteTargetSighting(state, action.sighting)
-  case 'START_SAVE_TARGET_SIGHTING':
-    return startSaveTargetSighting(state, action.localId)
-  case 'SUCCEED_SAVE_TARGET_SIGHTING':
-    return succeedSaveTargetSighting(state, action.sighting, action.localId)
-  case 'FAIL_SAVE_TARGET_SIGHTING':
-    return failSaveTargetSighting(state, action.localId)
-  case 'START_UPDATE_TARGET_SIGHTING':
-    return startUpdateTargetSighting(state, action.sighting, action.attribute)
-  case 'SUCCEED_UPDATE_TARGET_SIGHTING':
-    return succeedUpdateTargetSighting(state, action.newSighting, action.attribute)
-  case 'FAIL_UPDATE_TARGET_SIGHTING':
-    return failUpdateTargetSighting(state, action.sighting, action.attribute)
-  case 'ADD_TARGET_SIGHTINGS_FROM_SERVER':
-    return addTargetSightingsFromServer(state, action.sightings)
-  case 'DELETE_TARGET':
-    return deleteLocalTarget(state, action.target)
-  case 'DELETE_TARGET_FROM_TARGET_SIGHTINGS':
-    return deleteTargetFromTargetSightings(state, action.target)
-  case 'CLEAR_STATE':
-    return initialState
-  default:
-    return state
+    case 'ADD_TARGET_SIGHTING':
+      return addTargetSighting(state, action.sighting, action.assignment)
+    case 'DELETE_TARGET_SIGHTING':
+      return deleteTargetSighting(state, action.sighting)
+    case 'START_SAVE_TARGET_SIGHTING':
+      return startSaveTargetSighting(state, action.localId)
+    case 'SUCCEED_SAVE_TARGET_SIGHTING':
+      return succeedSaveTargetSighting(state, action.sighting, action.localId)
+    case 'FAIL_SAVE_TARGET_SIGHTING':
+      return failSaveTargetSighting(state, action.localId)
+    case 'START_UPDATE_TARGET_SIGHTING':
+      return startUpdateTargetSighting(state, action.sighting, action.attribute)
+    case 'SUCCEED_UPDATE_TARGET_SIGHTING':
+      return succeedUpdateTargetSighting(state, action.newSighting, action.attribute)
+    case 'FAIL_UPDATE_TARGET_SIGHTING':
+      return failUpdateTargetSighting(state, action.sighting, action.attribute)
+    case 'ADD_TARGET_SIGHTINGS_FROM_SERVER':
+      return addTargetSightingsFromServer(state, action.sightings)
+    case 'DELETE_TARGET':
+      return deleteLocalTarget(state, action.target)
+    case 'DELETE_TARGET_FROM_TARGET_SIGHTINGS':
+      return deleteTargetFromTargetSightings(state, action.target)
+    case 'CLEAR_STATE':
+      return initialState
+    default:
+      return state
   }
 }
 

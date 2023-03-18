@@ -11,13 +11,15 @@ export const TargetSightingRequests = {
   ) {
     $.ajax(
       '/api/v1/' +
-        (isAlphanum ? 'alphanum' : 'emergent') +
-        '_target_sighting/' +
-        id,
+      (isAlphanum ? 'alphanum' : 'emergent') +
+      '_target_sighting/' +
+      id,
       { method: 'DELETE' }
     )
       .done(successCallback)
-      .fail(failureCallback)
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        console.log("Request failed: " + textStatus + ", " + errorThrown);
+      });
   },
 
   saveTargetSighting: function (
@@ -29,9 +31,9 @@ export const TargetSightingRequests = {
   ) {
     $.post(
       '/api/v1' +
-        (isAlphanum ? '/alphanum' : '/emergent') +
-        '_target_sighting/assignment/' +
-        assignmentId,
+      (isAlphanum ? '/alphanum' : '/emergent') +
+      '_target_sighting/assignment/' +
+      assignmentId,
       sighting
     )
       .done(successCallback)
@@ -47,9 +49,9 @@ export const TargetSightingRequests = {
   ) {
     $.ajax(
       '/api/v1/' +
-        (isAlphanum ? 'alphanum' : 'emergent') +
-        '_target_sighting/' +
-        id,
+      (isAlphanum ? 'alphanum' : 'emergent') +
+      '_target_sighting/' +
+      id,
       { method: 'PUT', data: sighting }
     )
       .done(successCallback)

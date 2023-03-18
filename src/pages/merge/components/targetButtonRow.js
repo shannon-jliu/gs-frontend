@@ -10,7 +10,7 @@ const TargetButtonRow = ({ type, offaxis, isSaved, saveable, save, deletable, de
       </a>
     </div>
     {/*Delete button */}
-    <div className={type === 'emergent' || offaxis ? 'hidden' : 'button-container input-field col s5'}>
+    <div className={type === 'emergent' || offaxis || 'alphanum' ? 'hidden' : 'button-container input-field col s5'}>
       <a onClick={deleteFn} className={(deletable ? '' : 'grey lighten-2 ') + 'waves-effect waves-light btn'} href='/#'>
         Delete
       </a>
