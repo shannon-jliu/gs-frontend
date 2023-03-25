@@ -18,7 +18,9 @@
     flex-wrap: wrap;
 }
 
-.camera, .gimbal, .targets {
+.camera,
+.gimbal,
+.settingsTargets {
     width: 50%;
     padding: 1em;
 }
@@ -45,7 +47,10 @@ h3 {
     margin: 5px;
 }
 
-.shape, .shapeColor, .letter, .letterColor {
+.shape,
+.shapeColor,
+.letter,
+.letterColor {
     display: inline-grid;
     width: 50%;
 }

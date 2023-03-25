@@ -295,8 +295,6 @@ export class fiveTargetsSettings extends Component {
         localId: Math.random() + ':' + Math.random() + ':' + Math.random(),
         airdropId: i,
       }
-      console.log(JSON.stringify(target))
-
       //second param is target sightings
       this.props.saveTarget(fromJS(target), fromJS([]))
     }
@@ -311,7 +309,7 @@ export class fiveTargetsSettings extends Component {
     // Uses a map to create a selector for the 4 values needed for each of the 5 targets from the props list.
     // Index indicates which target, evt is the event information
     return (
-      <div className="targets">
+      <div className="settingsTargets">
         <div className="card white">
           <div className="card-content">
             <h3>Targets</h3>

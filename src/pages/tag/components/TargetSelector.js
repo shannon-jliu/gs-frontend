@@ -13,7 +13,6 @@ const TargetSelector = ({ setTargetSighting }) => {
 
   function saveTargetSighting(id) {
     const target = savedTargets.find((t) => t.get('airdropId') === id)
-    console.log(JSON.stringify(savedTargets))
     setTargetSighting(target)
   }
 

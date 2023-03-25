@@ -22,7 +22,6 @@ const ThumbnailOperations = {
     }
     const failure = () => {
       SnackbarUtil.render('Failed to retrieve thumbnails')
-      console.log('fail')
     }
 
     //gets thumbnails for all ids

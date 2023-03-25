@@ -81,7 +81,6 @@ export class TagSighting extends Component {
       const s = this.state
 
       //state doesn't include shapes and alphas
-      console.log(JSON.stringify(this.state))
       if (s.type === 'roi') return true
       if (s.type === 'emergent') {
         return (
@@ -174,7 +173,6 @@ export class TagSighting extends Component {
   }
 
   setTargetSighting(target) {
-    console.log('TARGET: ' + JSON.stringify(target))
     const newState = {
       ...this.state,
       shape: target.get('shape'),
@@ -182,7 +180,6 @@ export class TagSighting extends Component {
       alpha: target.get('alpha'),
       alphaColor: target.get('alphaColor'),
     }
-    console.log(JSON.stringify(newState))
     this.setState(newState)
   }
 

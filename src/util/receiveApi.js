@@ -48,7 +48,6 @@ export const AssignmentGetRequests = {
 
 export const ThumbnailGetRequests = {
   requestThumbnail: function (airdropId, successCallback, failureCallback) {
-    console.log(airdropId)
     $.get('/api/v1/thumbnail/' + airdropId)
       .done((data) => successCallback(data, airdropId))
       .fail(failureCallback)

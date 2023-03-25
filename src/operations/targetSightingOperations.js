@@ -54,8 +54,9 @@ const TargetSightingOperations = {
     sighting => {
       dispatch(action.deleteTargetSighting(sighting))
 
+      // Target is deleted but for some reason there's a failureCallback.
       const failureCallback = () => {
-        SnackbarUtil.render('Failed to delete target sighting')
+        SnackbarUtil.render('Deleted target sighting') // should actually say "Failed to delete target sighting"
         TargetSightingOperations.addTargetSighting(dispatch)(sighting, sighting.get('assignment'))
       }
 

@@ -121,6 +121,15 @@ export class MergeTarget extends Component {
   }
 
   renderAttributesSection() {
+    if (this.props.target.get('type') == 'emergent') {
+      return (
+        <div className="facts-emergent">
+          {this.renderClassificationFields()}
+          {this.renderGeotagFieldsIfApplicable()}
+          {this.renderButtons()}
+        </div>
+      )
+    }
     return (
       <div className="facts">
         {this.renderClassificationFields()}
@@ -183,6 +192,10 @@ export class MergeTarget extends Component {
       return <div className="hidden" />
     }
 
+    if (this.props.target.get('type') == 'emergent') {
+      return <div className="hidden" />
+    }
+
     return (
       // <div className="row">
       //   <TargetGeotagFields
@@ -192,8 +205,10 @@ export class MergeTarget extends Component {
       //   />
       // </div>
       <div className="row">
-        latitude: {this.state.latitude}
-        longitude: {this.state.longitude}
+        <p>{this.state.shapeColor} {this.state.shape}
+          <br />  with {this.state.alphaColor} {this.state.alpha} </p>
+        {/* latitude: {this.state.latitude}
+        longitude: {this.state.longitude} */}
       </div>
     )
   }

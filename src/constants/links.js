@@ -7,7 +7,6 @@ export const ADLC_PAGE_ID = 'ADLC'
 export const SETTINGS_PAGE_ID = 'SETTINGS'
 export const LOGS_PAGE_ID = 'LOGS'
 export const INTSYS_PAGE_ID = 'INTSYS'
-export const CONFIRM_PAGE_ID = 'CONFIRM'
 
 export const GROUND_SERVER_URL = 'http://localhost:9000'
 // process.env.REACT_APP_GS_IP ?
