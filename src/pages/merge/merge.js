@@ -159,7 +159,6 @@ export class Merge extends Component {
     return (
       <div className="targets">
         {renderedSortedTargets}
-        {/* {renderedNewTargetButton} */}
       </div>
     )
   }
