@@ -179,7 +179,7 @@ export class Merge extends Component {
         } else if (target2.get('type') === 'emergent') {
           return 1
         } else {
-          return target1.get('id') - target2.get('id')
+          return target1.get('airdropId') - target2.get('airdropId')
         }
       }
     )
