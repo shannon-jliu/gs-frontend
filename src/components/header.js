@@ -13,7 +13,6 @@ import {
   SETTINGS_PAGE_ID,
   LOGS_PAGE_ID,
   INTSYS_PAGE_ID,
-  CONFIRM_PAGE_ID
 } from '../constants/links.js'
 
 const LINKS = Object.freeze({
@@ -25,7 +24,6 @@ const LINKS = Object.freeze({
   'Settings': { name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false },
   'Logs': { name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false },
   'Intsys': { name: 'Intsys', key: INTSYS_PAGE_ID, href: '/intsys', 'operator': false },
-  'Confirm': { name: 'Confirm', key: CONFIRM_PAGE_ID, href: '/confirm', 'operator': false },
 })
 
 export class Header extends Component {

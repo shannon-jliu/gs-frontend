@@ -68,10 +68,10 @@ const TargetOperations = {
   //deletes all targets from database
   deleteAllTargets: (dispatch) => () => {
     const successCallback = () => {
-      console.log('Deleted targets')
+      SnackbarUtil.render('Deleted targets')
     }
     const failureCallback = () => {
-      console.log('Failed to delete targets')
+      SnackbarUtil.render('Failed to delete targets')
     }
 
     targetRequests.deleteAllTargets(successCallback, failureCallback)
@@ -80,7 +80,7 @@ const TargetOperations = {
   //call in settings page
   saveTarget:
     (dispatch) =>
-    //sightings can be either all sightings or only sightings bound to target, either works
+      //sightings can be either all sightings or only sightings bound to target, either works
       (target, sightings) => {
         dispatch(action.startSaveTarget(target.get('localId')))
 

@@ -7,6 +7,7 @@ import MergeSighting from './mergeSighting'
 import MergeTarget from './mergeTarget'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import TargetOperations from '../../operations/targetOperations'
+import SnackbarUtil from '../../util/snackbarUtil.js'
 
 import { MILLISECONDS_BETWEEN_MERGE_PAGE_POLLS } from '../../constants/constants.js'
 import { AUTH_TOKEN_ID } from '../../constants/constants.js'
@@ -132,8 +133,13 @@ export class Merge extends Component {
       !_.isNil(this.state.dragSighting) &&
       !_.isNil(this.state.dragSighting.get('target'))
     ) {
-      if (this.state.dragSighting.has('id') && this.state.dragSighting.has('type')) {
-        this.props.deleteSavedTargetSighting(this.state.dragSighting)
+      if (this.state.dragSighting.has('type')) {
+        if (this.state.dragSighting.has('id')) {
+          this.props.deleteSavedTargetSighting(this.state.dragSighting)
+        } else {
+          this.props.deleteUnsavedTargetSighting(this.state.dragSighting)
+        }
+        // this.props.deleteSavedTargetSighting(this.state.dragSighting)
       }
     }
     this.setState({
