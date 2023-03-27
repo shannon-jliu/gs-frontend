@@ -18,8 +18,8 @@ export const TargetSightingRequests = {
     )
       .done(successCallback)
       .fail(function (jqXHR, textStatus, errorThrown) {
-        console.log("Request failed: " + textStatus + ", " + errorThrown);
-      });
+        console.log('Request failed: ' + textStatus + ', ' + errorThrown)
+      })
   },
 
   saveTargetSighting: function (
