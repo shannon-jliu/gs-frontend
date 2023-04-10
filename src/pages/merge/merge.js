@@ -326,6 +326,10 @@ export class Merge extends Component {
     //adds the target to the state/store (local)
     this.props.addTarget(target)
   }
+
+  updateMergeTargetNum() {
+
+  }
 }
 
 const mapStateToProps = (state) => ({

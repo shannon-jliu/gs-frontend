@@ -78,67 +78,67 @@ export class fiveTargetsSettings extends Component {
   }
 
   // Checks if items updated, and if they all did, sets the state to the updated value.
-  componentDidUpdate(prevProps) {
-    let targets = this.props.settings.get('settings').get('targets')
-    if (prevProps.settings.get('settings').get('targets') !== undefined) {
-      if (!_.isEqual(prevProps, this.props) && this.compareValues(targets)) {
-        this.setState({
-          targets: [
-            {
-              shape: this.props.settings.get('settings').get('targets')[0]
-                .shape,
-              shapeColor: this.props.settings.get('settings').get('targets')[0]
-                .shapeColor,
-              alpha: this.props.settings.get('settings').get('targets')[0]
-                .alpha,
-              alphaColor: this.props.settings.get('settings').get('targets')[0]
-                .alphaColor,
-            },
-            {
-              shape: this.props.settings.get('settings').get('targets')[1]
-                .shape,
-              shapeColor: this.props.settings.get('settings').get('targets')[1]
-                .shapeColor,
-              alpha: this.props.settings.get('settings').get('targets')[1]
-                .alpha,
-              alphaColor: this.props.settings.get('settings').get('targets')[1]
-                .alphaColor,
-            },
-            {
-              shape: this.props.settings.get('settings').get('targets')[2]
-                .shape,
-              shapeColor: this.props.settings.get('settings').get('targets')[2]
-                .shapeColor,
-              alpha: this.props.settings.get('settings').get('targets')[2]
-                .alpha,
-              alphaColor: this.props.settings.get('settings').get('targets')[2]
-                .alphaColor,
-            },
-            {
-              shape: this.props.settings.get('settings').get('targets')[3]
-                .shape,
-              shapeColor: this.props.settings.get('settings').get('targets')[3]
-                .shapeColor,
-              alpha: this.props.settings.get('settings').get('targets')[3]
-                .alpha,
-              alphaColor: this.props.settings.get('settings').get('targets')[3]
-                .alphaColor,
-            },
-            {
-              shape: this.props.settings.get('settings').get('targets')[4]
-                .shape,
-              shapeColor: this.props.settings.get('settings').get('targets')[4]
-                .shapeColor,
-              alpha: this.props.settings.get('settings').get('targets')[4]
-                .alpha,
-              alphaColor: this.props.settings.get('settings').get('targets')[4]
-                .alphaColor,
-            },
-          ],
-        })
-      }
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   let targets = this.props.settings.get('settings').get('targets')
+  //   if (prevProps.settings.get('settings').get('targets') !== undefined) {
+  //     if (!_.isEqual(prevProps, this.props) && this.compareValues(targets)) {
+  //       this.setState({
+  //         targets: [
+  //           {
+  //             shape: this.props.settings.get('settings').get('targets')[0]
+  //               .shape,
+  //             shapeColor: this.props.settings.get('settings').get('targets')[0]
+  //               .shapeColor,
+  //             alpha: this.props.settings.get('settings').get('targets')[0]
+  //               .alpha,
+  //             alphaColor: this.props.settings.get('settings').get('targets')[0]
+  //               .alphaColor,
+  //           },
+  //           {
+  //             shape: this.props.settings.get('settings').get('targets')[1]
+  //               .shape,
+  //             shapeColor: this.props.settings.get('settings').get('targets')[1]
+  //               .shapeColor,
+  //             alpha: this.props.settings.get('settings').get('targets')[1]
+  //               .alpha,
+  //             alphaColor: this.props.settings.get('settings').get('targets')[1]
+  //               .alphaColor,
+  //           },
+  //           {
+  //             shape: this.props.settings.get('settings').get('targets')[2]
+  //               .shape,
+  //             shapeColor: this.props.settings.get('settings').get('targets')[2]
+  //               .shapeColor,
+  //             alpha: this.props.settings.get('settings').get('targets')[2]
+  //               .alpha,
+  //             alphaColor: this.props.settings.get('settings').get('targets')[2]
+  //               .alphaColor,
+  //           },
+  //           {
+  //             shape: this.props.settings.get('settings').get('targets')[3]
+  //               .shape,
+  //             shapeColor: this.props.settings.get('settings').get('targets')[3]
+  //               .shapeColor,
+  //             alpha: this.props.settings.get('settings').get('targets')[3]
+  //               .alpha,
+  //             alphaColor: this.props.settings.get('settings').get('targets')[3]
+  //               .alphaColor,
+  //           },
+  //           {
+  //             shape: this.props.settings.get('settings').get('targets')[4]
+  //               .shape,
+  //             shapeColor: this.props.settings.get('settings').get('targets')[4]
+  //               .shapeColor,
+  //             alpha: this.props.settings.get('settings').get('targets')[4]
+  //               .alpha,
+  //             alphaColor: this.props.settings.get('settings').get('targets')[4]
+  //               .alphaColor,
+  //           },
+  //         ],
+  //       })
+  //     }
+  //   }
+  // }
 
   AssignUndefined(x) {
     let targets = [
@@ -300,6 +300,25 @@ export class fiveTargetsSettings extends Component {
     }
   }
 
+  // updates the numTargets stored in the global state
+  updateStateTargetsNum(evt) {
+    this.props.updateNumTargets(evt.target.value)
+  }
+
+  // saves updates the number of targets shown
+  saveNumTargets() {
+    let num = this.props.numTargets
+    this.props.updateNumTargets(num)
+    for (let i = 5; i > num; i--) {
+      let idName = 'target' + i
+      document.getElementById(idName).style.display = 'none'
+    }
+    for (let i = num; i > 0; i--) {
+      let idName = 'target' + i
+      document.getElementById(idName).style.display = 'block'
+    }
+  }
+
   render() {
     let display = this.getDisplayFields()
     let saveClass = !this.canSave()
@@ -314,9 +333,21 @@ export class fiveTargetsSettings extends Component {
           <div className="card-content">
             <h3>Targets</h3>
             <br />{' '}
+
+            <h5>Choose the number of targets:</h5>
+            <select name="selectNumTargets" id="selectNumTargets" onChange={(evt) => this.updateStateTargetsNum(evt)}>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <button onClick={this.saveNumTargets.bind(this)}>Save</button>
+
             {this.state.targets.map((target, index) => {
               return (
                 <>
+                <div id={`target${index + 1}`}>
                   <h5>Target #{index + 1}</h5>
                   <div className="smallerRow">
                     <div className="shapeColor">
@@ -356,6 +387,7 @@ export class fiveTargetsSettings extends Component {
                       />
                     </div>
                   </div>
+                </div>
                 </>
               )
             })}
@@ -374,6 +406,7 @@ export class fiveTargetsSettings extends Component {
 // mapStateToProps is a redux tool to merge props together
 const mapStateToProps = (state) => ({
   settings: state.fiveTargetsReducer,
+  numTargets: state.fiveTargetsReducer.get('settings').get('numTargets'),
   //calls reducer to get thumbnails
   // thumbnails: getThumbnails(state.thumbnailReducer),
 })
@@ -382,6 +415,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   saveTarget: TargetOperations.saveTarget(dispatch),
   deleteTargets: TargetOperations.deleteAllTargets(dispatch),
+  updateNumTargets: fiveTargetsSettingsOperations.updateNumTargets(dispatch),
 })
 
 export default connect(

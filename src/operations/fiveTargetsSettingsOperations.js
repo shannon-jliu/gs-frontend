@@ -10,7 +10,7 @@ const FiveTargetsSettingsOperations = {
       dispatch(action.receiveSettings(fromJS(data)))
     }
 
-    SettingsGetRequests.getFiveTargetsSettings(successCallback, () => {})
+    SettingsGetRequests.getFiveTargetsSettings(successCallback, () => { })
   },
 
   updateSettingsStart: dispatch => (
@@ -28,7 +28,13 @@ const FiveTargetsSettingsOperations = {
       }
 
       SettingsRequest.updateFiveTargetsSetting(setting, successCallback, failureCallback)
-    } )
+    }),
+
+
+  // update number of targets
+  updateNumTargets: (dispatch) => (num) => {
+    dispatch(action.updateNumTargets(num))
+  }
 }
 
 export default FiveTargetsSettingsOperations
