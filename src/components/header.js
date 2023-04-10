@@ -9,10 +9,8 @@ import {
   LOGOUT_PAGE_ID,
   TAGGING_PAGE_ID,
   MERGING_PAGE_ID,
-  ADLC_PAGE_ID,
   SETTINGS_PAGE_ID,
   LOGS_PAGE_ID,
-  INTSYS_PAGE_ID,
 } from '../constants/links.js'
 
 const LINKS = Object.freeze({
@@ -20,10 +18,8 @@ const LINKS = Object.freeze({
   'Logout': { name: 'Logout', key: LOGOUT_PAGE_ID, 'operator': false },
   'Tag': { name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag', 'operator': false },
   'Merging': { name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'operator': true },
-  'ADLC': { name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'operator': false },
   'Settings': { name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false },
   'Logs': { name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false },
-  'Intsys': { name: 'Intsys', key: INTSYS_PAGE_ID, href: '/intsys', 'operator': false },
 })
 
 export class Header extends Component {

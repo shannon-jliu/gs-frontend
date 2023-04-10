@@ -36,7 +36,7 @@ export class MergeTarget extends Component {
       latitude: t.getIn(['geotag', 'gpsLocation', 'latitude']) || '',
       dragCtr: 0, //counter rather than boolean to allow hovering over child elements
       iwidth: -1,
-      iheight: -1
+      iheight: -1,
     }
 
     this.canDelete = this.canDelete.bind(this)
@@ -95,6 +95,8 @@ export class MergeTarget extends Component {
         {this.renderTitleIfSpecialType()}
         {this.renderAttributesSection()}
         {this.renderSightingPreviewRow()}
+        {/* {this.renderADLCSightingPreviewRow()} */}
+        {/* <div className="adlc-images"><label>{this.props.checked}</label></div> */}
       </div>
     )
   }
@@ -229,11 +231,31 @@ export class MergeTarget extends Component {
   }
 
   renderSightingPreviewRow() {
+    if (this.props.isChecked) {
+      return this.renderADLCSightingPreviewRow()
+    }
+    else {
+      return this.renderMDLCSightingPreviewRow()
+    }
+  }
+
+  renderMDLCSightingPreviewRow() {
     // toJSON is a shallow conversion (preserving immutable html attributes), while toJS would be deep
-    const sightingPreviews = this.props.sightings
+    const sightingPreviews = this.props.sightings.filter(
+      (ts) => ts.get('creator').get('username') != "ADLC"
+    )
       .map(this.renderSightingPreview)
       .toJSON()
-    return <div className="sighting-images">{sightingPreviews}</div>
+    return <div className="sighting-images"><label>mdlc images</label><div>{sightingPreviews}</div></div>
+  }
+
+  renderADLCSightingPreviewRow() {
+    const sightingPreviews = this.props.sightings.filter(
+      (ts) => ts.get('creator').get('username') == "ADLC"
+    )
+      .map(this.renderSightingPreview)
+      .toJSON()
+    return <div className="adlc-images"><label>adlc images</label><div>{sightingPreviews}</div></div>
   }
 
   renderSightingPreview(sighting) {
@@ -573,6 +595,7 @@ MergeTarget.propTypes = {
   onTsDragEnd: PropTypes.func.isRequired,
   onTsDrop: PropTypes.func.isRequired,
   dragId: PropTypes.number,
+  isChecked: PropTypes.bool
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
