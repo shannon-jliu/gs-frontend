@@ -164,7 +164,8 @@ export class TagSighting extends Component {
     i.src = GROUND_SERVER_URL + imageUrl
   }
 
-  save() {
+  save(e) {
+    e.preventDefault();
     const s = this.state
     if (this.canSave()) {
       if (s.type === 'roi') {
@@ -208,7 +209,8 @@ export class TagSighting extends Component {
     }
   }
 
-  deleteSighting() {
+  deleteSighting(e) {
+    e.preventDefault();
     if (this.actionable()) {
       if (this.props.sighting.has('id')) {
         if (this.state.type === 'roi') this.props.deleteSavedROISighting(this.props.sighting)
