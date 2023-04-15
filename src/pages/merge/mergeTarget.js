@@ -272,6 +272,15 @@ export class MergeTarget extends Component {
     )
       .map(this.renderSightingPreview)
       .toJSON()
+    return <div className="sighting-images"><label>mdlc images</label><div>{sightingPreviews}</div></div>
+  }
+
+  renderADLCSightingPreviewRow() {
+    const sightingPreviews = this.props.sightings.filter(
+      (ts) => ts.get('creator').get('username') == 'ADLC'
+    )
+      .map(this.renderSightingPreview)
+      .toJSON()
     return <div className="adlc-images"><label>adlc images</label><div>{sightingPreviews}</div></div>
   }
 
