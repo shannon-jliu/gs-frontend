@@ -10,6 +10,7 @@ import { fromJS, Map } from 'immutable'
 const initialState = fromJS({
   settings: fromJS({
     timestamp: -1,
+    numTargets: 5,
     targets: [
       {
         shape: '',
@@ -57,6 +58,8 @@ const fiveTargetsReducer = (state = initialState, action) => {
     return state.set('pending', action.settings)
   case 'UPDATE FIVE_TARGETS_SETTINGS_FAILED':
     return state.set('pending', Map())
+  case 'UPDATE_NUM_TARGETS':
+    return state.set('settings', state.get('settings').set('numTargets', action.targetsNum))
   default:
     return state
   }

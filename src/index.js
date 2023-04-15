@@ -54,22 +54,22 @@ var requireAuth = Class => {
 // PersistGate required to delay until persistence complete
 // see https://github.com/rt2zz/redux-persist#react-integration
 const GroundServerRouter = () =>
-(
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/login" render={() => <App main={<Login />} />} />
-          <Route path="/logout" render={() => requireAuth(<Logout />)} />
-          <Route path="/tag" render={() => requireAuth(<Tag />)} />
-          <Route path="/settings" render={() => requireAuth(<Settings />)} />
-          <Route path="/merge" render={() => requireAuth(<Merge />)} />
-          <Route path="/logs" render={() => requireAuth(<Logs />)} />
-          <Redirect from="*" to="/login" />
-        </Switch>
-      </BrowserRouter>
-    </PersistGate>
-  </Provider>
-)
+  (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/login" render={() => <App main={<Login />} />} />
+            <Route path="/logout" render={() => requireAuth(<Logout />)} />
+            <Route path="/tag" render={() => requireAuth(<Tag />)} />
+            <Route path="/settings" render={() => requireAuth(<Settings />)} />
+            <Route path="/merge" render={() => requireAuth(<Merge />)} />
+            <Route path="/logs" render={() => requireAuth(<Logs />)} />
+            <Redirect from="*" to="/login" />
+          </Switch>
+        </BrowserRouter>
+      </PersistGate>
+    </Provider>
+  )
 
 ReactDOM.render(<GroundServerRouter />, document.getElementById('root'))

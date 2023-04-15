@@ -156,26 +156,52 @@ export class MergeTarget extends Component {
   }
 
   renderAlphanumClassificationFields() {
+    let alpha = this.props.target.get('alpha')
+    let alphaColor = (shape = this.props.target.get('alphaColor'))
+    let shape = this.props.target.get('shape').toUpperCase()
+    let shapeColor = this.props.target.get('shapeColor')
+
+    if (shapeColor == 'white') {
+      shapeColor = '#FFF8DC'
+    }
+
     return (
-      <img
-        alt={'target image'}
-        src={GROUND_SERVER_URL + '/api/v1/thumbnail/' + this.props.target.get('airdropId')}
-        width="100"
-      />
+      <>
+        <div
+          className="mask"
+          style={{
+            maskImage: `url("/img/thumbnails/${shape}.png")`,
+            WebkitMaskImage: `url("/img/thumbnails/${shape}.png")`,
+            backgroundColor: shapeColor,
+          }}
+        >
+          <div style={{ color: alphaColor }}>
+            <svg
+              style={{ width: '100px', height: '100px' }}
+              viewBox={'0 0 100 100'}
+            >
+              <text
+                stroke={'black'}
+                strokeWidth={1}
+                fill={alphaColor}
+                style={{
+                  fontSize: '50px',
+                  textAlign: 'center',
+                  textAnchor: 'middle',
+                  dominantBaseline: 'central',
+                  fontWeight: 'bold',
+                }}
+                x={50}
+                y={50}
+              >
+                {alpha}
+              </text>
+            </svg>
+          </div>
+        </div>
+      </>
     )
   }
-
-  // renderAlphanumClassificationFields() {
-  //   return (
-  //     <TargetAlphanumFields
-  //       shape={this.state.shape}
-  //       shapeColor={this.state.shapeColor}
-  //       alpha={this.state.alpha}
-  //       alphaColor={this.state.alphaColor}
-  //       getHandler={this.getHandler}
-  //     />
-  //   )
-  // }
 
   renderEmergentClassificationFields() {
     return (
@@ -242,16 +268,7 @@ export class MergeTarget extends Component {
   renderMDLCSightingPreviewRow() {
     // toJSON is a shallow conversion (preserving immutable html attributes), while toJS would be deep
     const sightingPreviews = this.props.sightings.filter(
-      (ts) => ts.get('creator').get('username') != "ADLC"
-    )
-      .map(this.renderSightingPreview)
-      .toJSON()
-    return <div className="sighting-images"><label>mdlc images</label><div>{sightingPreviews}</div></div>
-  }
-
-  renderADLCSightingPreviewRow() {
-    const sightingPreviews = this.props.sightings.filter(
-      (ts) => ts.get('creator').get('username') == "ADLC"
+      (ts) => ts.get('creator').get('username') != 'ADLC'
     )
       .map(this.renderSightingPreview)
       .toJSON()
@@ -356,11 +373,9 @@ export class MergeTarget extends Component {
   }
 
   areAllFieldsValidToSave(showReason) {
-    return (
-      this.isTargetNotCurrentlySavingToSave(showReason)
-      // this.areClassificationFieldsValidToSave(showReason) &&
-      // this.isGeotagValidAndSaneToSave(showReason)
-    )
+    return this.isTargetNotCurrentlySavingToSave(showReason)
+    // this.areClassificationFieldsValidToSave(showReason) &&
+    // this.isGeotagValidAndSaneToSave(showReason)
   }
 
   isTargetNotCurrentlySavingToSave(showReason) {

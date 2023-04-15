@@ -11,6 +11,6 @@ const config = {
   storage: storageSession
 }
 const persistedReducer = persistReducer(config, rootReducer)
-const store = createStore(persistedReducer)
+const store = createStore(persistedReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
 export default store

@@ -102,7 +102,7 @@ export class Merge extends Component {
   mergeADLC() {
     const targets = this.props.savedTargets
     const adlcSightings = this.props.sightings.filter(
-      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') == "ADLC"
+      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') == 'ADLC'
     )
     adlcSightings.map((sighting) =>
       targets.map((target) => {
@@ -120,7 +120,7 @@ export class Merge extends Component {
 
   assignUnassignedSighting() {
     const unassignedSightings = this.props.sightings.filter(
-      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') !== "ADLC"
+      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') !== 'ADLC'
     )
     unassignedSightings.map((sighting) => this.matchSightingToTarget(sighting, this.props.savedTargets))
   }
@@ -213,7 +213,6 @@ export class Merge extends Component {
     return (
       <div className="targets">
         {renderedSortedTargets}
-        {/* {renderedNewTargetButton} */}
       </div>
     )
   }
@@ -375,6 +374,10 @@ export class Merge extends Component {
     })
     //adds the target to the state/store (local)
     this.props.addTarget(target)
+  }
+
+  updateMergeTargetNum() {
+
   }
 }
 

@@ -140,3 +140,10 @@
 .merge .hidden {
   display: none;
 }
+
+.merge .mask {
+  width: 100px;
+  height: 100px;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+}
