@@ -268,7 +268,7 @@ export class MergeTarget extends Component {
   renderMDLCSightingPreviewRow() {
     // toJSON is a shallow conversion (preserving immutable html attributes), while toJS would be deep
     const sightingPreviews = this.props.sightings.filter(
-      (ts) => ts.get('creator').get('username') != 'ADLC'
+      (ts) => ts.get('creator').get('username') != 'adlc'
     )
       .map(this.renderSightingPreview)
       .toJSON()
@@ -277,7 +277,7 @@ export class MergeTarget extends Component {
 
   renderADLCSightingPreviewRow() {
     const sightingPreviews = this.props.sightings.filter(
-      (ts) => ts.get('creator').get('username') == 'ADLC'
+      (ts) => ts.get('creator').get('username') == 'adlc'
     )
       .map(this.renderSightingPreview)
       .toJSON()

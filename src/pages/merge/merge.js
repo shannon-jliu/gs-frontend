@@ -120,7 +120,7 @@ export class Merge extends Component {
 
   assignUnassignedSighting() {
     const unassignedSightings = this.props.sightings.filter(
-      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') !== 'ADLC'
+      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') !== 'adlc'
     )
     unassignedSightings.map((sighting) => this.matchSightingToTarget(sighting, this.props.savedTargets))
   }
