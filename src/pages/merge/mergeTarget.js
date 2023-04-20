@@ -49,6 +49,7 @@ export class MergeTarget extends Component {
     this.drop = this.drop.bind(this);
     this.renderSightingPreview = this.renderSightingPreview.bind(this);
     this.selectSightingAsThumbnail = this.selectSightingAsThumbnail.bind(this);
+    this.sendToAutopilot = this.sendToAutopilot.bind(this);
   }
 
   getAssumedTargetFromProps() {
@@ -121,14 +122,14 @@ export class MergeTarget extends Component {
   }
 
   renderAttributesSection() {
-    if (this.props.target.get('type') == 'emergent') {
+    if (this.props.target.get("type") == "emergent") {
       return (
         <div className="facts-emergent">
           {this.renderClassificationFields()}
           {this.renderGeotagFieldsIfApplicable()}
           {this.renderButtons()}
         </div>
-      )
+      );
     }
     return (
       <div className="facts">
@@ -218,8 +219,8 @@ export class MergeTarget extends Component {
       return <div className="hidden" />;
     }
 
-    if (this.props.target.get('type') == 'emergent') {
-      return <div className="hidden" />
+    if (this.props.target.get("type") == "emergent") {
+      return <div className="hidden" />;
     }
 
     return (
@@ -231,10 +232,15 @@ export class MergeTarget extends Component {
       //   />
       // </div>
       <div className="row">
-        <p>{this.state.shapeColor} {this.state.shape}
-          <br />  with {this.state.alphaColor} {this.state.alpha} </p>
-        {/* latitude: {this.state.latitude}
-        longitude: {this.state.longitude} */}
+        <p>
+          {this.state.shapeColor} {this.state.shape} <br />
+          {this.state.alphaColor} {this.state.alpha}
+        </p>
+        <>
+          Latitude: {this.state.latitude}
+          <br />
+          Longitude: {this.state.longitude}
+        </>
       </div>
     );
   }
@@ -242,15 +248,18 @@ export class MergeTarget extends Component {
   renderButtons() {
     const t = this.props.target;
     return (
-      <TargetButtonRow
-        type={t.get("type")}
-        offaxis={t.get("offaxis")}
-        isSaved={t.has("id")}
-        saveable={this.canSave()}
-        save={this.save}
-        deletable={this.canDelete()}
-        deleteFn={this.delete}
-      />
+      <div>
+        <TargetButtonRow
+          type={t.get("type")}
+          offaxis={t.get("offaxis")}
+          isSaved={t.has("id")}
+          saveable={this.canSave()}
+          save={this.save}
+          deletable={this.canDelete()}
+          deleteFn={this.delete}
+          send={this.sendToAutopilot}
+        />
+      </div>
     );
   }
 
@@ -297,6 +306,12 @@ export class MergeTarget extends Component {
   isTargetTypeSpecial() {
     const t = this.props.target;
     return t.get("type") === "emergent" || t.get("offaxis") || !t.has("id");
+  }
+
+  //sends geolocation to autopilot
+  sendToAutopilot(e) {
+    e.preventDefault();
+    this.props.sendTarget(this.props.target);
   }
 
   save() {
@@ -473,14 +488,14 @@ export class MergeTarget extends Component {
       if (showReason) {
         SnackbarUtil.render(
           "Cannot save target: geotag not near PAX (lat: " +
-          PAX_COORDS[0] +
-          ", long: " +
-          PAX_COORDS[1] +
-          ") or Neno (lat: " +
-          NENO_COORDS[0] +
-          ", long: " +
-          NENO_COORDS[1] +
-          ")"
+            PAX_COORDS[0] +
+            ", long: " +
+            PAX_COORDS[1] +
+            ") or Neno (lat: " +
+            NENO_COORDS[0] +
+            ", long: " +
+            NENO_COORDS[1] +
+            ")"
         );
       }
       return false;
@@ -604,6 +619,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   updateTarget: TargetOperations.updateTarget(dispatch),
   deleteSavedTarget: TargetOperations.deleteSavedTarget(dispatch),
   deleteUnsavedTarget: TargetOperations.deleteUnsavedTarget(dispatch),
+  sendTarget: TargetOperations.sendTarget(dispatch),
 });
 
 export default connect(null, mapDispatchToProps)(MergeTarget);

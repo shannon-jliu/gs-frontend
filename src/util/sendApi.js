@@ -113,6 +113,13 @@ export const targetRequests = {
       .done(successCallback)
       .fail(failureCallback)
   },
+
+  //calls endpoint to send to autopilot
+  sendTarget: function (target, successCallback, failureCallback) {
+    $.ajax('/api/v1/alphanum_target/send/', { method: 'POST', data: target })
+      .done(successCallback)
+      .fail(failureCallback)
+  }
 }
 
 export const AssignmentRequests = {
