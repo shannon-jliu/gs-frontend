@@ -52,6 +52,7 @@ export class TagSighting extends Component {
   }
 
   // checks if the target sighting can be performed on in any way
+  //TODO: some target sightings always stuck on pending
   actionable() {
     return !this.props.sighting.has('pending')
   }

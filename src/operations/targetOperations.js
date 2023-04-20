@@ -147,6 +147,16 @@ const TargetOperations = {
       failureCallback
     )
   },
+
+  sendTarget: (dispatch) => (target) => {
+    const successCallback = () => {
+      SnackbarUtil.render('Sent target to autopilot')
+    }
+    const failureCallback = () => {
+      SnackbarUtil.render('Failed to send target to autopilot')
+    }
+    targetRequests.sendTarget(target, successCallback, failureCallback)
+  }
 }
 
 export default TargetOperations

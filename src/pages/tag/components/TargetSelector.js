@@ -16,13 +16,13 @@ const TargetSelector = ({ setTargetSighting }) => {
   }
 
   const RenderTarget = ({ target }) => {
-    let alpha = target.get("alpha");
-    let alphaColor = (shape = target.get("alphaColor"));
-    let shape = target.get("shape").toUpperCase();
-    let shapeColor = target.get("shapeColor");
+    let alpha = target.get('alpha')
+    let alphaColor = (shape = target.get('alphaColor'))
+    let shape = target.get('shape').toUpperCase()
+    let shapeColor = target.get('shapeColor')
 
-    if (shapeColor == "white") {
-      shapeColor = "#FFF8DC";
+    if (shapeColor == 'white') {
+      shapeColor = '#FFF8DC'
     }
 
     return (
@@ -37,19 +37,19 @@ const TargetSelector = ({ setTargetSighting }) => {
         >
           <div style={{ color: alphaColor }}>
             <svg
-              style={{ width: "100px", height: "100px" }}
-              viewBox={"0 0 100 100"}
+              style={{ width: '100px', height: '100px' }}
+              viewBox={'0 0 100 100'}
             >
               <text
-                stroke={"black"}
+                stroke={'black'}
                 strokeWidth={1}
                 fill={alphaColor}
                 style={{
-                  fontSize: "50px",
-                  textAlign: "center",
-                  textAnchor: "middle",
-                  dominantBaseline: "central",
-                  fontWeight: "bold",
+                  fontSize: '50px',
+                  textAlign: 'center',
+                  textAnchor: 'middle',
+                  dominantBaseline: 'central',
+                  fontWeight: 'bold',
                 }}
                 x={50}
                 y={50}
@@ -60,14 +60,14 @@ const TargetSelector = ({ setTargetSighting }) => {
           </div>
         </div>
       </>
-    );
+    )
   }
 
   return (
     <div style={{ justifyContent: 'left' }}>
       {
         savedTargets.map(target => {
-          const id = target.get("airdropId")
+          const id = target.get('airdropId')
           return (
             <button className='target-button'
               style={
