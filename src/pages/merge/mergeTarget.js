@@ -49,6 +49,7 @@ export class MergeTarget extends Component {
     this.drop = this.drop.bind(this)
     this.renderSightingPreview = this.renderSightingPreview.bind(this)
     this.selectSightingAsThumbnail = this.selectSightingAsThumbnail.bind(this)
+    this.sendToAutopilot = this.sendToAutopilot.bind(this)
   }
 
   getAssumedTargetFromProps() {
@@ -233,10 +234,17 @@ export class MergeTarget extends Component {
       //   />
       // </div>
       <div className="row">
-        <p>{this.state.shapeColor} {this.state.shape}
-          <br />  with {this.state.alphaColor} {this.state.alpha} </p>
-        {/* latitude: {this.state.latitude}
-        longitude: {this.state.longitude} */}
+        <p>
+          {this.state.shapeColor} {this.state.shape}
+          <br /> with {this.state.alphaColor} {this.state.alpha}{' '}
+        </p>
+        latitude: {this.state.latitude}
+        longitude: {this.state.longitude}
+        {/* <TargetGeotagFields
+          latitude={'' + this.state.latitude}
+          longitude={'' + this.state.longitude}
+          getHandler={this.getHandler}
+        /> */}
       </div>
     )
   }
@@ -244,44 +252,54 @@ export class MergeTarget extends Component {
   renderButtons() {
     const t = this.props.target
     return (
-      <TargetButtonRow
-        type={t.get('type')}
-        offaxis={t.get('offaxis')}
-        isSaved={t.has('id')}
-        saveable={this.canSave()}
-        save={this.save}
-        deletable={this.canDelete()}
-        deleteFn={this.delete}
-      />
+      <div>
+        <TargetButtonRow
+          type={t.get('type')}
+          offaxis={t.get('offaxis')}
+          isSaved={t.has('id')}
+          saveable={this.canSave()}
+          save={this.save}
+          deletable={this.canDelete()}
+          deleteFn={this.delete}
+          send={this.sendToAutopilot}
+        />
+      </div>
     )
   }
 
   renderSightingPreviewRow() {
     if (this.props.isChecked) {
       return this.renderADLCSightingPreviewRow()
-    }
-    else {
+    } else {
       return this.renderMDLCSightingPreviewRow()
     }
   }
 
   renderMDLCSightingPreviewRow() {
     // toJSON is a shallow conversion (preserving immutable html attributes), while toJS would be deep
-    const sightingPreviews = this.props.sightings.filter(
-      (ts) => ts.get('creator').get('username') != 'adlc'
-    )
+    const sightingPreviews = this.props.sightings
+      .filter((ts) => ts.get('creator').get('username') != 'adlc')
       .map(this.renderSightingPreview)
       .toJSON()
-    return <div className="sighting-images"><label>mdlc images</label><div>{sightingPreviews}</div></div>
+    return (
+      <div className="sighting-images">
+        <label>mdlc images</label>
+        <div>{sightingPreviews}</div>
+      </div>
+    )
   }
 
   renderADLCSightingPreviewRow() {
-    const sightingPreviews = this.props.sightings.filter(
-      (ts) => ts.get('creator').get('username') == 'adlc'
-    )
+    const sightingPreviews = this.props.sightings
+      .filter((ts) => ts.get('creator').get('username') == 'adlc')
       .map(this.renderSightingPreview)
       .toJSON()
-    return <div className="adlc-images"><label>adlc images</label><div>{sightingPreviews}</div></div>
+    return (
+      <div className="adlc-images">
+        <label>adlc images</label>
+        <div>{sightingPreviews}</div>
+      </div>
+    )
   }
 
   renderSightingPreview(sighting) {
@@ -319,6 +337,12 @@ export class MergeTarget extends Component {
   isTargetTypeSpecial() {
     const t = this.props.target
     return t.get('type') === 'emergent' || t.get('offaxis') || !t.has('id')
+  }
+
+  //sends geolocation to autopilot
+  sendToAutopilot(e) {
+    e.preventDefault()
+    this.props.sendTarget(this.props.target)
   }
 
   save() {
@@ -495,14 +519,14 @@ export class MergeTarget extends Component {
       if (showReason) {
         SnackbarUtil.render(
           'Cannot save target: geotag not near PAX (lat: ' +
-          PAX_COORDS[0] +
-          ', long: ' +
-          PAX_COORDS[1] +
-          ') or Neno (lat: ' +
-          NENO_COORDS[0] +
-          ', long: ' +
-          NENO_COORDS[1] +
-          ')'
+            PAX_COORDS[0] +
+            ', long: ' +
+            PAX_COORDS[1] +
+            ') or Neno (lat: ' +
+            NENO_COORDS[0] +
+            ', long: ' +
+            NENO_COORDS[1] +
+            ')'
         )
       }
       return false
@@ -619,7 +643,7 @@ MergeTarget.propTypes = {
   onTsDragEnd: PropTypes.func.isRequired,
   onTsDrop: PropTypes.func.isRequired,
   dragId: PropTypes.number,
-  isChecked: PropTypes.bool
+  isChecked: PropTypes.bool,
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -627,6 +651,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   updateTarget: TargetOperations.updateTarget(dispatch),
   deleteSavedTarget: TargetOperations.deleteSavedTarget(dispatch),
   deleteUnsavedTarget: TargetOperations.deleteUnsavedTarget(dispatch),
+  sendTarget: TargetOperations.sendTarget(dispatch),
 })
 
 export default connect(null, mapDispatchToProps)(MergeTarget)

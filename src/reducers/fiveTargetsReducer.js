@@ -10,7 +10,7 @@ import { fromJS, Map } from 'immutable'
 const initialState = fromJS({
   settings: fromJS({
     timestamp: -1,
-    numTargets: 5,
+    numTargets: 1,
     targets: [
       {
         shape: '',

@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux'
 
 const TargetSelector = ({ setTargetSighting }) => {
   const [selected, setSelected] = useState(-1)
-  const arr = [0, 1, 2, 3, 4]
 
   //access redux state
-  const savedTargets = useSelector((state) => state.targetReducer.get('saved'))
+  let savedTargets = useSelector((state) => state.targetReducer.get('saved'))
+  savedTargets = savedTargets.filter((t) => t.get('type') !== 'emergent')
 
   function saveTargetSighting(id) {
     const target = savedTargets.find((t) => t.get('airdropId') === id)
@@ -17,7 +17,8 @@ const TargetSelector = ({ setTargetSighting }) => {
 
   const RenderTarget = ({ target }) => {
     let alpha = target.get('alpha')
-    let alphaColor = (shape = target.get('alphaColor'))
+    // let alphaColor = (shape = target.get('alphaColor'))
+    let alphaColor = target.get('alphaColor')
     let shape = target.get('shape').toUpperCase()
     let shapeColor = target.get('shapeColor')
 

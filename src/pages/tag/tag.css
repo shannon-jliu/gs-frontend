@@ -137,6 +137,7 @@
   height: 100px;
   margin: 10px;
   padding: 0px;
+  cursor: pointer;
 }
 
 .tag .mask {
