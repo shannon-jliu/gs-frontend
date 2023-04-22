@@ -34,7 +34,7 @@ export class Merge extends Component {
     this.onDrop = this.onDrop.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
     this.renderTarget = this.renderTarget.bind(this)
-    this.mergeADLC = this.mergeADLC.bind(this)
+    // this.mergeADLC = this.mergeADLC.bind(this)
     this.updateCheck = this.updateCheck.bind(this)
   }
 
@@ -84,11 +84,11 @@ export class Merge extends Component {
         />
       </div>
       <br />
-      <div className='mergeButton'>
+      {/* <div className='mergeButton'>
         <a onClick={this.mergeADLC} className='waves-effect waves-light btn red' href='/#'>
           Merge ADLC Sightings
         </a>
-      </div>
+      </div> */}
     </div>
   }
 
@@ -99,28 +99,28 @@ export class Merge extends Component {
     this.setState(newLocal)
   }
 
-  mergeADLC() {
-    const targets = this.props.savedTargets
-    const adlcSightings = this.props.sightings.filter(
-      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') == 'ADLC'
-    )
-    adlcSightings.map((sighting) =>
-      targets.map((target) => {
-        if (sighting.get('shape') == target.get('shape')
-          && sighting.get('shapeColor') == target.get('shapeColor')
-          && sighting.get('alpha') == target.get('alpha')
-          && sighting.get('alphaColor') == target.get('alphaColor')) {
-          this.props.updateTargetSighting(
-            sighting,
-            fromJS({ target: target })
-          )
-        }
-      }))
-  }
+  // mergeADLC() {
+  //   const targets = this.props.savedTargets
+  //   const adlcSightings = this.props.sightings.filter(
+  //     (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') == 'adlc'
+  //   )
+  //   adlcSightings.map((sighting) =>
+  //     targets.map((target) => {
+  //       if (sighting.get('shape') == target.get('shape')
+  //         && sighting.get('shapeColor') == target.get('shapeColor')
+  //         && sighting.get('alpha') == target.get('alpha')
+  //         && sighting.get('alphaColor') == target.get('alphaColor')) {
+  //         this.props.updateTargetSighting(
+  //           sighting,
+  //           fromJS({ target: target })
+  //         )
+  //       }
+  //     }))
+  // }
 
   assignUnassignedSighting() {
     const unassignedSightings = this.props.sightings.filter(
-      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') !== 'adlc'
+      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts)
     )
     unassignedSightings.map((sighting) => this.matchSightingToTarget(sighting, this.props.savedTargets))
   }
