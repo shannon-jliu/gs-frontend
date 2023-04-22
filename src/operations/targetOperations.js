@@ -68,10 +68,10 @@ const TargetOperations = {
   //deletes all targets from database
   deleteAllTargets: (dispatch) => () => {
     const successCallback = () => {
-      SnackbarUtil.render('Deleted targets')
+      // SnackbarUtil.render('Deleted targets')
     }
     const failureCallback = () => {
-      SnackbarUtil.render('Failed to delete targets')
+      // SnackbarUtil.render('Failed to delete targets')
     }
 
     targetRequests.deleteAllTargets(successCallback, failureCallback)
@@ -91,7 +91,7 @@ const TargetOperations = {
         ])
 
         const successCallback = (data) => {
-          SnackbarUtil.render('Successfully saved target')
+          // SnackbarUtil.render('Successfully saved target')
           const recievedTarget = fromJS(data).set('type', 'alphanum')
           dispatch(
             action.succeedSaveTarget(recievedTarget, target.get('localId'))
@@ -108,7 +108,7 @@ const TargetOperations = {
         }
 
         const failureCallback = () => {
-          SnackbarUtil.render('Failed to save target')
+          // SnackbarUtil.render('Failed to save target')
           dispatch(action.failSaveTarget(target.get('localId')))
         }
 
