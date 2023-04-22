@@ -49,6 +49,7 @@ export class fiveTargetsSettings extends Component {
           alphaColor: '',
         },
       ],
+      dropdownSelected: false,
     }
     this.getSavedFields = this.getSavedFields.bind(this)
     this.getDisplayFields = this.getDisplayFields.bind(this)
@@ -56,12 +57,53 @@ export class fiveTargetsSettings extends Component {
     this.canSave = this.canSave.bind(this)
     this.save = this.save.bind(this)
     this.updateTargetInformation = this.updateTargetInformation.bind(this)
+
+    this.getSavedTargets()
+    this.setDisplayTargets(this.props.numTargets)
   }
+
 
   // Used by selector to work to initialize elements
   componentDidMount() {
     let elems = document.querySelectorAll('select')
     M.FormSelect.init(elems, {})
+
+    this.getSavedTargets()
+    this.setDisplayTargets(this.props.numTargets)
+  }
+
+  // Populates the target input fields based on database's saved targets
+  getSavedTargets() {
+    let sT = this.props.savedTargets
+    let savedTArray = Array.from(sT)
+    if (savedTArray) {
+      for (let i = 0; i < this.props.numTargets; i++) {
+        const elem = savedTArray[i]
+        if (elem && elem.size == 10 && this.state.targets[i]) {
+          this.state.targets[i].alpha = elem.get('alpha')
+          this.state.targets[i].alphaColor = elem.get('alphaColor')
+          this.state.targets[i].shape = elem.get('shape')
+          this.state.targets[i].shapeColor = elem.get('shapeColor')
+        }
+      }
+    }
+  }
+
+  // Hides target fields based on saved number of targets
+  setDisplayTargets(num) {
+    this.props.updateNumTargets(num)
+    for (let i = 5; i > num; i--) {
+      let idName = 'target' + i
+      if (document.getElementById(idName)) {
+        document.getElementById(idName).style.display = 'none'
+      }
+    }
+    for (let i = num; i > 0; i--) {
+      let idName = 'target' + i
+      if (document.getElementById(idName)) {
+        document.getElementById(idName).style.display = 'block'
+      }
+    }
   }
 
   // Checks if any previous and current values are the same.
@@ -295,27 +337,30 @@ export class fiveTargetsSettings extends Component {
         localId: Math.random() + ':' + Math.random() + ':' + Math.random(),
         airdropId: i,
       }
-      //second param is target sightings
       this.props.saveTarget(fromJS(target), fromJS([]))
     }
   }
 
   // updates the numTargets stored in the global state
   updateStateTargetsNum(evt) {
+    this.state.dropdownSelected = true
     this.props.updateNumTargets(evt.target.value)
   }
 
-  // saves updates the number of targets shown
+  // Saves the number of targets shown
   saveNumTargets() {
     let num = this.props.numTargets
-    this.props.updateNumTargets(num)
-    for (let i = 5; i > num; i--) {
-      let idName = 'target' + i
-      document.getElementById(idName).style.display = 'none'
-    }
-    for (let i = num; i > 0; i--) {
-      let idName = 'target' + i
-      document.getElementById(idName).style.display = 'block'
+    if (!this.state.dropdownSelected) num = 1
+
+    // Hides targets to display
+    this.setDisplayTargets(num)
+
+    // Clears other targets in the local state
+    for (let i = num; i < this.state.targets.length; i++) {
+      this.state.targets[i].alpha = ''
+      this.state.targets[i].alphaColor = ''
+      this.state.targets[i].shape = ''
+      this.state.targets[i].shapeColor = ''
     }
   }
 
@@ -342,52 +387,52 @@ export class fiveTargetsSettings extends Component {
               <option value="4">4</option>
               <option value="5">5</option>
             </select>
-            <button onClick={this.saveNumTargets.bind(this)}>Save</button>
+            <button onClick={this.saveNumTargets.bind(this)} className={saveClass}>Save</button>
 
             {this.state.targets.map((target, index) => {
               return (
                 <>
-                <div id={`target${index + 1}`}>
-                  <h5>Target #{index + 1}</h5>
-                  <div className="smallerRow">
-                    <div className="shapeColor">
-                      <ColorSelect
-                        onChange={(evt) =>
-                          this.updateTargetInformation(evt, target, index, 1)
-                        }
-                        value={target.shapeColor}
-                        title={'Shape Color'}
-                      />
-                    </div>
-                    <div className="shape">
-                      <ShapeSelect
-                        onChange={(evt) =>
-                          this.updateTargetInformation(evt, target, index, 2)
-                        }
-                        value={target.shape}
-                        title={'Shape'}
-                      />
-                    </div>
-                    <div className="alphaColor">
-                      <ColorSelect
-                        onChange={(evt) =>
-                          this.updateTargetInformation(evt, target, index, 3)
-                        }
-                        value={target.alphaColor}
-                        title={'Alpha Color'}
-                      />
-                    </div>
-                    <div className="alpha">
-                      <LetterSelect
-                        onChange={(evt) =>
-                          this.updateTargetInformation(evt, target, index, 4)
-                        }
-                        value={target.alpha}
-                        title={'Alphanumeric'}
-                      />
+                  <div id={`target${index + 1}`}>
+                    <h5>Target #{index + 1}</h5>
+                    <div className="smallerRow">
+                      <div className="shapeColor">
+                        <ColorSelect
+                          onChange={(evt) =>
+                            this.updateTargetInformation(evt, target, index, 1)
+                          }
+                          value={target.shapeColor}
+                          title={'Shape Color'}
+                        />
+                      </div>
+                      <div className="shape">
+                        <ShapeSelect
+                          onChange={(evt) =>
+                            this.updateTargetInformation(evt, target, index, 2)
+                          }
+                          value={target.shape}
+                          title={'Shape'}
+                        />
+                      </div>
+                      <div className="alphaColor">
+                        <ColorSelect
+                          onChange={(evt) =>
+                            this.updateTargetInformation(evt, target, index, 3)
+                          }
+                          value={target.alphaColor}
+                          title={'Alpha Color'}
+                        />
+                      </div>
+                      <div className="alpha">
+                        <LetterSelect
+                          onChange={(evt) =>
+                            this.updateTargetInformation(evt, target, index, 4)
+                          }
+                          value={target.alpha}
+                          title={'Alphanumeric'}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
                 </>
               )
             })}
@@ -407,6 +452,7 @@ export class fiveTargetsSettings extends Component {
 const mapStateToProps = (state) => ({
   settings: state.fiveTargetsReducer,
   numTargets: state.fiveTargetsReducer.get('settings').get('numTargets'),
+  savedTargets: state.targetReducer.get('saved'),
   //calls reducer to get thumbnails
   // thumbnails: getThumbnails(state.thumbnailReducer),
 })

@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const TargetButtonRow = ({
   type,
@@ -17,25 +17,25 @@ const TargetButtonRow = ({
       <a
         onClick={save}
         className={
-          (saveable ? "" : "grey lighten-2 ") + "waves-effect waves-light btn"
+          (saveable ? '' : 'grey lighten-2 ') + 'waves-effect waves-light btn'
         }
         href="/#"
       >
-        {isSaved ? "Update" : "Save"}
+        {isSaved ? 'Update' : 'Save'}
       </a>
     </div>
     {/*Delete button */}
     <div
       className={
-        type === "emergent" || offaxis || "alphanum"
-          ? "hidden"
-          : "button-container input-field col s5"
+        type === 'emergent' || offaxis || 'alphanum'
+          ? 'hidden'
+          : 'button-container input-field col s5'
       }
     >
       <a
         onClick={deleteFn}
         className={
-          (deletable ? "" : "grey lighten-2 ") + "waves-effect waves-light btn"
+          (deletable ? '' : 'grey lighten-2 ') + 'waves-effect waves-light btn'
         }
         href="/#"
       >
@@ -44,11 +44,11 @@ const TargetButtonRow = ({
     </div>
 
     {/*Send button */}
-    <div className={"button-container input-field col s5"}>
+    <div className={'button-container input-field col s5'}>
       <a
         onClick={send}
         className={
-          (deletable ? "" : "grey lighten-2 ") + "waves-effect waves-light btn"
+          (deletable ? '' : 'grey lighten-2 ') + 'waves-effect waves-light btn'
         }
         href="/#"
       >
@@ -56,7 +56,7 @@ const TargetButtonRow = ({
       </a>
     </div>
   </div>
-);
+)
 
 TargetButtonRow.propTypes = {
   type: PropTypes.string.isRequired,
@@ -66,6 +66,6 @@ TargetButtonRow.propTypes = {
   save: PropTypes.func.isRequired,
   deletable: PropTypes.bool.isRequired,
   deleteFn: PropTypes.func.isRequired,
-};
+}
 
-export default TargetButtonRow;
+export default TargetButtonRow

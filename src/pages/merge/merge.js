@@ -8,11 +8,13 @@ import MergeTarget from './mergeTarget'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import TargetOperations from '../../operations/targetOperations'
 import SnackbarUtil from '../../util/snackbarUtil.js'
+import Switch from './components/Switch.js'
 
 import { MILLISECONDS_BETWEEN_MERGE_PAGE_POLLS } from '../../constants/constants.js'
 import { AUTH_TOKEN_ID } from '../../constants/constants.js'
 
 import './merge.css'
+import { TargetSightingRequests } from '../../util/sendApi'
 
 export class Merge extends Component {
   constructor(props) {
@@ -22,6 +24,7 @@ export class Merge extends Component {
       // if a target sighting is being dragged, the entire object is copied to this variable
       // when no sighting is being dragged, this is null
       dragSighting: null,
+      adlcChecked: false
     }
 
     this.createNewTarget = this.createNewTarget.bind(this)
@@ -31,6 +34,8 @@ export class Merge extends Component {
     this.onDrop = this.onDrop.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
     this.renderTarget = this.renderTarget.bind(this)
+    this.mergeADLC = this.mergeADLC.bind(this)
+    this.updateCheck = this.updateCheck.bind(this)
   }
 
   // every 3 seconds, the page polls the server for the current targets and target sightings
@@ -67,12 +72,55 @@ export class Merge extends Component {
       .map(this.renderSighting)
       .toJSON()
 
-    return <div className="sightings">{renderedUnassignedSightings}</div>
+    return <div className="sightings">{renderedUnassignedSightings}
+      <br />
+      <div className="adlcMdlcSwitch">
+        <Switch offState={'mdlc'}
+          myRef={ref => (this.capturingInput = ref)}
+          onChange={this.updateCheck}
+          id={'adlc or mdlc'}
+          checked={this.state.adlcChecked}
+          onState={'adlc'}
+        />
+      </div>
+      <br />
+      <div className='mergeButton'>
+        <a onClick={this.mergeADLC} className='waves-effect waves-light btn red' href='/#'>
+          Merge ADLC Sightings
+        </a>
+      </div>
+    </div>
+  }
+
+  updateCheck() {
+    let newLocal = _.cloneDeep(this.state)
+    let past = newLocal.adlcChecked
+    newLocal.adlcChecked = !past
+    this.setState(newLocal)
+  }
+
+  mergeADLC() {
+    const targets = this.props.savedTargets
+    const adlcSightings = this.props.sightings.filter(
+      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') == 'ADLC'
+    )
+    adlcSightings.map((sighting) =>
+      targets.map((target) => {
+        if (sighting.get('shape') == target.get('shape')
+          && sighting.get('shapeColor') == target.get('shapeColor')
+          && sighting.get('alpha') == target.get('alpha')
+          && sighting.get('alphaColor') == target.get('alphaColor')) {
+          this.props.updateTargetSighting(
+            sighting,
+            fromJS({ target: target })
+          )
+        }
+      }))
   }
 
   assignUnassignedSighting() {
     const unassignedSightings = this.props.sightings.filter(
-      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts)
+      (ts) => ts.get('type') === 'alphanum' && !this.isSightingAssigned(ts) && ts.get('creator').get('username') !== 'adlc'
     )
     unassignedSightings.map((sighting) => this.matchSightingToTarget(sighting, this.props.savedTargets))
   }
@@ -207,6 +255,7 @@ export class Merge extends Component {
         onTsDragEnd={this.onDragEnd}
         onTsDrop={this.onDrop}
         dragId={dragId}
+        isChecked={this.state.adlcChecked}
       />
     )
   }

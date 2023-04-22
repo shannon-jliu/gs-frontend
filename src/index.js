@@ -14,7 +14,6 @@ import Tag from './pages/tag/tag.js'
 import Settings from './pages/settings/settings.js'
 import Merge from './pages/merge/merge.js'
 import Logs from './pages/logs/logs.js'
-import Intsys from './pages/intsys/intsys.js'
 
 import store from './store.js'
 import AuthUtil from './util/authUtil.js'
@@ -66,7 +65,6 @@ const GroundServerRouter = () =>
             <Route path="/settings" render={() => requireAuth(<Settings />)} />
             <Route path="/merge" render={() => requireAuth(<Merge />)} />
             <Route path="/logs" render={() => requireAuth(<Logs />)} />
-            <Route path="/intsys" render={() => requireAuth(<Intsys />)} />
             <Redirect from="*" to="/login" />
           </Switch>
         </BrowserRouter>

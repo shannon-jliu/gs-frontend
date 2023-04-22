@@ -96,6 +96,8 @@ export class MergeTarget extends Component {
         {this.renderTitleIfSpecialType()}
         {this.renderAttributesSection()}
         {this.renderSightingPreviewRow()}
+        {/* {this.renderADLCSightingPreviewRow()} */}
+        {/* <div className="adlc-images"><label>{this.props.checked}</label></div> */}
       </div>
     )
   }
@@ -233,14 +235,16 @@ export class MergeTarget extends Component {
       // </div>
       <div className="row">
         <p>
-          {this.state.shapeColor} {this.state.shape} <br />
-          {this.state.alphaColor} {this.state.alpha}
+          {this.state.shapeColor} {this.state.shape}
+          <br /> with {this.state.alphaColor} {this.state.alpha}{' '}
         </p>
-        <>
-          Latitude: {this.state.latitude}
-          <br />
-          Longitude: {this.state.longitude}
-        </>
+        latitude: {this.state.latitude}
+        longitude: {this.state.longitude}
+        {/* <TargetGeotagFields
+          latitude={'' + this.state.latitude}
+          longitude={'' + this.state.longitude}
+          getHandler={this.getHandler}
+        /> */}
       </div>
     )
   }
@@ -264,11 +268,38 @@ export class MergeTarget extends Component {
   }
 
   renderSightingPreviewRow() {
+    if (this.props.isChecked) {
+      return this.renderADLCSightingPreviewRow()
+    } else {
+      return this.renderMDLCSightingPreviewRow()
+    }
+  }
+
+  renderMDLCSightingPreviewRow() {
     // toJSON is a shallow conversion (preserving immutable html attributes), while toJS would be deep
     const sightingPreviews = this.props.sightings
+      .filter((ts) => ts.get('creator').get('username') != 'adlc')
       .map(this.renderSightingPreview)
       .toJSON()
-    return <div className="sighting-images">{sightingPreviews}</div>
+    return (
+      <div className="sighting-images">
+        <label>mdlc images</label>
+        <div>{sightingPreviews}</div>
+      </div>
+    )
+  }
+
+  renderADLCSightingPreviewRow() {
+    const sightingPreviews = this.props.sightings
+      .filter((ts) => ts.get('creator').get('username') == 'adlc')
+      .map(this.renderSightingPreview)
+      .toJSON()
+    return (
+      <div className="adlc-images">
+        <label>adlc images</label>
+        <div>{sightingPreviews}</div>
+      </div>
+    )
   }
 
   renderSightingPreview(sighting) {
@@ -612,6 +643,7 @@ MergeTarget.propTypes = {
   onTsDragEnd: PropTypes.func.isRequired,
   onTsDrop: PropTypes.func.isRequired,
   dragId: PropTypes.number,
+  isChecked: PropTypes.bool,
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

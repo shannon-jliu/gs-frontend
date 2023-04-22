@@ -79,6 +79,7 @@ const TargetSightingOperations = {
         _.omit(sighting.toJS(), ['localId', 'type']),
         { creator: creator })
 
+      //TODO: not hitting this callback, which deletes the local sighting that contains "pending"
       const successCallback = data => {
         SnackbarUtil.render('Succesfully saved target sighting')
         const receivedSighting = fromJS(data).set('type', sighting.get('type'))
