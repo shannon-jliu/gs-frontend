@@ -64,6 +64,8 @@ const TargetSightingOperations = {
     }
   ),
 
+// TODO: issue here doesn't go to successCallback - find way to fix this... (doesn't call and doesn't filter..)
+
   saveTargetSighting: dispatch => (
     sighting => {
       dispatch(action.startSaveTargetSighting(sighting.get('localId')))

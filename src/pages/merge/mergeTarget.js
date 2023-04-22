@@ -238,8 +238,8 @@ export class MergeTarget extends Component {
           {this.state.shapeColor} {this.state.shape}
           <br /> with {this.state.alphaColor} {this.state.alpha}{' '}
         </p>
-        latitude: {this.state.latitude} <br></br>
-        longitude: {this.state.longitude}
+        latitude: {this.state.latitude}
+        <br />longitude: {this.state.longitude}
         {/* <TargetGeotagFields
           latitude={'' + this.state.latitude}
           longitude={'' + this.state.longitude}
