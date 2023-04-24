@@ -23,10 +23,12 @@ const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd, onDrag }) =
         onDrag={onDrag}
         dragging={dragging} />
       <div className="fact-container">
-        <div className="fact">Shape: {shape}</div>
+        <div className="fact">{shapeColor} {shape} </div>
+        <div className="fact">with {alphaColor} {sighting.get('alpha')}</div>
+        {/* <div className="fact">Shape: {shape}</div>
         <div className="fact">Shape Color: {shapeColor}</div>
         <div className="fact">Alpha: {sighting.get('alpha')}</div>
-        <div className="fact">Alpha Color: {alphaColor}</div>
+        <div className="fact">Alpha Color: {alphaColor}</div> */}
       </div>
     </div>
   )

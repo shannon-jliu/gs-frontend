@@ -72,7 +72,7 @@ export class Merge extends Component {
       .map(this.renderSighting)
       .toJSON()
 
-    return <div className="sightings">{renderedUnassignedSightings}
+    return <div className="sightings">
       <br />
       <div className="adlcMdlcSwitch">
         <Switch offState={'mdlc'}
@@ -84,6 +84,8 @@ export class Merge extends Component {
         />
       </div>
       <br />
+
+      {renderedUnassignedSightings}
       {/* <div className='mergeButton'>
         <a onClick={this.mergeADLC} className='waves-effect waves-light btn red' href='/#'>
           Merge ADLC Sightings

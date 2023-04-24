@@ -20,12 +20,12 @@
 }
 
 .merge .adlcMdlcSwitch {
-  margin-left: 25px;
+  margin-left: 50px;
 }
 
 .merge .sightings {
   float: left;
-  width: 200px;
+  width: 260px;
   overflow: hidden;
   padding: 10px;
   box-sizing: border-box;

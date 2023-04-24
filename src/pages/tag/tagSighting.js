@@ -198,7 +198,9 @@ export class TagSighting extends Component {
     i.src = GROUND_SERVER_URL + imageUrl
   }
 
-  save() {
+  save(e) {
+    //prevents refresh
+    e.preventDefault()
     const s = this.state
     if (this.canSave()) {
       if (s.type === 'roi') {
