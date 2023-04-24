@@ -307,7 +307,10 @@ export class MergeTarget extends Component {
       <MergeSightingPreview
         key={this.getSightingPreviewKey(sighting)}
         onClick={() => this.selectSightingAsThumbnail(sighting)}
-        isThumbnail={sighting.get('id') === this.state.thumbnailTsid}
+        // store this id in global state and then maybe in each sighting preview if it is the one id then red
+        // and this way only one id is stored (default id = -1 aka none selected...)
+        // isThumbnail={sighting.get('id') === this.state.thumbnailTsid}
+        isThumbnail={sighting.get('id') === this.props.selectedThumbId}
         isMerged={true}
         sighting={sighting}
         onDragStart={
@@ -616,6 +619,11 @@ export class MergeTarget extends Component {
   }
 
   selectSightingAsThumbnail(sighting) {
+    this.props.updateSelectedThum(sighting.get('id'))
+    console.log("attempting to print selected thumbnail id??")
+    console.log(this.props.selectedThumbId) //undefined??
+    // once this is updated in global check in the target thing if the ids are the same add the class
+
     this.setState({ thumbnailTsid: sighting.get('id') })
     this.save()
   }
@@ -652,6 +660,21 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   deleteSavedTarget: TargetOperations.deleteSavedTarget(dispatch),
   deleteUnsavedTarget: TargetOperations.deleteUnsavedTarget(dispatch),
   sendTarget: TargetOperations.sendTarget(dispatch),
+  
+  // storing id of selected thumbnail globally
+  updateSelectedThum: TargetOperations.updateSelectedThum(dispatch),
 })
 
-export default connect(null, mapDispatchToProps)(MergeTarget)
+const mapStateToProps = (state) => ({
+  selectedThumbId: state.targetReducer.get('thumbId'),
+})
+
+// const mapStateToProps = (state) => ({
+//   settings: state.fiveTargetsReducer,
+//   numTargets: state.fiveTargetsReducer.get('settings').get('numTargets'),
+//   savedTargets: state.targetReducer.get('saved'),
+//   //calls reducer to get thumbnails
+//   // thumbnails: getThumbnails(state.thumbnailReducer),
+// })
+
+export default connect(mapStateToProps, mapDispatchToProps)(MergeTarget)

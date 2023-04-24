@@ -54,3 +54,8 @@ export const addTargetsFromServer = (targets) => ({
 export const clearState = () => ({
   type: 'CLEAR_STATE',
 })
+
+export const updateSelectedThum = (thumbId) => ({
+  type: 'UPDATE_SELECTED_THUM',
+  thumbId,
+})

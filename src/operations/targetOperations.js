@@ -156,7 +156,11 @@ const TargetOperations = {
       SnackbarUtil.render('Failed to send target to autopilot')
     }
     targetRequests.sendTarget(target, successCallback, failureCallback)
-  }
+  },
+
+  updateSelectedThum: (dispatch) => (thumbId) => {
+    dispatch(action.updateSelectedThum(thumbId))
+  },
 }
 
 export default TargetOperations

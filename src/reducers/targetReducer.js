@@ -14,6 +14,7 @@ import _ from 'lodash'
 const initialState = fromJS({
   local: [],
   saved: [],
+  thumbId: -1,
 })
 
 const targetReducer = (state = initialState, action) => {
@@ -38,6 +39,9 @@ const targetReducer = (state = initialState, action) => {
     return addTargetsFromServer(state, action.targets)
   case 'CLEAR_STATE':
     return initialState
+  case 'UPDATE_SELECTED_THUM':
+    // do something here to store..
+    return state.set('thumbId', action.thumbId)
   default:
     return state
   }
