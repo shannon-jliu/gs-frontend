@@ -27,7 +27,7 @@ export class TagSighting extends Component {
     )
     this.state = {
       type:
-        sighting.get('type') || (this.props.isTracking ? 'alphanum' : 'roi'),
+        sighting.get('type') || ('alphanum'),
       description: sighting.get('description') || '',
       shape: sighting.get('shape') || '',
       shapeColor: sighting.get('shapeColor') || '',
