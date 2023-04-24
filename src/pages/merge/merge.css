@@ -48,6 +48,7 @@
   cursor: auto;
   flex-direction: column;
   justify-content: center;
+  font-size: 0.98em;
 }
 
 .merge .targets {
