@@ -177,7 +177,8 @@ export class Tag extends Component {
       'next ' + btnClass + (assignment.get('loading') ? ' disabled' : '')
     return (
       <div className="tag">
-        <div className="flex-row">
+        {/* uncoment below if u want the sliders back*/}
+        {/* <div className="flex-row">
           <ImageTools
             getHandler={this.getHandler}
             reset={this.reset}
@@ -185,7 +186,7 @@ export class Tag extends Component {
             contrast={this.state.contrast}
             saturation={this.state.saturation}
           />
-        </div>
+        </div> */}
         <div className="detect">
           <div className="tag-image card">
             <ImageViewer
