@@ -13,7 +13,9 @@ const TargetButtonRow = ({
 }) => (
   <div className="row">
     {/*Save button */}
-    <div className="button-container input-field col s6">
+    <div className="hidden">
+
+      {/* <div className="button-container input-field col s6"> */}
       <a
         onClick={save}
         className={
