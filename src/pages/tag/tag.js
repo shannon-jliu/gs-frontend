@@ -200,7 +200,8 @@ export class Tag extends Component {
         </div>
         <div className="classify">
           <div className="sightings">
-            {mdlcSightings.map((s) => this.renderSighting(s, isTracking))}
+            {(mdlcSightings.filter(sighting => !sighting.has('id'))).map((s) => this.renderSighting(s, isTracking))}
+            {(mdlcSightings.filter(sighting => sighting.has('id'))).map((s) => this.renderSighting(s, isTracking))}
           </div>
         </div>
         <div className="count"> {count} </div>

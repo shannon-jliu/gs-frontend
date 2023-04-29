@@ -96,8 +96,6 @@ export class MergeTarget extends Component {
         {this.renderTitleIfSpecialType()}
         {this.renderAttributesSection()}
         {this.renderSightingPreviewRow()}
-        {/* {this.renderADLCSightingPreviewRow()} */}
-        {/* <div className="adlc-images"><label>{this.props.checked}</label></div> */}
       </div>
     )
   }
