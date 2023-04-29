@@ -119,69 +119,6 @@ export class fiveTargetsSettings extends Component {
     return check
   }
 
-  // Checks if items updated, and if they all did, sets the state to the updated value.
-  // componentDidUpdate(prevProps) {
-  //   let targets = this.props.settings.get('settings').get('targets')
-  //   if (prevProps.settings.get('settings').get('targets') !== undefined) {
-  //     if (!_.isEqual(prevProps, this.props) && this.compareValues(targets)) {
-  //       this.setState({
-  //         targets: [
-  //           {
-  //             shape: this.props.settings.get('settings').get('targets')[0]
-  //               .shape,
-  //             shapeColor: this.props.settings.get('settings').get('targets')[0]
-  //               .shapeColor,
-  //             alpha: this.props.settings.get('settings').get('targets')[0]
-  //               .alpha,
-  //             alphaColor: this.props.settings.get('settings').get('targets')[0]
-  //               .alphaColor,
-  //           },
-  //           {
-  //             shape: this.props.settings.get('settings').get('targets')[1]
-  //               .shape,
-  //             shapeColor: this.props.settings.get('settings').get('targets')[1]
-  //               .shapeColor,
-  //             alpha: this.props.settings.get('settings').get('targets')[1]
-  //               .alpha,
-  //             alphaColor: this.props.settings.get('settings').get('targets')[1]
-  //               .alphaColor,
-  //           },
-  //           {
-  //             shape: this.props.settings.get('settings').get('targets')[2]
-  //               .shape,
-  //             shapeColor: this.props.settings.get('settings').get('targets')[2]
-  //               .shapeColor,
-  //             alpha: this.props.settings.get('settings').get('targets')[2]
-  //               .alpha,
-  //             alphaColor: this.props.settings.get('settings').get('targets')[2]
-  //               .alphaColor,
-  //           },
-  //           {
-  //             shape: this.props.settings.get('settings').get('targets')[3]
-  //               .shape,
-  //             shapeColor: this.props.settings.get('settings').get('targets')[3]
-  //               .shapeColor,
-  //             alpha: this.props.settings.get('settings').get('targets')[3]
-  //               .alpha,
-  //             alphaColor: this.props.settings.get('settings').get('targets')[3]
-  //               .alphaColor,
-  //           },
-  //           {
-  //             shape: this.props.settings.get('settings').get('targets')[4]
-  //               .shape,
-  //             shapeColor: this.props.settings.get('settings').get('targets')[4]
-  //               .shapeColor,
-  //             alpha: this.props.settings.get('settings').get('targets')[4]
-  //               .alpha,
-  //             alphaColor: this.props.settings.get('settings').get('targets')[4]
-  //               .alphaColor,
-  //           },
-  //         ],
-  //       })
-  //     }
-  //   }
-  // }
-
   AssignUndefined(x) {
     let targets = [
       { shape: '', shapeColor: '', alpha: '', alphaColor: '' },
@@ -267,40 +204,6 @@ export class fiveTargetsSettings extends Component {
     if (this.canSave()) {
       let newFields = this.getNewFields()
       this.props.updateSettingsStart(newFields)
-      // this.setState({
-      //   targets: [
-      //     {
-      //       shape: "",
-      //       shapeColor: "",
-      //       alpha: "",
-      //       alphaColor: "",
-      //     },
-      //     {
-      //       shape: "",
-      //       shapeColor: "",
-      //       alpha: "",
-      //       alphaColor: "",
-      //     },
-      //     {
-      //       shape: "",
-      //       shapeColor: "",
-      //       alpha: "",
-      //       alphaColor: "",
-      //     },
-      //     {
-      //       shape: "",
-      //       shapeColor: "",
-      //       alpha: "",
-      //       alphaColor: "",
-      //     },
-      //     {
-      //       shape: "",
-      //       shapeColor: "",
-      //       alpha: "",
-      //       alphaColor: "",
-      //     },
-      //   ],
-      // });
     }
     this.createTargets()
   }

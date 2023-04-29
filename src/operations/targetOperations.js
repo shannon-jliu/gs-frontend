@@ -92,6 +92,7 @@ const TargetOperations = {
 
         const successCallback = (data) => {
           // SnackbarUtil.render('Successfully saved target')
+          SnackbarUtil.render('Successfully saved targets')
           const recievedTarget = fromJS(data).set('type', 'alphanum')
           dispatch(
             action.succeedSaveTarget(recievedTarget, target.get('localId'))
@@ -108,6 +109,7 @@ const TargetOperations = {
         }
 
         const failureCallback = () => {
+          SnackbarUtil.render('Failed to save targets')
           // SnackbarUtil.render('Failed to save target')
           dispatch(action.failSaveTarget(target.get('localId')))
         }
