@@ -135,7 +135,9 @@ export class Merge extends Component {
         && sighting.get('alphaColor') == target.get('alphaColor')) {
         this.props.updateTargetSighting(
           sighting,
-          fromJS({ target: target })
+          fromJS({
+            target: target
+          })
         )
         // sighting.set('target', target)
       }
@@ -275,7 +277,13 @@ export class Merge extends Component {
         // this.props.deleteSavedTargetSighting(target)
         this.props.updateTargetSighting(
           this.state.dragSighting,
-          fromJS({ target })
+          fromJS({
+            target: target,
+            shape: target.get('shape'),
+            shapeColor: target.get('shapeColor'),
+            alpha: target.get('alpha'),
+            alphaColor: target.get('alphaColor')
+          })
         )
       }
     }

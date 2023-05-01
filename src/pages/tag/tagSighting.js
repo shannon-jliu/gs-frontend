@@ -18,6 +18,7 @@ import TargetSightingOperations from '../../operations/targetSightingOperations'
 
 import Radio from './components/Radio.js'
 import TargetSelector from './components/TargetSelector'
+import SnackbarUtil from '../../util/snackbarUtil'
 
 export class TagSighting extends Component {
   constructor(props) {
@@ -237,12 +238,41 @@ export class TagSighting extends Component {
         }
         if (this.props.sighting.has('id')) {
           // if it has an id, then it has been saved and needs to be updated
-          this.props.updateTargetSighting(this.props.sighting, attr)
+          // this.props.updateTargetSighting(this.props.sighting, fromJS({
+          //   shape: s.shape,
+          //   shapeColor: s.shapeColor,
+          //   alpha: s.alpha,
+          //   alphaColor: s.alphaColor
+          // }))
+          this.matchSightingToTarget(this.props.sighting, this.props.savedTargets)
         } else {
           this.props.saveTargetSighting(newSighting)
         }
       }
     }
+  }
+
+  matchSightingToTarget(sighting, targets) {
+    const s = this.state
+    targets.map((target) => {
+      if (s.shape == target.get('shape')
+        && s.shapeColor == target.get('shapeColor')
+        && s.alpha == target.get('alpha')
+        && s.alphaColor == target.get('alphaColor')) {
+        this.props.updateTargetSighting(
+          sighting,
+          fromJS({
+            target: target,
+            shape: s.shape,
+            shapeColor: s.shapeColor,
+            alpha: s.alpha,
+            alphaColor: s.alphaColor
+          })
+        )
+
+        // sighting.set('target', target)
+      }
+    })
   }
 
   deleteSighting() {
@@ -316,6 +346,12 @@ export class TagSighting extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  sightings: state.targetSightingReducer.get('saved'),
+  savedTargets: state.targetReducer.get('saved'),
+  localTargets: state.targetReducer.get('local'),
+})
+
 TagSighting.propTypes = {
   sighting: PropTypes.object.isRequired,
   imageUrl: PropTypes.string.isRequired,
@@ -335,4 +371,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     TargetSightingOperations.deleteSavedROISighting(dispatch),
 })
 
-export default connect(null, mapDispatchToProps)(TagSighting)
+export default connect(mapStateToProps, mapDispatchToProps)(TagSighting)

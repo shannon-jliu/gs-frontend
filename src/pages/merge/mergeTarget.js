@@ -224,13 +224,6 @@ export class MergeTarget extends Component {
     }
 
     return (
-      // <div className="row">
-      //   <TargetGeotagFields
-      //     latitude={'' + this.state.latitude}
-      //     longitude={'' + this.state.longitude}
-      //     getHandler={this.getHandler}
-      //   />
-      // </div>
       <div className="row">
         <p>
           {this.state.shapeColor} {this.state.shape}
@@ -238,11 +231,6 @@ export class MergeTarget extends Component {
         </p>
         latitude: {this.state.latitude}
         <br />longitude: {this.state.longitude}
-        {/* <TargetGeotagFields
-          latitude={'' + this.state.latitude}
-          longitude={'' + this.state.longitude}
-          getHandler={this.getHandler}
-        /> */}
       </div>
     )
   }
