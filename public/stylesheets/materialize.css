@@ -4281,6 +4281,11 @@ nav.nav-extended {
   height: auto;
 }
 
+nav .nav-user {
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
 nav.nav-extended .nav-wrapper {
   min-height: 56px;
   height: auto;
@@ -4307,6 +4312,9 @@ nav i.material-icons {
 nav .nav-wrapper {
   position: relative;
   height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
 }
 
 @media only screen and (min-width: 993px) {
@@ -4329,11 +4337,11 @@ nav .sidenav-trigger i {
 }
 
 nav .brand-logo {
-  position: absolute;
   color: #fff;
   display: inline-block;
-  font-size: 2.1rem;
-  padding: 0;
+  font-size: 1.1rem;
+  margin: 1rem;
+  line-height: 1em;
 }
 
 nav .brand-logo.center {

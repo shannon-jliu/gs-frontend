@@ -6,10 +6,10 @@ const ImageSighting = ({ heightWidth, imageUrl, imgWidth, imgHeight, sighting })
   const imgscale = heightWidth / sighting.get('width')
   const bgSize = imgWidth * imgscale + 'px ' + imgHeight * imgscale + 'px'
   /* The following calculations for x and y are calculating the offset of the fully-sized/uncompressed image that
-    will be displayed as the background image for the actual image sighting. The 300/2 is dealing with moving
-    the background image relative to the center of the image sighting, which is 300px by 300px. */
-  let x = 300/2 - sighting.get('pixelx') * imgscale
-  let y = 300/2 - sighting.get('pixely') * imgscale
+    will be displayed as the background image for the actual image sighting. The 315/2 is dealing with moving
+    the background image relative to the center of the image sighting, which is 315px by 315px. */
+  let x = this.props.heightWidth/2 - sighting.get('pixelx') * imgscale
+  let y = this.props.heightWidth/2 - sighting.get('pixely') * imgscale
   const drawOrientationLine = sighting.has('radiansFromTop')
   const orientationX = radius + radius * Math.sin(sighting.get('radiansFromTop'))
   const orientationY = heightWidth - (radius + radius * Math.cos(sighting.get('radiansFromTop')))

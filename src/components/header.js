@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 
-import AuthUtil from '../util/authUtil'
+import AuthUtil, { UserType } from '../util/authUtil'
 
 import {
   LOGIN_PAGE_ID,
@@ -15,15 +15,26 @@ import {
 } from '../constants/links.js'
 
 const LINKS = Object.freeze({
-  'Login': {name: 'Login', key: LOGIN_PAGE_ID, href: '/login', 'operator': false},
-  'Logout': {name: 'Logout', key: LOGOUT_PAGE_ID, 'operator': false},
-  'Tag': {name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag', 'operator': false},
-  'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'operator': true},
-  'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'operator': false},
-  'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false},
-  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false},
+  'Login': { name: 'Login', key: LOGIN_PAGE_ID, href: '/login', 'operator': false },
+  'Logout': { name: 'Logout', key: LOGOUT_PAGE_ID, 'operator': false },
+  'Tag': { name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag', 'operator': false },
+  'Merging': { name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'operator': true },
+  'ADLC': { name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'operator': false },
+  'Settings': { name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false },
+  'Logs': { name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false },
 })
 
+
+function getOperator(userType) {
+  switch (userType) {
+    case UserType.Operator:
+      return "Operator"
+    case UserType.IntSys:
+      return "IntSys Tagger"
+    default:
+      return "Image Tagger"
+  }
+}
 
 export class Header extends Component {
   // try to pass in the current page as a prop so we can set its property to 'active'
@@ -31,17 +42,20 @@ export class Header extends Component {
     super(props)
     this.props = props
     this.authenticated = this.props.authenticated
-    this.operator = this.props.operator
+    this.userType = this.props.userType
   }
 
   render() {
-    const linksToShow = _.filter(Object.keys(LINKS), key => !LINKS[key].operator || this.operator)
+    const linksToShow = _.filter(Object.keys(LINKS), key => !LINKS[key].operator || this.userType == UserType.Operator)
     return (
       <div>
         <nav>
           <div className="red nav-wrapper">
-            <div className="brand-logo" style={{marginLeft:10}}>
+            <div className="brand-logo">
               <a href="/#"><img src={require('../img/cuair_logo.png')} alt='' /></a>
+            </div>
+            <div className="nav-user">
+              {getOperator(this.userType)}
             </div>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
               {

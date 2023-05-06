@@ -11,6 +11,8 @@ import gimbalSettingsOperations from '../../operations/gimbalSettingsOperations.
 import assignmentOperations from '../../operations/assignmentOperations.js'
 
 import Modes from './components/Modes.js'
+import { TargetSightingGetRequests as GetRequests } from '../../util/receiveApi.js'
+import SnackbarUtil from '../../util/snackbarUtil.js'
 
 import './settings.css'
 
@@ -22,6 +24,7 @@ export class Settings extends Component {
     }
 
     this.clearMdlc = this.clearMdlc.bind(this)
+    this.downloadSightings = this.downloadSightings.bind(this)
     this.changeCameraGimbalMode = this.changeCameraGimbalMode.bind(this)
   }
 
@@ -45,6 +48,28 @@ export class Settings extends Component {
     }
   }
 
+  downloadSightings(e) {
+    e.preventDefault()
+    const alphanumSuccess = data => {
+      let filename = "target-annotations" + Date.now() + ".json";
+      let contentType = "application/json;charset=utf-8;";
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        var blob = new Blob([decodeURIComponent(encodeURI(JSON.stringify(data)))], { type: contentType });
+        navigator.msSaveOrOpenBlob(blob, filename);
+      } else {
+        var a = document.createElement('a');
+        a.download = filename;
+        a.href = 'data:' + contentType + ',' + encodeURIComponent(JSON.stringify(data));
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    }
+    const alphanumFail = () => SnackbarUtil.render('Failed to download target sightings.')
+    GetRequests.getAlphanumSightings(alphanumSuccess, alphanumFail)
+  }
+
   changeCameraGimbalMode(newCameraGimbalMode) {
     this.setState({cameraGimbalMode: newCameraGimbalMode})
   }
@@ -53,6 +78,11 @@ export class Settings extends Component {
     return (
       <React.Fragment>
         <div id='containerContainer'>
+          <div id='clearButtonContainer' className="row">
+          <a onClick={this.downloadSightings} className='waves-effect waves-light btn green' href='/#'>
+              Download Sightings
+          </a>
+          </div>
           <div id='clearButtonContainer' className="row">
             <a onClick={this.clearMdlc} className='waves-effect waves-light btn red' href='/#'>
               Clear MDLC

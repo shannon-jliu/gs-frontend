@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 export const TargetSightingRequests = {
   deleteTargetSighting: function(isAlphanum, id, successCallback, failureCallback) {
-    $.ajax('/api/v1/' + (isAlphanum ? 'alphanum' : 'emergent') + '_target_sighting/' + id, {method: 'DELETE'})
+    $.ajax('/api/v1/' + (isAlphanum ? 'alphanum' : 'emergent') + '_target_sighting/' + id, {method: 'DELETE', dataType: 'text'})
       .done(successCallback)
       .fail(failureCallback)
   },
