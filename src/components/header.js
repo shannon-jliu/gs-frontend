@@ -15,13 +15,13 @@ import {
 } from '../constants/links.js'
 
 const LINKS = Object.freeze({
-  'Login': { name: 'Login', key: LOGIN_PAGE_ID, href: '/login', 'operator': false },
-  'Logout': { name: 'Logout', key: LOGOUT_PAGE_ID, 'operator': false },
-  'Tag': { name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag', 'operator': false },
-  'Merging': { name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'operator': true },
-  'ADLC': { name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'operator': false },
-  'Settings': { name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false },
-  'Logs': { name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false },
+  'Login': {name: 'Login', key: LOGIN_PAGE_ID, href: '/login', 'operator': false},
+  'Logout': {name: 'Logout', key: LOGOUT_PAGE_ID, 'operator': false},
+  'Tag': {name: 'Tagging', key: TAGGING_PAGE_ID, href: '/tag', 'operator': false},
+  'Merging': {name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'operator': true},
+  'ADLC': {name: 'ADLC', key: ADLC_PAGE_ID, href: '#', 'operator': false},
+  'Settings': {name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false},
+  'Logs': {name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false},
 })
 
 
