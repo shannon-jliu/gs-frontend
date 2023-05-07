@@ -13,7 +13,7 @@ export class App extends Component {
     super(props)
     this.props = props
     this.authenticated = AuthUtil.authenticated(this.props.utilSettings.get('usersEnabled')) && window.location.pathname !== '/login'
-    this.operator = AuthUtil.operator(this.props.utilSettings.get('usersEnabled')) && window.location.pathname !== '/login'
+    this.userType = window.location.pathname == '/login'? null: AuthUtil.userType(this.props.utilSettings.get('usersEnabled'))
   }
 
   componentDidMount() {
@@ -23,7 +23,7 @@ export class App extends Component {
   render() {
     return (
       <div>
-        <Header authenticated={this.authenticated} operator={this.operator}/>
+        <Header authenticated={this.authenticated} userType={this.userType}/>
         {
           this.props.main
         }

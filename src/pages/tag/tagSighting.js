@@ -6,7 +6,7 @@ import M from 'materialize-css'
 import _ from 'lodash'
 import localforage from 'localforage'
 
-import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting } from './components'
+import { AlphanumFields, EmergentFields, ButtonRow, ImageSighting, ShapeTagger } from './components'
 import { TypeSelect } from '../../components/target'
 import { GROUND_SERVER_URL } from '../../constants/links'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
@@ -16,7 +16,7 @@ export class TagSighting extends Component {
     super(props)
     const sighting = this.props.sighting.merge(this.props.sighting.get('pending'))
     this.state = {
-      type: sighting.get('type') || (this.props.isTracking ? 'alphanum' : 'roi'),
+      type: sighting.get('type') || (this.props.isTracking || this.props.isIntsys ? 'alphanum' : 'roi'),
       description: sighting.get('description') || '',
       shape: sighting.get('shape') || '',
       shapeColor: sighting.get('shapeColor') || '',
@@ -24,18 +24,31 @@ export class TagSighting extends Component {
       alphaColor: sighting.get('alphaColor') || '',
       offaxis: sighting.get('offaxis') || false,
       mdlcClassConf: sighting.get('mdlcClassConf') || '',
+      points: sighting.get('points')? sighting.get('points').toJS(): [],
       imgSrc: '',
       imgWidth: -1,
       imgHeight: -1,
       compressedWidth: -1,
-      compressedHeight: -1
+      compressedHeight: -1,
+      shapeCompleted: sighting.get('points') !== undefined
     }
     this.save = this.save.bind(this)
+    this.setPoints = this.setPoints.bind(this)
+    this.setShapeCompleted = this.setShapeCompleted.bind(this)
     this.canSave = this.canSave.bind(this)
     this.actionable = this.actionable.bind(this)
     this.getHandler = this.getHandler.bind(this)
     this.findDifference = this.findDifference.bind(this)
     this.deleteSighting = this.deleteSighting.bind(this)
+    this.isEquiv = this.isEquiv.bind(this)
+  }
+
+  setPoints(newPoints) {
+    this.setState({ points: newPoints })
+  }
+
+  setShapeCompleted(completed) {
+    this.setState({ shapeCompleted: completed })
   }
 
   // checks if the target sighting can be performed on in any way
@@ -43,12 +56,24 @@ export class TagSighting extends Component {
     return !this.props.sighting.has('pending')
   }
 
+  // deep equals for array 
+  isEquiv = (a, b)=>{
+    if(Array.isArray(a) && Array.isArray(b)){
+      return (a.length == b.length) && a.every(function(element, index) {
+        return element === b[index]; 
+      })
+    }
+    else{
+      return a == b
+    }
+  }
+
   /* returns the difference between the state and original sighting as immutable obj
     within the given fields */
   findDifference(fields) {
     const s = this.state
     const origSighting = this.props.sighting
-    const diffKeys = Object.keys(s).filter(k => fields.includes(k) && s[k] !== origSighting.get(k))
+    const diffKeys = Object.keys(s).filter(k => fields.includes(k) && !this.isEquiv(s[k], origSighting.get(k)))
     let diffObj = {}
     for (let i = 0; i < diffKeys.length; i++) {
       const key = diffKeys[i]
@@ -75,12 +100,13 @@ export class TagSighting extends Component {
       }
       if (s.type === 'alphanum') {
         return (
+          (!this.props.isIntsys || this.state.shapeCompleted) &&
           s.shape.length > 0 &&
           s.shapeColor.length > 0 &&
           s.alpha.length > 0 &&
           s.alphaColor.length > 0 &&
           s.mdlcClassConf.length > 0 &&
-          !_.isEqual(
+          (!_.isEqual(
             _.pick(s, [
               'shape',
               'shapeColor',
@@ -97,7 +123,8 @@ export class TagSighting extends Component {
               'offaxis',
               'mdlcClassConf'
             ])
-          )
+          ) || !this.isEquiv(s['points'], sighting.toJS()['points']))
+
         )
       }
     }
@@ -124,7 +151,8 @@ export class TagSighting extends Component {
       type: sighting.get('type') || prevType,
       description: sighting.get('description') || '',
       mdlcClassConf: sighting.get('mdlcClassConf') || '',
-      offaxis: sighting.get('offaxis') || false
+      offaxis: sighting.get('offaxis') || false,
+      points: sighting.get('points')? sighting.get('points').toJS(): []
     })
     this.loadImage(nextProps.imageUrl)
   }
@@ -188,7 +216,8 @@ export class TagSighting extends Component {
             alpha: s.alpha,
             alphaColor: s.alphaColor,
             offaxis: s.offaxis,
-            mdlcClassConf: s.mdlcClassConf
+            mdlcClassConf: s.mdlcClassConf,
+            points: s.points
           })
           attr = this.findDifference([
             'shape',
@@ -196,7 +225,8 @@ export class TagSighting extends Component {
             'alpha',
             'alphaColor',
             'offaxis',
-            'mdlcClassConf'
+            'mdlcClassConf',
+            'points'
           ])
         }
         if (this.props.sighting.has('id')) {
@@ -222,16 +252,29 @@ export class TagSighting extends Component {
   }
 
   render() {
-    const height_width = 300
+    const height_width = 315
     return (
       <div className={this.state.saved ? 'hidden' : 'sighting card'}>
-        <ImageSighting
-          heightWidth={height_width}
-          imageUrl={this.state.imgSrc}
-          imgWidth={this.state.imgWidth}
-          imgHeight={this.state.imgHeight}
-          sighting={this.props.sighting}
-        />
+
+        {this.props.isIntsys ?
+          <ShapeTagger
+            heightWidth={height_width}
+            imageUrl={this.state.imgSrc}
+            imgWidth={this.state.imgWidth}
+            imgHeight={this.state.imgHeight}
+            sighting={this.props.sighting}
+            points={this.state.points}
+            setPoints={this.setPoints}
+            completed={this.state.shapeCompleted}
+            setCompleted={this.setShapeCompleted}
+          /> :
+          <ImageSighting
+            heightWidth={height_width}
+            imageUrl={this.state.imgSrc}
+            imgWidth={this.state.imgWidth}
+            imgHeight={this.state.imgHeight}
+            sighting={this.props.sighting}
+          />}
 
         <div className={this.props.sighting.has('id') ? 'hidden' : 'row'}>
           <TypeSelect

@@ -103,7 +103,8 @@ const TargetOperations = {
         'alphaColor',
         'description',
         'geotag',
-        'thumbnailTsid'
+        'thumbnailTsid',
+        'points'
       ])
 
       const successCallback = (data) => {

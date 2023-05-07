@@ -11,6 +11,7 @@ import AssignmentOperations from '../../operations/assignmentOperations'
 import ImageViewer from '../../components/imageViewer'
 import TagSighting from './tagSighting'
 import ImageTools from './imageTools'
+import AuthUtil, { UserType } from '../../util/authUtil'
 
 import { GROUND_SERVER_URL } from '../../constants/links'
 import { TWO_PASS_MODE } from '../../util/config'
@@ -37,6 +38,7 @@ export class Tag extends Component {
     this.getHandler = this.getHandler.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
     this.updateReceiving = this.updateReceiving.bind(this)
+    this.userType = AuthUtil.userType(true)
   }
 
   onTag(tagged) {
@@ -124,6 +126,7 @@ export class Tag extends Component {
         key={s.get('id') + s.get('type') || s.get('localId')}
         sighting={s}
         isTracking={isTracking}
+        isIntsys={this.userType == UserType.IntSys}
         imageUrl={imageUrl}
         cameraTilt={showOffaxis}
       />

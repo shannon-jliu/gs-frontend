@@ -82,7 +82,7 @@
   width: 350px;
   height: 85%;
   overflow-x: hidden;
-  overflow-y: auto; /* want the imageViewer to stay still while the sightings div can scroll */
+  overflow-y: scroll; /* want the imageViewer to stay still while the sightings div can scroll */
 }
 
 .tag .sighting {

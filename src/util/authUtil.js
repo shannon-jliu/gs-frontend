@@ -4,7 +4,13 @@ import {AUTH_TOKEN_ID} from '../constants/constants.js'
 
 var authenticated = !!localStorage.getItem(AUTH_TOKEN_ID)
 var confirmedAuthentication = false
-var operator = false
+var userType = null
+
+export const UserType = Object.freeze({
+  Operator: Symbol("operator"),
+  IntSys: Symbol("intsys"),
+  Tagger: Symbol("tagger")
+})
 
 function confirmAuthentication() {
   let usernameObj = (localStorage.getItem(AUTH_TOKEN_ID) === null || localStorage.getItem(AUTH_TOKEN_ID) === undefined) ? {} : { Username: JSON.parse(localStorage.getItem(AUTH_TOKEN_ID)).username }
@@ -15,7 +21,10 @@ function confirmAuthentication() {
     async: false
   })
   if (res && res.status && res.status !== 200) authenticated = false
-  if (res && res.responseJSON && res.responseJSON.userType === 'MDLCOPERATOR') operator = true
+  if (res && res.responseJSON) {
+    if (res.responseJSON.userType === 'MDLCOPERATOR') userType = UserType.Operator
+    if (res.responseJSON.userType === 'INTSYSTAGGER') userType = UserType.IntSys
+  }
 }
 
 const AuthUtil = {
@@ -49,19 +58,20 @@ const AuthUtil = {
     return authenticated
   },
   // determine if this user is an operator user
-  operator: function(usersEnabled) {
-    if (!usersEnabled) return true
-    if (confirmedAuthentication) return operator
+  userType: function(usersEnabled) {
+    if (!usersEnabled) return UserType.Operator
+    if (confirmedAuthentication) return userType
     confirmAuthentication()
     confirmedAuthentication = true
-    return operator
+    return userType
   },
+  // determine if this user is an intsys tagger (for target annotation)
   logout: function() {
     sessionStorage.clear()
     localStorage.clear()
     authenticated = false
     confirmedAuthentication = false
-    operator = false
+    userType = UserType.Tagger
     window.location.assign('/login')
   }
 }
