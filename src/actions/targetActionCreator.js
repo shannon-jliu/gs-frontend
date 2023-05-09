@@ -59,3 +59,8 @@ export const updateSelectedThum = (thumbId) => ({
   type: 'UPDATE_SELECTED_THUM',
   thumbId,
 })
+
+export const saveSelectedSighting = (sighting) => ({
+  type: 'SAVE_SELECTED_SIGHTING',
+  sighting,
+})

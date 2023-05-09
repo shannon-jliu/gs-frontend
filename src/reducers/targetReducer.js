@@ -14,7 +14,8 @@ import _ from 'lodash'
 const initialState = fromJS({
   local: [],
   saved: [],
-  thumbId: -1,
+  thumbId: -1, // default: no thumbnail is selected
+  selectedSighting: null,
 })
 
 const targetReducer = (state = initialState, action) => {
@@ -40,8 +41,9 @@ const targetReducer = (state = initialState, action) => {
   case 'CLEAR_STATE':
     return initialState
   case 'UPDATE_SELECTED_THUM':
-    // do something here to store..
     return state.set('thumbId', action.thumbId)
+  case 'SAVE_SELECTED_SIGHTING':
+    return state.set('selectedSighting', action.sighting)
   default:
     return state
   }

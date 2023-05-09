@@ -303,12 +303,13 @@ export class MergeTarget extends Component {
   }
 
   renderSightingPreview(sighting) {
+    if (sighting.get('id') === this.props.selectedThumbId) {
+      this.props.saveSelectedSighting(sighting)
+    }
     return (
       <MergeSightingPreview
         key={this.getSightingPreviewKey(sighting)}
         onClick={() => this.selectSightingAsThumbnail(sighting)}
-        // store this id in global state and then maybe in each sighting preview if it is the one id then red
-        // and this way only one id is stored (default id = -1 aka none selected...)
         // isThumbnail={sighting.get('id') === this.state.thumbnailTsid}
         isThumbnail={sighting.get('id') === this.props.selectedThumbId}
         isMerged={true}
@@ -620,9 +621,8 @@ export class MergeTarget extends Component {
 
   selectSightingAsThumbnail(sighting) {
     this.props.updateSelectedThum(sighting.get('id'))
-    console.log("attempting to print selected thumbnail id??")
-    console.log(this.props.selectedThumbId) //undefined??
-    // once this is updated in global check in the target thing if the ids are the same add the class
+
+    this.props.saveSelectedSighting(sighting)
 
     this.setState({ thumbnailTsid: sighting.get('id') })
     this.save()
@@ -660,9 +660,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   deleteSavedTarget: TargetOperations.deleteSavedTarget(dispatch),
   deleteUnsavedTarget: TargetOperations.deleteUnsavedTarget(dispatch),
   sendTarget: TargetOperations.sendTarget(dispatch),
-  
+
   // storing id of selected thumbnail globally
   updateSelectedThum: TargetOperations.updateSelectedThum(dispatch),
+  // saves the sighting that is selected in red in the global state
+  saveSelectedSighting: TargetOperations.saveSelectedSighting(dispatch),
 })
 
 const mapStateToProps = (state) => ({

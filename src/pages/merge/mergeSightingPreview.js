@@ -67,6 +67,7 @@ class MergeSightingPreview extends Component {
           (this.props.isThumbnail ? ' t-thumb' : '') +
           (this.state.iwidth === -1 || this.state.iheight === -1 ? ' red lighten-3' : '')
         }
+
         onClick={this.props.onClick}
         onDragStart={this.props.onDragStart}
         onDragEnd={this.props.onDragEnd}

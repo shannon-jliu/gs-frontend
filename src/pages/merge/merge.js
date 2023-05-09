@@ -32,10 +32,12 @@ export class Merge extends Component {
     this.onDragEnd = this.onDragEnd.bind(this)
     this.onDrag = this.onDrag.bind(this)
     this.onDrop = this.onDrop.bind(this)
+    this.onClick = this.onClick.bind(this)
     this.renderSighting = this.renderSighting.bind(this)
     this.renderTarget = this.renderTarget.bind(this)
     // this.mergeADLC = this.mergeADLC.bind(this)
     this.updateCheck = this.updateCheck.bind(this)
+    this.keySelectTarget = this.keySelectTarget.bind(this)
   }
 
   // every 3 seconds, the page polls the server for the current targets and target sightings
@@ -48,10 +50,12 @@ export class Merge extends Component {
       loadNewestContent,
       MILLISECONDS_BETWEEN_MERGE_PAGE_POLLS
     )
+    document.addEventListener('keydown', this.keySelectTarget)
   }
 
   componentWillUnmount() {
     clearInterval(this.contentLoader)
+    document.removeEventListener('keydown', this.keySelectTarget)
   }
 
   render() {
@@ -151,6 +155,14 @@ export class Merge extends Component {
     )
   }
 
+  // when a sidebar sighting is clicked - select it
+  onClick(sighting) {
+    this.props.updateSelectedThum(sighting.get('id'))
+    this.props.saveSelectedSighting(sighting)
+
+    //TODO: change style (find method for this...)
+  }
+
   renderSighting(sighting) {
     const isDragging =
       !_.isNil(this.state.dragSighting) &&
@@ -160,10 +172,12 @@ export class Merge extends Component {
       <MergeSighting
         key={sighting.get('id') + '-sighting-info'}
         sighting={sighting}
+        isThumbnail={sighting.get('id') === this.props.selectedThumbId}
         onDragStart={() => this.onDragStart(sighting)}
         onDragEnd={this.onDragEnd}
         onDrag={this.onDrag}
         dragging={isDragging}
+        onClick={() => this.onClick(sighting)}
       />
     )
   }
@@ -282,6 +296,36 @@ export class Merge extends Component {
     })
   }
 
+  // assigning the selected sighting to a target based on the key pressed
+  keySelectTarget(e) {
+    let key = e.key
+    let code = e.keyCode
+
+    if (!isNaN(key) && code >= 49 && code <= (this.props.numTargets + 48)) {
+      key-- // changing key to a valid index 0 to _
+      let sT = this.props.savedTargets
+      let savedTArray = Array.from(sT)
+      let selectedTarget = savedTArray.find(t => {
+        return t.get('airdropId') === key
+      })
+
+      if (selectedTarget && selectedTarget.has('id')) {
+        this.props.updateTargetSighting(
+          this.props.selectedSighting,
+          fromJS({ target: selectedTarget })
+        )
+      }
+    } else if (key === 'Backspace' || key === 'Delete') {
+      if (this.props.selectedSighting.has('type')) {
+        if (this.props.selectedSighting.has('id')) {
+          this.props.deleteSavedTargetSighting(this.props.selectedSighting)
+        } else {
+          this.props.deleteUnsavedTargetSighting(this.props.selectedSighting)
+        }
+      }
+    }
+  }
+
   getTargetAssumedForSighting(sighting) {
     if (this.isTargetBoundToSightingBeingChanged(sighting)) {
       return sighting.getIn(['pending', 'target'])
@@ -385,6 +429,11 @@ const mapStateToProps = (state) => ({
   sightings: state.targetSightingReducer.get('saved'),
   savedTargets: state.targetReducer.get('saved'),
   localTargets: state.targetReducer.get('local'),
+
+  selectedThumbId: state.targetReducer.get('thumbId'),
+  selectedSighting: state.targetReducer.get('selectedSighting'),
+
+  numTargets: state.fiveTargetsReducer.get('settings').get('numTargets'),
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -393,7 +442,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   getAllSightings: TargetSightingOperations.getAllSightings(dispatch),
   getAllTargets: TargetOperations.getAllTargets(dispatch),
   deleteSavedTargetSighting: TargetSightingOperations.deleteSavedTargetSighting(dispatch),
-  deleteUnsavedTargetSighting: TargetSightingOperations.deleteUnsavedTargetSighting(dispatch)
+  deleteUnsavedTargetSighting: TargetSightingOperations.deleteUnsavedTargetSighting(dispatch),
+
+  updateSelectedThum: TargetOperations.updateSelectedThum(dispatch),
+  saveSelectedSighting: TargetOperations.saveSelectedSighting(dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Merge)

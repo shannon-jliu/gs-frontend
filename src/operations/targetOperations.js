@@ -161,6 +161,10 @@ const TargetOperations = {
   updateSelectedThum: (dispatch) => (thumbId) => {
     dispatch(action.updateSelectedThum(thumbId))
   },
+
+  saveSelectedSighting: (dispatch) => (sighting) => {
+    dispatch(action.saveSelectedSighting(sighting))
+  }
 }
 
 export default TargetOperations

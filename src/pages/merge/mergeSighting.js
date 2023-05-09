@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import MergeSightingPreview from './mergeSightingPreview.js'
 
-const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd, onDrag }) => {
+const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd, onDrag, onClick, isThumbnail }) => {
   // capitalization for display purposes only
   const shape = sighting.get('shape').charAt(0).toUpperCase() + sighting.get('shape').substr(1)
   const shapeColor = sighting.get('shapeColor').charAt(0).toUpperCase() + sighting.get('shapeColor').substr(1)
@@ -15,12 +15,13 @@ const MergeSighting = ({ sighting, dragging, onDragStart, onDragEnd, onDrag }) =
       className="sighting card z-depth-2"
       style={dragging ? { opacity: 0.15 } : {}}>
       <MergeSightingPreview
-        isThumbnail={false}
+        isThumbnail={isThumbnail}
         isMerged={false}
         sighting={sighting}
         onDragStart={onDragStart === undefined ? undefined : () => onDragStart(sighting)}
         onDragEnd={onDragEnd}
         onDrag={onDrag}
+        onClick={onClick}
         dragging={dragging} />
       <div className="fact-container">
         <div className="fact">Shape: {shape}</div>
