@@ -14,7 +14,7 @@ export const TargetSightingRequests = {
       (isAlphanum ? 'alphanum' : 'emergent') +
       '_target_sighting/' +
       id,
-      { method: 'DELETE' }
+      { method: 'DELETE', dataType: 'text' }
     )
       .done(successCallback)
       .fail(failureCallback)
