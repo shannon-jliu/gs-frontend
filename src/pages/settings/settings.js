@@ -63,9 +63,9 @@ export class Settings extends Component {
           </div>
           <div id='container'>
             <CameraSettings/>
-            <CameraGimbalSettings changeCameraGimbalMode={this.changeCameraGimbalMode}/>
             <GimbalSettings cameraGimbalMode={this.state.cameraGimbalMode}/>
             <FiveTargetsSettings/>
+            <CameraGimbalSettings changeCameraGimbalMode={this.changeCameraGimbalMode}/>
           </div>
         </div>
       </React.Fragment>
