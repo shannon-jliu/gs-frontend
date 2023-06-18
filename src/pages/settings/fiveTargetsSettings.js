@@ -253,7 +253,7 @@ export class fiveTargetsSettings extends Component {
   // Saves the number of targets shown
   saveNumTargets() {
     let num = this.props.numTargets
-    if (!this.state.dropdownSelected) num = 1
+    if (!this.state.dropdownSelected) num = 2
 
     // Hides targets to display
     this.setDisplayTargets(num)
