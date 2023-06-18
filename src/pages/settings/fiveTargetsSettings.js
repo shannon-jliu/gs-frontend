@@ -285,7 +285,7 @@ export class fiveTargetsSettings extends Component {
             <h5>Choose the number of targets:</h5>
             <select name="selectNumTargets" id="selectNumTargets" onChange={(evt) => this.updateStateTargetsNum(evt)}>
               <option value="1">1</option>
-              <option value="2">2</option>
+              <option selected value="2">2</option>
               <option value="3">3</option>
               <option value="4">4</option>
               <option value="5">5</option>
