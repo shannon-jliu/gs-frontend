@@ -246,6 +246,9 @@ export class Merge extends Component {
       ? undefined
       : this.state.dragSighting.get('id')
 
+    if (target.get('type') === 'emergent') {
+      return
+    }
     return (
       <MergeTarget
         key={key}
