@@ -258,7 +258,11 @@ export class Merge extends Component {
   // called by a target when a target sighting that can be dropped into it is released over it. runs before onDragEnd
   onDrop(target) {
     if (target.has('id')) {
-      console.log(target.get('id'))
+      // a lot of components have ID, this doesn't exclude those. fix after comp, im adding a hack
+      console.log(this.state.dragSighting)
+      if (!this.state.dragSighting){
+        return
+      }
       const currTargetOfDragSighting = this.getTargetAssumedForSighting(
         this.state.dragSighting
       )
