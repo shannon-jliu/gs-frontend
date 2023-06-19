@@ -298,7 +298,7 @@ export class fiveTargetsSettings extends Component {
                   <div id={`target${index + 1}`}>
                     <h5>Target #{index + 1}</h5>
                     <div className="smallerRow">
-                      <div className="shapeColor">
+                      <div className="characteristic">
                         <ColorSelect
                           onChange={(evt) =>
                             this.updateTargetInformation(evt, target, index, 1)
@@ -307,7 +307,7 @@ export class fiveTargetsSettings extends Component {
                           title={'Shape Color'}
                         />
                       </div>
-                      <div className="shape">
+                      <div className="characteristic">
                         <ShapeSelect
                           onChange={(evt) =>
                             this.updateTargetInformation(evt, target, index, 2)
@@ -316,7 +316,7 @@ export class fiveTargetsSettings extends Component {
                           title={'Shape'}
                         />
                       </div>
-                      <div className="alphaColor">
+                      <div className="characteristic">
                         <ColorSelect
                           onChange={(evt) =>
                             this.updateTargetInformation(evt, target, index, 3)
@@ -325,7 +325,7 @@ export class fiveTargetsSettings extends Component {
                           title={'Alpha Color'}
                         />
                       </div>
-                      <div className="alpha">
+                      <div className="characteristic">
                         <LetterSelect
                           onChange={(evt) =>
                             this.updateTargetInformation(evt, target, index, 4)

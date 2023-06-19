@@ -174,11 +174,11 @@ export class Merge extends Component {
       !_.isNil(this.state.dragSighting.get('target'))
     ) {
       if (this.state.dragSighting.has('type')) {
-        if (this.state.dragSighting.has('id')) {
-          this.props.deleteSavedTargetSighting(this.state.dragSighting)
-        } else {
-          this.props.deleteUnsavedTargetSighting(this.state.dragSighting)
-        }
+        // if (this.state.dragSighting.has('id')) {
+        //   this.props.deleteSavedTargetSighting(this.state.dragSighting)
+        // } else {
+        //   this.props.deleteUnsavedTargetSighting(this.state.dragSighting)
+        // }
         // this.props.deleteSavedTargetSighting(this.state.dragSighting)
       }
     }
@@ -258,6 +258,7 @@ export class Merge extends Component {
   // called by a target when a target sighting that can be dropped into it is released over it. runs before onDragEnd
   onDrop(target) {
     if (target.has('id')) {
+      console.log(target.get('id'))
       const currTargetOfDragSighting = this.getTargetAssumedForSighting(
         this.state.dragSighting
       )
@@ -265,6 +266,7 @@ export class Merge extends Component {
         _.isNil(currTargetOfDragSighting) ||
         currTargetOfDragSighting.get('id') !== target.get('id')
       ) {
+        console.log(target.get('shape'))
         // this.props.deleteSavedTargetSighting(target)
         this.props.updateTargetSighting(
           this.state.dragSighting,

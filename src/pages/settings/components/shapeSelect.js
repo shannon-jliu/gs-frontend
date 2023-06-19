@@ -12,6 +12,7 @@ const shapes = {
   rectangle: 'Rectangle',
   trapezoid: 'Trapezoid',
   pentagon: 'Pentagon',
+  heptagon: 'Heptagon',
   hexagon: 'Hexagon',
   octagon: 'Octagon',
   star: 'Star',
