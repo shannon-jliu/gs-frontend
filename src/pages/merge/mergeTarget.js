@@ -254,11 +254,15 @@ export class MergeTarget extends Component {
   }
 
   renderSightingPreviewRow() {
-    if (this.props.isChecked) {
-      return this.renderADLCSightingPreviewRow()
-    } else {
-      return this.renderMDLCSightingPreviewRow()
-    }
+    // if (this.props.isChecked) {
+    //   return this.renderADLCSightingPreviewRow()
+    // } else {
+    //   return this.renderMDLCSightingPreviewRow()
+    // }
+    return <>
+    {this.renderMDLCSightingPreviewRow()}
+    {this.renderADLCSightingPreviewRow()}
+    </>
   }
 
   renderMDLCSightingPreviewRow() {
@@ -268,9 +272,9 @@ export class MergeTarget extends Component {
       .map(this.renderSightingPreview)
       .toJSON()
     return (
-      <div className="sighting-images">
-        <label>mdlc images</label>
-        <div>{sightingPreviews}</div>
+      <div className="sighting-images-container">
+        <label style={{fontSize: 17}}> MDLC images</label>
+        <div className="sighting-images">{sightingPreviews}</div>
       </div>
     )
   }
@@ -281,9 +285,9 @@ export class MergeTarget extends Component {
       .map(this.renderSightingPreview)
       .toJSON()
     return (
-      <div className="adlc-images">
-        <label>adlc images</label>
-        <div>{sightingPreviews}</div>
+      <div className="adlc-images-container">
+        <label style={{fontSize: 17}}> ADLC images</label>
+        <div className="adlc-images">{sightingPreviews}</div>
       </div>
     )
   }

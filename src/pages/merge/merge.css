@@ -1,3 +1,10 @@
+.merge {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  /* align-items: end; */
+}
+
 .merge .image {
   width: 100px;
   height: 100px;
@@ -24,7 +31,7 @@
 }
 
 .merge .sightings {
-  float: left;
+  align-self: flex-end;
   width: 260px;
   overflow: hidden;
   padding: 10px;
@@ -66,25 +73,40 @@
   margin: 10px 0;
   display: flex;
   flex-direction: row;
-  padding: 4px;
+  /* padding: 4px; */
   min-height: 0;
   position: static;
   overflow: visible;
 }
 
-.merge .targets .target .sighting-images {
-  display: inline-block;
-  flex: 1 1 1px;
-  height: 250px;
+
+
+.merge .targets .target .sighting-images-container {
+  display: flex;
+  flex-direction: column;
+  width: 44%;
   overflow-y: auto;
+  border: 1px solid rgb(192, 191, 191);
+  padding: 4px;
+}
+.merge .targets .target .sighting-images {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 4px;
+}
+
+.merge .targets .target .adlc-images-container {
+  display: flex;
+  flex-direction: column;
+  width: 44%;
+  overflow-y: auto;
+  border: 1px solid rgb(192, 191, 191);
   padding: 4px;
 }
 
 .merge .targets .target .adlc-images {
-  display: inline-block;
-  flex: 1 1 1px;
-  height: 250px;
-  overflow-y: auto;
+  display: flex;
+  flex-flow: row wrap;
   padding: 4px;
 }
 
@@ -94,7 +116,10 @@
 }
 
 .merge .targets .target .facts {
-  margin: 15px;
+  padding: 15px;
+  width: 12%; 
+  overflow: hidden;
+  border: 1px solid rgb(192, 191, 191);
 }
 
 .merge .targets .target.drag-over {

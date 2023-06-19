@@ -73,18 +73,6 @@ export class Merge extends Component {
       .toJSON()
 
     return <div className="sightings">
-      <br />
-      <div className="adlcMdlcSwitch">
-        <Switch offState={'mdlc'}
-          myRef={ref => (this.capturingInput = ref)}
-          onChange={this.updateCheck}
-          id={'adlc or mdlc'}
-          checked={this.state.adlcChecked}
-          onState={'adlc'}
-        />
-      </div>
-      <br />
-
       {renderedUnassignedSightings}
       {/* <div className='mergeButton'>
         <a onClick={this.mergeADLC} className='waves-effect waves-light btn red' href='/#'>
