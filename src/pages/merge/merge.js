@@ -5,16 +5,17 @@ import _ from 'lodash'
 
 import MergeSighting from './mergeSighting'
 import MergeTarget from './mergeTarget'
+import MergeOperations from '../../operations/mergeOperations'
 import TargetSightingOperations from '../../operations/targetSightingOperations'
 import TargetOperations from '../../operations/targetOperations'
 import SnackbarUtil from '../../util/snackbarUtil.js'
 import Switch from './components/Switch.js'
+import { TargetSightingRequests } from '../../util/sendApi'
 
 import { MILLISECONDS_BETWEEN_MERGE_PAGE_POLLS } from '../../constants/constants.js'
 import { AUTH_TOKEN_ID } from '../../constants/constants.js'
 
 import './merge.css'
-import { TargetSightingRequests } from '../../util/sendApi'
 
 export class Merge extends Component {
   constructor(props) {
@@ -36,6 +37,7 @@ export class Merge extends Component {
     this.renderTarget = this.renderTarget.bind(this)
     // this.mergeADLC = this.mergeADLC.bind(this)
     this.updateCheck = this.updateCheck.bind(this)
+    this.onSelectedUpdate = this.onSelectedUpdate.bind(this)
   }
 
   // every 3 seconds, the page polls the server for the current targets and target sightings
@@ -57,8 +59,8 @@ export class Merge extends Component {
   render() {
     return (
       <div className="merge">
-        {this.renderUnassignedSightingsSidebar()}
         {this.renderTargetsColumn()}
+        {this.renderUnassignedSightingsSidebar()}
       </div>
     )
   }
@@ -153,7 +155,7 @@ export class Merge extends Component {
         key={sighting.get('id') + '-sighting-info'}
         sighting={sighting}
         onDragStart={() => this.onDragStart(sighting)}
-        onDragEnd={this.onDragEnd}
+        // onDragEnd={this.onDragEnd}
         onDrag={this.onDrag}
         dragging={isDragging}
       />
@@ -174,12 +176,12 @@ export class Merge extends Component {
       !_.isNil(this.state.dragSighting.get('target'))
     ) {
       if (this.state.dragSighting.has('type')) {
-        // if (this.state.dragSighting.has('id')) {
-        //   this.props.deleteSavedTargetSighting(this.state.dragSighting)
-        // } else {
-        //   this.props.deleteUnsavedTargetSighting(this.state.dragSighting)
-        // }
-        // this.props.deleteSavedTargetSighting(this.state.dragSighting)
+        if (this.state.dragSighting.has('id')) {
+          this.props.deleteSavedTargetSighting(this.state.dragSighting)
+        } else {
+          this.props.deleteUnsavedTargetSighting(this.state.dragSighting)
+        }
+        this.props.deleteSavedTargetSighting(this.state.dragSighting)
       }
     }
     this.setState({
@@ -247,19 +249,39 @@ export class Merge extends Component {
         target={target}
         sightings={boundSightings}
         onTsDragStart={this.onDragStart}
-        onTsDragEnd={this.onDragEnd}
+        // onTsDragEnd={this.onDragEnd}
         onTsDrop={this.onDrop}
         dragId={dragId}
         isChecked={this.state.adlcChecked}
       />
     )
   }
+  onSelectedUpdate(targetId){
+    const adlcIds = targetId in this.props.selectedTsids? 'adlc' in this.props.selectedTsids[targetId]? this.props.selectedTsids[targetId]['adlc'] : [] : []
+    const mdlcIds = targetId in this.props.selectedTsids? 'mdlc' in this.props.selectedTsids[targetId]? this.props.selectedTsids[targetId]['mdlc'] : [] : []
+    const allSelectedIds = adlcIds.concat(mdlcIds)
+    console.log('drag: new ids', allSelectedIds)
+    const onSuccess = data => {
+      // im so sorry
+      
+      if(data.geotag){
+        this.props.updateGeotag(targetId, {latitude: data.geotag.gpsLocation.latitude, longitude: data.geotag.gpsLocation.longitude})
+      }
+      else{
+        this.props.updateGeotag(targetId, {latitude: "", longitude: ""})
+      }
+
+    }
+    const onFailure = data => {
+      SnackbarUtil.render('Failed to update selected targets')
+    }
+    TargetSightingRequests.getGeotag(targetId, allSelectedIds, onSuccess, onFailure)
+  }
 
   // called by a target when a target sighting that can be dropped into it is released over it. runs before onDragEnd
-  onDrop(target) {
+  async onDrop(target) {
     if (target.has('id')) {
       // a lot of components have ID, this doesn't exclude those. fix after comp, im adding a hack
-      console.log(this.state.dragSighting)
       if (!this.state.dragSighting){
         return
       }
@@ -270,9 +292,12 @@ export class Merge extends Component {
         _.isNil(currTargetOfDragSighting) ||
         currTargetOfDragSighting.get('id') !== target.get('id')
       ) {
-        console.log(target.get('shape'))
         // this.props.deleteSavedTargetSighting(target)
-        this.props.updateTargetSighting(
+        console.log('prev', currTargetOfDragSighting.get('id'), 'after', target.get('id'))
+        await this.props.removeSelectedTsid(currTargetOfDragSighting.get('id'), sightingType, this.state.dragSighting)
+        this.onSelectedUpdate(currTargetOfDragSighting.get('id'))
+        
+        await this.props.updateTargetSighting(
           this.state.dragSighting,
           fromJS({
             target: target,
@@ -282,6 +307,12 @@ export class Merge extends Component {
             alphaColor: target.get('alphaColor')
           })
         )
+
+        const sightingType = this.state.dragSighting.get('creator').get('username') === 'adlc'? 'adlc': 'mdlc'
+        await this.props.addSelectedTsid(target.get('id'), sightingType, this.state.dragSighting)
+        console.log('selected ids', this.props.selectedTsids)
+        this.onSelectedUpdate(target.get('id'))
+        // console.log(this.props.geotag[target.get('id')])
       }
     }
     this.setState({
@@ -392,6 +423,8 @@ const mapStateToProps = (state) => ({
   sightings: state.targetSightingReducer.get('saved'),
   savedTargets: state.targetReducer.get('saved'),
   localTargets: state.targetReducer.get('local'),
+  selectedTsids: state.mergeReducer.get('selectedTsids'),
+  geotag: state.mergeReducer.get('geotag')
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -399,6 +432,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   addTarget: TargetOperations.addTarget(dispatch),
   getAllSightings: TargetSightingOperations.getAllSightings(dispatch),
   getAllTargets: TargetOperations.getAllTargets(dispatch),
+  addSelectedTsid: MergeOperations.addSelectedTsid(dispatch),
+  updateGeotag: MergeOperations.updateGeotag(dispatch),
+  removeSelectedTsid: MergeOperations.removeSelectedTsid(dispatch),
   deleteSavedTargetSighting: TargetSightingOperations.deleteSavedTargetSighting(dispatch),
   deleteUnsavedTargetSighting: TargetSightingOperations.deleteUnsavedTargetSighting(dispatch)
 })

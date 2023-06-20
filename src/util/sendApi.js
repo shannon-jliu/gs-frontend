@@ -3,6 +3,15 @@ import _ from 'lodash'
 // non-GET requests here
 
 export const TargetSightingRequests = {
+  getGeotag: function (targetId, ids, successCallback, failureCallback) {
+    $.ajax(
+      '/api/v1/alphanum_target/' + targetId + '/geotags',
+      { method: 'PUT', data: ids }
+    )
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+
   deleteTargetSighting: function (
     isAlphanum,
     id,

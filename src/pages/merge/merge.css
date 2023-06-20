@@ -19,7 +19,7 @@
 
 .merge .targets .image.t-thumb {
   margin: 5px;
-  border-color: #F44336;
+  border-color: #36f45f;
 }
 
 .merge .mergeButton {
@@ -89,6 +89,20 @@
   border: 1px solid rgb(192, 191, 191);
   padding: 4px;
 }
+
+.merge .targets .target .sighting-images-container .label {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 7px;
+}
+
+.merge .targets .target .sighting-images-container .label .buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;  
+}
+
 .merge .targets .target .sighting-images {
   display: flex;
   flex-flow: row wrap;
@@ -103,6 +117,20 @@
   border: 1px solid rgb(192, 191, 191);
   padding: 4px;
 }
+
+.merge .targets .target .adlc-images-container .label {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 7px 7px 7px 15.5px;
+}
+
+.merge .targets .target .adlc-images-container .label .buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;  
+}
+
 
 .merge .targets .target .adlc-images {
   display: flex;

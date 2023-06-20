@@ -69,7 +69,7 @@ class MergeSightingPreview extends Component {
         }
         onClick={this.props.onClick}
         onDragStart={this.props.onDragStart}
-        onDragEnd={this.props.onDragEnd}
+        // onDragEnd={this.props.onDragEnd}
         onDrag={this.props.onDrag}
         draggable={this.props.onDragStart !== undefined}
         style={this.getStyle()}>
@@ -83,7 +83,7 @@ MergeSightingPreview.propTypes = {
   sighting: ImmutablePropTypes.map.isRequired,
   onClick: PropTypes.func,
   onDragStart: PropTypes.func,
-  onDragEnd: PropTypes.func,
+  // onDragEnd: PropTypes.func,
   dragging: PropTypes.bool.isRequired,
   isMerged: PropTypes.bool.isRequired,
   isThumbnail: PropTypes.bool.isRequired

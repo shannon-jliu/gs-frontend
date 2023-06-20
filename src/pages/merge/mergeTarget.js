@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { fromJS } from 'immutable'
 import M from 'materialize-css'
 import _ from 'lodash'
+import localforage from 'localforage'
 
 import {
   TargetAlphanumFields,
@@ -18,6 +19,10 @@ import TargetOperations from '../../operations/targetOperations'
 import SnackbarUtil from '../../util/snackbarUtil.js'
 import { NENO_COORDS, PAX_COORDS } from '../../constants/constants.js'
 import { GROUND_SERVER_URL } from '../../constants/links'
+import MergeOperations from '../../operations/mergeOperations'
+import { TargetSightingRequests } from '../../util/sendApi'
+import { setSelectedTsids } from '../../actions/mergeActionCreator'
+import {useSelector} from 'react-redux';
 
 export class MergeTarget extends Component {
   constructor(props) {
@@ -25,20 +30,7 @@ export class MergeTarget extends Component {
 
     const t = this.getAssumedTargetFromProps()
 
-    this.state = {
-      shape: t.get('shape') || '',
-      shapeColor: t.get('shapeColor') || '',
-      alpha: t.get('alpha') || '',
-      alphaColor: t.get('alphaColor') || '',
-      thumbnailTsid: t.get('thumbnailTsid') || 0,
-      description: t.get('description') || '',
-      longitude: t.getIn(['geotag', 'gpsLocation', 'longitude']) || '',
-      latitude: t.getIn(['geotag', 'gpsLocation', 'latitude']) || '',
-      dragCtr: 0, //counter rather than boolean to allow hovering over child elements
-      iwidth: -1,
-      iheight: -1,
-    }
-
+    
     this.canDelete = this.canDelete.bind(this)
     this.canSave = this.canSave.bind(this)
     this.getHandler = this.getHandler.bind(this)
@@ -49,7 +41,24 @@ export class MergeTarget extends Component {
     this.drop = this.drop.bind(this)
     this.renderSightingPreview = this.renderSightingPreview.bind(this)
     this.selectSightingAsThumbnail = this.selectSightingAsThumbnail.bind(this)
+    this.toggleSelectSighting = this.toggleSelectSighting.bind(this)
     this.sendToAutopilot = this.sendToAutopilot.bind(this)
+    this.targetId = this.props.target.get('id')
+
+    this.state = {
+      shape: t.get('shape') || '',
+      shapeColor: t.get('shapeColor') || '',
+      alpha: t.get('alpha') || '',
+      alphaColor: t.get('alphaColor') || '',
+      thumbnailTsid: t.get('thumbnailTsid') || 0,
+      description: t.get('description') || '',
+      longitude: this.props.geotag[this.targetId]['longitude'] || t.getIn(['geotag', 'gpsLocation', 'longitude']) || '',
+      latitude: this.props.geotag[this.targetId]['latitude']|| t.getIn(['geotag', 'gpsLocation', 'latitude']) || '',
+      dragCtr: 0, //counter rather than boolean to allow hovering over child elements
+      iwidth: -1,
+      iheight: -1,
+    }
+
   }
 
   getAssumedTargetFromProps() {
@@ -59,6 +68,23 @@ export class MergeTarget extends Component {
     }
     return t
   }
+
+  getCreaterName(ts){
+    return ts.get('creator').get('username');
+  }
+
+  getRelatedSelectedTsids(ts){
+    const sightingType = this.getCreaterName(ts) === 'adlc'? 'adlc' : 'mdlc'
+    const targetId = this.targetId
+    if (targetId in this.props.selectedTsids){
+      if (sightingType in this.props.selectedTsids[targetId]){
+        return this.props.selectedTsids[targetId][sightingType]
+      }
+    }
+    return []
+  }
+  
+  
 
   componentDidMount() {
     // required for selectors.
@@ -223,14 +249,15 @@ export class MergeTarget extends Component {
       return <div className="hidden" />
     }
 
+
     return (
       <div className="row">
         <p>
           {this.state.shapeColor} {this.state.shape}
           <br /> with {this.state.alphaColor} {this.state.alpha}{' '}
         </p>
-        latitude: {this.state.latitude}
-        <br />longitude: {this.state.longitude}
+        <>latitude: {this.state.latitude}
+        <br />longitude: {this.state.longitude}</>
       </div>
     )
   }
@@ -268,12 +295,33 @@ export class MergeTarget extends Component {
   renderMDLCSightingPreviewRow() {
     // toJSON is a shallow conversion (preserving immutable html attributes), while toJS would be deep
     const sightingPreviews = this.props.sightings
-      .filter((ts) => ts.get('creator').get('username') != 'adlc')
+      .filter((ts) =>  this.getCreaterName(ts) !== 'adlc')
       .map(this.renderSightingPreview)
       .toJSON()
+
+    const addAllMDLC = async () =>{
+      console.log('all',Array.from(this.props.sightings.map(ts => ts.get('id'))))
+      await this.props.setSelectedTsids(this.targetId, 'mdlc', Array.from(this.props.sightings.map(ts => ts.get('id'))))
+      this.onSelectedUpdate()
+      return 
+    } 
+    const removeAllMDLC = async () =>{
+      await this.props.setSelectedTsids(this.targetId, 'mdlc', [])
+      this.onSelectedUpdate()
+      return 
+    } 
+    const buttonStyle = {height: '34px', width: '120px', padding: '0 6px'}
     return (
       <div className="sighting-images-container">
-        <label style={{fontSize: 17}}> MDLC images</label>
+        <div className="label">
+          <label style={{fontSize: 17, color: 'black'}}> MDLC images</label>
+          <div className="buttons">
+            <button className="btn waves-effect waves-light" style={buttonStyle} 
+            onClick={addAllMDLC}> Add All</button>
+            <button className="btn waves-effect waves-light red accent-2" style={buttonStyle} 
+            onClick={removeAllMDLC}> Remove All</button>
+          </div>
+        </div>
         <div className="sighting-images">{sightingPreviews}</div>
       </div>
     )
@@ -281,23 +329,45 @@ export class MergeTarget extends Component {
 
   renderADLCSightingPreviewRow() {
     const sightingPreviews = this.props.sightings
-      .filter((ts) => ts.get('creator').get('username') == 'adlc')
+      .filter((ts) => this.getCreaterName(ts) === 'adlc')
       .map(this.renderSightingPreview)
       .toJSON()
+
+    // sorry bout the bad code
+    const addAllMDLC = () =>{
+      this.props.setSelectedTsids(this.targetId, 'adlc', this.props.sightings.map(ts => ts.get('id')))
+      this.onSelectedUpdate()
+      return 
+    } 
+    const removeAllMDLC = () =>{
+      this.props.setSelectedTsids(this.targetId, 'adlc', [])
+      this.onSelectedUpdate()
+      return 
+    } 
+    const buttonStyle = {height: '34px', width: '120px', padding: '0 6px'}
     return (
       <div className="adlc-images-container">
-        <label style={{fontSize: 17}}> ADLC images</label>
+        <div className="label">
+          <label style={{fontSize: 17, color: 'black'}}> ADLC images</label>
+          <div className="buttons">
+            <button className="btn waves-effect waves-light" style={buttonStyle} 
+            onClick={addAllMDLC}> Add All</button>
+            <button className="btn waves-effect waves-light red accent-2" style={buttonStyle} 
+            onClick={removeAllMDLC}> Remove All</button>
+          </div>
+        </div>
         <div className="adlc-images">{sightingPreviews}</div>
       </div>
     )
   }
 
   renderSightingPreview(sighting) {
+    const selectedIds = this.getRelatedSelectedTsids(sighting)
     return (
       <MergeSightingPreview
         key={this.getSightingPreviewKey(sighting)}
-        onClick={() => this.selectSightingAsThumbnail(sighting)}
-        isThumbnail={sighting.get('id') === this.state.thumbnailTsid}
+        onClick={() => this.toggleSelectSighting(sighting)}
+        isThumbnail={selectedIds.includes(sighting.get('id'))}
         isMerged={true}
         sighting={sighting}
         onDragStart={
@@ -607,7 +677,58 @@ export class MergeTarget extends Component {
 
   selectSightingAsThumbnail(sighting) {
     this.setState({ thumbnailTsid: sighting.get('id') })
-    this.save()
+    // this.save()
+  }
+
+  onSelectedUpdate(){
+    const targetId = this.targetId
+    const adlcIds = targetId in this.props.selectedTsids? 'adlc' in this.props.selectedTsids[targetId]? this.props.selectedTsids[targetId]['adlc'] : [] : []
+    const mdlcIds = targetId in this.props.selectedTsids? 'mdlc' in this.props.selectedTsids[targetId]? this.props.selectedTsids[targetId]['mdlc'] : [] : []
+    const allSelectedIds = adlcIds.concat(mdlcIds)
+    console.log('new ids', allSelectedIds)
+    
+    const onSuccess = data => {
+      // im so sorry
+      
+      if(data.geotag){
+        this.props.updateGeotag(targetId, {latitude: data.geotag.gpsLocation.latitude, longitude: data.geotag.gpsLocation.longitude})
+        // console.log('geotag received')
+        // console.log('geotag', this.props.geotag[targetId][''], this.props.geotag[targetId]['longitude'], this.props.geotag['latitude'])
+        const geotag = this.props.geotag[targetId]
+        // console.log('geotag', geotag)
+        // console.log('geotag1', this.state.latitude, this.state.longitude)
+        this.setState({latitude: geotag['latitude'], longitude: geotag['longitude']})
+      }
+      else {
+        let fakeGeotag = {latitude: '', longitude: ''}
+        this.props.updateGeotag(targetId, fakeGeotag)
+        // console.log('geotag', this.props.geotag[targetId][''], this.props.geotag[targetId]['longitude'], this.props.geotag['latitude'])
+        const geotag = this.props.geotag[targetId]
+        this.setState({latitude:geotag['latitude'], longitude: geotag['longitude']})
+      }
+  
+    }
+    const onFailure = data => {
+      SnackbarUtil.render('Failed to update selected targets')
+    }
+    TargetSightingRequests.getGeotag(targetId, allSelectedIds, onSuccess, onFailure)
+  }
+
+  async toggleSelectSighting(sighting){
+    const sightingId = sighting.get('id') 
+    const targetId = this.targetId
+    const sightingType = this.getCreaterName(sighting) === 'adlc'? 'adlc' : 'mdlc'
+    
+    const selectedIds = this.getRelatedSelectedTsids(sighting)
+    if (selectedIds.includes(sightingId)){
+      await this.props.removeSelectedTsid(targetId, sightingType, sighting)
+    }
+    else {
+      await this.props.addSelectedTsid(targetId, sightingType, sighting)
+    }
+    
+    this.onSelectedUpdate()
+    
   }
 
   getNonGeotagMutableAttributeNames() {
@@ -636,12 +757,21 @@ MergeTarget.propTypes = {
   isChecked: PropTypes.bool,
 }
 
+const mapStateToProps = (state) => ({
+  selectedTsids: state.mergeReducer.get('selectedTsids'),
+  geotag: state.mergeReducer.get('geotags')
+})
+
 const mapDispatchToProps = (dispatch, ownProps) => ({
   saveTarget: TargetOperations.saveTarget(dispatch),
   updateTarget: TargetOperations.updateTarget(dispatch),
   deleteSavedTarget: TargetOperations.deleteSavedTarget(dispatch),
   deleteUnsavedTarget: TargetOperations.deleteUnsavedTarget(dispatch),
   sendTarget: TargetOperations.sendTarget(dispatch),
+  addSelectedTsid: MergeOperations.addSelectedTsid(dispatch),
+  removeSelectedTsid: MergeOperations.removeSelectedTsid(dispatch),
+  setSelectedTsids: MergeOperations.setSelectedTsids(dispatch),
+  updateGeotag: MergeOperations.updateGeotag(dispatch)
 })
 
-export default connect(null, mapDispatchToProps)(MergeTarget)
+export default connect(mapStateToProps, mapDispatchToProps)(MergeTarget)
