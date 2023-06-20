@@ -52,8 +52,8 @@ export class MergeTarget extends Component {
       alphaColor: t.get('alphaColor') || '',
       thumbnailTsid: t.get('thumbnailTsid') || 0,
       description: t.get('description') || '',
-      longitude: this.props.geotag[this.targetId]['longitude'] || t.getIn(['geotag', 'gpsLocation', 'longitude']) || '',
-      latitude: this.props.geotag[this.targetId]['latitude']|| t.getIn(['geotag', 'gpsLocation', 'latitude']) || '',
+      longitude: t.getIn(['geotag', 'gpsLocation', 'longitude']) || '',
+      latitude: t.getIn(['geotag', 'gpsLocation', 'latitude']) || '',
       dragCtr: 0, //counter rather than boolean to allow hovering over child elements
       iwidth: -1,
       iheight: -1,
@@ -686,7 +686,7 @@ export class MergeTarget extends Component {
     const mdlcIds = targetId in this.props.selectedTsids? 'mdlc' in this.props.selectedTsids[targetId]? this.props.selectedTsids[targetId]['mdlc'] : [] : []
     const allSelectedIds = adlcIds.concat(mdlcIds)
     console.log('new ids', allSelectedIds)
-    
+
     const onSuccess = data => {
       // im so sorry
       
