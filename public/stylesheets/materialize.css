@@ -4305,9 +4305,31 @@ nav i.material-icons {
 }
 
 nav .nav-wrapper {
-  position: relative;
+  /* position: relative; */
   height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
+
+nav .nav-wrapper .stats{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  /* gap: 20px; */
+  height: 70%;
+  border: 1px solid grey;
+  background-color: #eeeeee;
+  color: #000;
+  border-radius: 15px;
+  padding: 0px 15px;
+}
+nav .nav-wrapper .stats .stat{
+  margin: 0 10px;
+  
+}
+
 
 @media only screen and (min-width: 993px) {
   nav a.sidenav-trigger {
@@ -4316,8 +4338,8 @@ nav .nav-wrapper {
 }
 
 nav .sidenav-trigger {
-  float: left;
-  position: relative;
+  /* float: left;
+  position: relative; */
   z-index: 1;
   height: 56px;
   margin: 0 18px;
@@ -4329,7 +4351,7 @@ nav .sidenav-trigger i {
 }
 
 nav .brand-logo {
-  position: absolute;
+  /* position: absolute; */
   color: #fff;
   display: inline-block;
   font-size: 2.1rem;
