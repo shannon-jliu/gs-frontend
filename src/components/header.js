@@ -50,7 +50,7 @@ export class Header extends Component {
       console.log('mdlc', sightings.filter(ts => ts.type !== 'adlc'))
       const mdlc_count = sightings.filter(ts => !isAdlc(ts) &&( ts.target && ts.target.get('id') === target.id)).length
       const adlc_count = sightings.filter(ts => isAdlc(ts)&& ( ts.target && ts.target.get('id') === target.id)).length
-      return <div className='stat'>{"Target " + target.id + ": " + mdlc_count + " MDLC + " + adlc_count + " ADLC"}</div>
+      return <div className='stat'>{"Target " + target.id + ": " + mdlc_count + ", " + adlc_count}</div>
     }
 
     return (
