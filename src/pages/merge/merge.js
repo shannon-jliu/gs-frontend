@@ -25,7 +25,8 @@ export class Merge extends Component {
       // if a target sighting is being dragged, the entire object is copied to this variable
       // when no sighting is being dragged, this is null
       dragSighting: null,
-      adlcChecked: false
+      adlcChecked: false,
+      geotag: {}
     }
 
     this.createNewTarget = this.createNewTarget.bind(this)
@@ -38,18 +39,28 @@ export class Merge extends Component {
     // this.mergeADLC = this.mergeADLC.bind(this)
     this.updateCheck = this.updateCheck.bind(this)
     this.onSelectedUpdate = this.onSelectedUpdate.bind(this)
+    this.setGeotag = this.setGeotag.bind(this)
   }
 
   // every 3 seconds, the page polls the server for the current targets and target sightings
   componentDidMount() {
-    const loadNewestContent = () => {
-      this.props.getAllTargets()
+    const loadNewestContent = async () => {
+      await this.props.getAllTargets()
       this.props.getAllSightings()
+      // const targetIds = Array.from(this.props.savedTargets?.map((t)=> [t.get('id'),{latitude: "", longitude: ""}]) || [])
+      // const geotagState = new Map(targetIds)
+      // console.log("load geotag", geotagState)
+      // this.setState({geotag: geotagState})
+
     }
     this.contentLoader = setInterval(
       loadNewestContent,
       MILLISECONDS_BETWEEN_MERGE_PAGE_POLLS
     )
+  }
+
+  setGeotag(targetId, geotag) {
+    this.setState({geotag: {...this.state.geotag, [targetId]: geotag}})
   }
 
   componentWillUnmount() {
@@ -243,6 +254,8 @@ export class Merge extends Component {
     if (target.get('type') === 'emergent') {
       return
     }
+    // console.log('current geotag', this.state.geotag[target.get('id')], this.state.geotag)
+    const subGeotag = this.state.geotag[target.get('id')]
     return (
       <MergeTarget
         key={key}
@@ -253,6 +266,8 @@ export class Merge extends Component {
         onTsDrop={this.onDrop}
         dragId={dragId}
         isChecked={this.state.adlcChecked}
+        setGeotag={this.setGeotag}
+        targetGeotag={subGeotag ?? {longitude: '', latitude: ''}}
       />
     )
   }
@@ -260,16 +275,21 @@ export class Merge extends Component {
     const adlcIds = targetId in this.props.selectedTsids? 'adlc' in this.props.selectedTsids[targetId]? this.props.selectedTsids[targetId]['adlc'] : [] : []
     const mdlcIds = targetId in this.props.selectedTsids? 'mdlc' in this.props.selectedTsids[targetId]? this.props.selectedTsids[targetId]['mdlc'] : [] : []
     const allSelectedIds = adlcIds.concat(mdlcIds)
-    console.log('drag: new ids', allSelectedIds)
+    // console.log('drag: new ids', allSelectedIds)
     const onSuccess = data => {
       // im so sorry
       
       if(data.geotag){
-        this.props.updateGeotag(targetId, {latitude: data.geotag.gpsLocation.latitude, longitude: data.geotag.gpsLocation.longitude})
+        const newGeotag = {latitude: data.geotag.gpsLocation.latitude, longitude: data.geotag.gpsLocation.longitude}
+        this.props.updateGeotag(targetId, newGeotag)
+        this.setGeotag(targetId, newGeotag)
       }
       else{
-        this.props.updateGeotag(targetId, {latitude: "", longitude: ""})
+        const newGeotag = {latitude: "", longitude: ""}
+        this.props.updateGeotag(targetId, newGeotag)
+        this.setGeotag(targetId, newGeotag)
       }
+
 
     }
     const onFailure = data => {
@@ -293,8 +313,12 @@ export class Merge extends Component {
         currTargetOfDragSighting.get('id') !== target.get('id')
       ) {
         // this.props.deleteSavedTargetSighting(target)
+        const sightingType = this.state.dragSighting.get('creator').get('username') === 'adlc'? 'adlc': 'mdlc'
         console.log('prev', currTargetOfDragSighting.get('id'), 'after', target.get('id'))
+        console.log('pre: selected ids', this.props.selectedTsids[currTargetOfDragSighting.get('id')])
+        console.log('disable: ', currTargetOfDragSighting.get('id'), sightingType, this.state.dragSighting)
         await this.props.removeSelectedTsid(currTargetOfDragSighting.get('id'), sightingType, this.state.dragSighting)
+        console.log('post: selected ids', this.props.selectedTsids[currTargetOfDragSighting.get('id')])
         this.onSelectedUpdate(currTargetOfDragSighting.get('id'))
         
         await this.props.updateTargetSighting(
@@ -308,9 +332,8 @@ export class Merge extends Component {
           })
         )
 
-        const sightingType = this.state.dragSighting.get('creator').get('username') === 'adlc'? 'adlc': 'mdlc'
+        
         await this.props.addSelectedTsid(target.get('id'), sightingType, this.state.dragSighting)
-        console.log('selected ids', this.props.selectedTsids)
         this.onSelectedUpdate(target.get('id'))
         // console.log(this.props.geotag[target.get('id')])
       }

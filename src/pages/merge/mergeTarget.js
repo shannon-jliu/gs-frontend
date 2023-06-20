@@ -52,8 +52,6 @@ export class MergeTarget extends Component {
       alphaColor: t.get('alphaColor') || '',
       thumbnailTsid: t.get('thumbnailTsid') || 0,
       description: t.get('description') || '',
-      longitude: t.getIn(['geotag', 'gpsLocation', 'longitude']) || '',
-      latitude: t.getIn(['geotag', 'gpsLocation', 'latitude']) || '',
       dragCtr: 0, //counter rather than boolean to allow hovering over child elements
       iwidth: -1,
       iheight: -1,
@@ -111,6 +109,7 @@ export class MergeTarget extends Component {
     return (
       <div
         ref="main"
+        key={this.targetId + this.props.targetGeotag} 
         className={'target card' + (this.state.dragCtr > 0 ? ' drag-over' : '')}
         onDragEnter={targetHasSpecialType ? undefined : this.dragEnter}
         onDragLeave={targetHasSpecialType ? undefined : this.dragLeave}
@@ -249,15 +248,15 @@ export class MergeTarget extends Component {
       return <div className="hidden" />
     }
 
-
+    // console.log('lanlot', this.props.targetGeotag.latitude, this.props.targetGeotag.latitude, this.props.targetGeotag)
     return (
       <div className="row">
         <p>
           {this.state.shapeColor} {this.state.shape}
           <br /> with {this.state.alphaColor} {this.state.alpha}{' '}
         </p>
-        <>latitude: {this.state.latitude}
-        <br />longitude: {this.state.longitude}</>
+        <>lat: <br />{this.props.targetGeotag.latitude}
+        <br />long: <br />{this.props.targetGeotag.longitude}<br /></>
       </div>
     )
   }
@@ -421,8 +420,8 @@ export class MergeTarget extends Component {
           'geotag',
           fromJS({
             gpsLocation: {
-              longitude: s.longitude,
-              latitude: s.latitude,
+              longitude: this.props.targetGeotag.longitude,
+              latitude: this.props.targetGeotag.latitude,
             },
           })
         )
@@ -525,7 +524,7 @@ export class MergeTarget extends Component {
   }
 
   isGeotagValidAndSaneToSave(showReason) {
-    if (this.state.latitude === '' && this.state.longitude === '') {
+    if (this.props.targetGeotag.latitude === '' && this.props.targetGeotag.longitude === '') {
       return true
     }
 
@@ -566,8 +565,8 @@ export class MergeTarget extends Component {
   // this checks that geotag is within 0.5 degrees of latitude and longitude from Neno or PAX
   // that's about 25-35 miles -- this is used as a sanity check, not a guarantee within bounds
   isValidNonEmptyGeotagInSaneLocationToSave(showReason) {
-    const lat = parseFloat(this.state.latitude)
-    const lon = parseFloat(this.state.longitude)
+    const lat = parseFloat(this.props.targetGeotag.latitude)
+    const lon = parseFloat(this.props.targetGeotag.longitude)
 
     const isGeotagNearPAX =
       Math.abs(lat - PAX_COORDS[0]) < 0.5 &&
@@ -628,7 +627,7 @@ export class MergeTarget extends Component {
   }
 
   isValidGeotagModified() {
-    if (this.state.latitude === '' || this.state.longitude === '') {
+    if (this.props.targetGeotag.latitude === '' || this.props.targetGeotag.longitude === '') {
       return false
     }
 
@@ -641,8 +640,8 @@ export class MergeTarget extends Component {
       undefined
     )
     return (
-      savedTargetLatitude !== this.state.latitude ||
-      savedTargetLongitude !== this.state.longitude
+      savedTargetLatitude !== this.props.targetGeotag.latitude ||
+      savedTargetLongitude !== this.props.targetGeotag.longitude
     )
   }
 
@@ -693,18 +692,20 @@ export class MergeTarget extends Component {
       if(data.geotag){
         this.props.updateGeotag(targetId, {latitude: data.geotag.gpsLocation.latitude, longitude: data.geotag.gpsLocation.longitude})
         // console.log('geotag received')
-        // console.log('geotag', this.props.geotag[targetId][''], this.props.geotag[targetId]['longitude'], this.props.geotag['latitude'])
-        const geotag = this.props.geotag[targetId]
-        // console.log('geotag', geotag)
-        // console.log('geotag1', this.state.latitude, this.state.longitude)
-        this.setState({latitude: geotag['latitude'], longitude: geotag['longitude']})
+        // console.log('geotag', this.props.targetGeotag[targetId][''], this.props.targetGeotag[targetId].longitude, this.props.targetGeotag.latitude)
+        const geotag = this.props.geotags[targetId]
+        // console.log('real geotag', geotag)
+        // console.log('geotag1', this.props.targetGeotag.latitude, this.props.targetGeotag.longitude)
+        this.props.setGeotag(targetId, {latitude: geotag.latitude, longitude: geotag.longitude})
+        // console.log('geotag', this.props.targetGeotag)
       }
       else {
         let fakeGeotag = {latitude: '', longitude: ''}
         this.props.updateGeotag(targetId, fakeGeotag)
-        // console.log('geotag', this.props.geotag[targetId][''], this.props.geotag[targetId]['longitude'], this.props.geotag['latitude'])
-        const geotag = this.props.geotag[targetId]
-        this.setState({latitude:geotag['latitude'], longitude: geotag['longitude']})
+        // console.log('fake geotag')
+        // console.log('geotag', this.props.targetGeotag[targetId][''], this.props.targetGeotag[targetId].longitude, this.props.targetGeotag.latitude)
+        const geotag = this.props.geotags[targetId]
+        this.props.setGeotag(targetId,{latitude:geotag.latitude, longitude: geotag.longitude})
       }
   
     }
@@ -722,6 +723,8 @@ export class MergeTarget extends Component {
     const selectedIds = this.getRelatedSelectedTsids(sighting)
     if (selectedIds.includes(sightingId)){
       await this.props.removeSelectedTsid(targetId, sightingType, sighting)
+      console.log('disable: ', targetId, sightingType, sighting)
+
     }
     else {
       await this.props.addSelectedTsid(targetId, sightingType, sighting)
@@ -755,11 +758,13 @@ MergeTarget.propTypes = {
   onTsDrop: PropTypes.func.isRequired,
   dragId: PropTypes.number,
   isChecked: PropTypes.bool,
+  setGeotag: PropTypes.func.isRequired,
+  geotag: ImmutablePropTypes.map.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   selectedTsids: state.mergeReducer.get('selectedTsids'),
-  geotag: state.mergeReducer.get('geotags')
+  geotags: state.mergeReducer.get('geotags')
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
