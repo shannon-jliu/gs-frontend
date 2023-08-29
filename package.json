@@ -28,7 +28,7 @@
     "redux-persist-transform-immutable": "^5.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom"
   },
