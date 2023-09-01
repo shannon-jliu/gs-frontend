@@ -276,7 +276,7 @@ export class TagSighting extends Component {
   }
 
   deleteSighting(e) {
-    e.preventDefault();
+    e.preventDefault()
     if (this.actionable()) {
       if (this.props.sighting.has('id')) {
         if (this.state.type === 'roi')

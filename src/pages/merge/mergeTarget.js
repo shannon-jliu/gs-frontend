@@ -22,7 +22,7 @@ import { GROUND_SERVER_URL } from '../../constants/links'
 import MergeOperations from '../../operations/mergeOperations'
 import { TargetSightingRequests } from '../../util/sendApi'
 import { setSelectedTsids } from '../../actions/mergeActionCreator'
-import {useSelector} from 'react-redux';
+import {useSelector} from 'react-redux'
 
 export class MergeTarget extends Component {
   constructor(props) {
@@ -68,7 +68,7 @@ export class MergeTarget extends Component {
   }
 
   getCreaterName(ts){
-    return ts.get('creator').get('username');
+    return ts.get('creator').get('username')
   }
 
   getRelatedSelectedTsids(ts){
@@ -316,9 +316,9 @@ export class MergeTarget extends Component {
           <label style={{fontSize: 17, color: 'black'}}> MDLC images</label>
           <div className="buttons">
             <button className="btn waves-effect waves-light" style={buttonStyle} 
-            onClick={addAllMDLC}> Add All</button>
+              onClick={addAllMDLC}> Add All</button>
             <button className="btn waves-effect waves-light red accent-2" style={buttonStyle} 
-            onClick={removeAllMDLC}> Remove All</button>
+              onClick={removeAllMDLC}> Remove All</button>
           </div>
         </div>
         <div className="sighting-images">{sightingPreviews}</div>
@@ -350,9 +350,9 @@ export class MergeTarget extends Component {
           <label style={{fontSize: 17, color: 'black'}}> ADLC images</label>
           <div className="buttons">
             <button className="btn waves-effect waves-light" style={buttonStyle} 
-            onClick={addAllMDLC}> Add All</button>
+              onClick={addAllMDLC}> Add All</button>
             <button className="btn waves-effect waves-light red accent-2" style={buttonStyle} 
-            onClick={removeAllMDLC}> Remove All</button>
+              onClick={removeAllMDLC}> Remove All</button>
           </div>
         </div>
         <div className="adlc-images">{sightingPreviews}</div>
