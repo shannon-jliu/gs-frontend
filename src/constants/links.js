@@ -5,6 +5,7 @@ export const TAGGING_PAGE_ID = 'TAGGING'
 export const MERGING_PAGE_ID = 'MERGING'
 export const SETTINGS_PAGE_ID = 'SETTINGS'
 export const LOGS_PAGE_ID = 'LOGS'
+export const PROGRESS_PAGE_ID = 'PROGRESS'
 
 export const GROUND_SERVER_URL = 'http://localhost:9000'
 // process.env.REACT_APP_GS_IP ?

@@ -11,6 +11,7 @@ import {
   MERGING_PAGE_ID,
   SETTINGS_PAGE_ID,
   LOGS_PAGE_ID,
+  PROGRESS_PAGE_ID
 } from '../constants/links.js'
 
 import { fromJS } from 'immutable'
@@ -22,6 +23,7 @@ const LINKS = Object.freeze({
   'Merging': { name: 'Merging', key: MERGING_PAGE_ID, href: '/merge', 'operator': true },
   'Settings': { name: 'Settings', key: SETTINGS_PAGE_ID, href: '/settings', 'operator': false },
   'Logs': { name: 'Logs', key: LOGS_PAGE_ID, href: '/logs', 'operator': false },
+  'Progress': { name: 'Progress', key: PROGRESS_PAGE_ID, href: '/progress', 'operator': false },
 })
 
 export class Header extends Component {
@@ -48,8 +50,8 @@ export class Header extends Component {
       console.log('target', target)
       console.log('sighting', sightings[0])
       console.log('mdlc', sightings.filter(ts => ts.type !== 'adlc'))
-      const mdlc_count = sightings.filter(ts => !isAdlc(ts) &&( ts.target && ts.target.get('id') === target.id)).length
-      const adlc_count = sightings.filter(ts => isAdlc(ts)&& ( ts.target && ts.target.get('id') === target.id)).length
+      const mdlc_count = sightings.filter(ts => !isAdlc(ts) && (ts.target && ts.target.get('id') === target.id)).length
+      const adlc_count = sightings.filter(ts => isAdlc(ts) && (ts.target && ts.target.get('id') === target.id)).length
       return <div className='stat'>{"Target " + target.id + ": " + mdlc_count + ", " + adlc_count}</div>
     }
 
