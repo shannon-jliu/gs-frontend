@@ -30,7 +30,7 @@ export class MergeTarget extends Component {
 
     const t = this.getAssumedTargetFromProps()
 
-    
+
     this.canDelete = this.canDelete.bind(this)
     this.canSave = this.canSave.bind(this)
     this.getHandler = this.getHandler.bind(this)
@@ -81,8 +81,8 @@ export class MergeTarget extends Component {
     }
     return []
   }
-  
-  
+
+
 
   componentDidMount() {
     // required for selectors.
@@ -109,7 +109,7 @@ export class MergeTarget extends Component {
     return (
       <div
         ref="main"
-        key={this.targetId + this.props.targetGeotag} 
+        key={this.targetId + this.props.targetGeotag}
         className={'target card' + (this.state.dragCtr > 0 ? ' drag-over' : '')}
         onDragEnter={targetHasSpecialType ? undefined : this.dragEnter}
         onDragLeave={targetHasSpecialType ? undefined : this.dragLeave}
@@ -302,22 +302,22 @@ export class MergeTarget extends Component {
       console.log('all',Array.from(this.props.sightings.map(ts => ts.get('id'))))
       await this.props.setSelectedTsids(this.targetId, 'mdlc', Array.from(this.props.sightings.map(ts => ts.get('id'))))
       this.onSelectedUpdate()
-      return 
-    } 
+      return
+    }
     const removeAllMDLC = async () =>{
       await this.props.setSelectedTsids(this.targetId, 'mdlc', [])
       this.onSelectedUpdate()
-      return 
-    } 
+      return
+    }
     const buttonStyle = {height: '34px', width: '120px', padding: '0 6px'}
     return (
       <div className="sighting-images-container">
         <div className="label">
           <label style={{fontSize: 17, color: 'black'}}> MDLC images</label>
           <div className="buttons">
-            <button className="btn waves-effect waves-light" style={buttonStyle} 
+            <button className="btn waves-effect waves-light" style={buttonStyle}
               onClick={addAllMDLC}> Add All</button>
-            <button className="btn waves-effect waves-light red accent-2" style={buttonStyle} 
+            <button className="btn waves-effect waves-light red accent-2" style={buttonStyle}
               onClick={removeAllMDLC}> Remove All</button>
           </div>
         </div>
@@ -336,22 +336,22 @@ export class MergeTarget extends Component {
     const addAllMDLC = () =>{
       this.props.setSelectedTsids(this.targetId, 'adlc', this.props.sightings.map(ts => ts.get('id')))
       this.onSelectedUpdate()
-      return 
-    } 
+      return
+    }
     const removeAllMDLC = () =>{
       this.props.setSelectedTsids(this.targetId, 'adlc', [])
       this.onSelectedUpdate()
-      return 
-    } 
+      return
+    }
     const buttonStyle = {height: '34px', width: '120px', padding: '0 6px'}
     return (
       <div className="adlc-images-container">
         <div className="label">
           <label style={{fontSize: 17, color: 'black'}}> ADLC images</label>
           <div className="buttons">
-            <button className="btn waves-effect waves-light" style={buttonStyle} 
+            <button className="btn waves-effect waves-light" style={buttonStyle}
               onClick={addAllMDLC}> Add All</button>
-            <button className="btn waves-effect waves-light red accent-2" style={buttonStyle} 
+            <button className="btn waves-effect waves-light red accent-2" style={buttonStyle}
               onClick={removeAllMDLC}> Remove All</button>
           </div>
         </div>
@@ -688,7 +688,7 @@ export class MergeTarget extends Component {
 
     const onSuccess = data => {
       // im so sorry
-      
+
       if(data.geotag){
         this.props.updateGeotag(targetId, {latitude: data.geotag.gpsLocation.latitude, longitude: data.geotag.gpsLocation.longitude})
         // console.log('geotag received')
@@ -707,7 +707,7 @@ export class MergeTarget extends Component {
         const geotag = this.props.geotags[targetId]
         this.props.setGeotag(targetId,{latitude:geotag.latitude, longitude: geotag.longitude})
       }
-  
+
     }
     const onFailure = data => {
       SnackbarUtil.render('Failed to update selected targets')
@@ -716,10 +716,10 @@ export class MergeTarget extends Component {
   }
 
   async toggleSelectSighting(sighting){
-    const sightingId = sighting.get('id') 
+    const sightingId = sighting.get('id')
     const targetId = this.targetId
     const sightingType = this.getCreaterName(sighting) === 'adlc'? 'adlc' : 'mdlc'
-    
+
     const selectedIds = this.getRelatedSelectedTsids(sighting)
     if (selectedIds.includes(sightingId)){
       await this.props.removeSelectedTsid(targetId, sightingType, sighting)
@@ -729,9 +729,9 @@ export class MergeTarget extends Component {
     else {
       await this.props.addSelectedTsid(targetId, sightingType, sighting)
     }
-    
+
     this.onSelectedUpdate()
-    
+
   }
 
   getNonGeotagMutableAttributeNames() {

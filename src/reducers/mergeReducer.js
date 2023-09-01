@@ -23,7 +23,7 @@ const mergeReducer = (state = initialState, action) => {
 }
 
 function updateGeotag(state, targetId, geotag){
-  return state.set('geotags',  
+  return state.set('geotags',
     {...state.get('geotags'), [targetId]: {longitude: geotag['longitude'], latitude: geotag['latitude']}} )
 }
 
