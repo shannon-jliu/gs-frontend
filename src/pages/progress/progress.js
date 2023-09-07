@@ -44,7 +44,7 @@ const Progress = () => {
   /*
   Number of tagged images corresponding to each target (up to all 5)
 Number of images received, processed, and pending, with the percentage that has been processed or needs to be processed
-Number of ROIs? 
+Number of ROIs?
  */
 
   return (
