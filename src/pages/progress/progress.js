@@ -1,65 +1,67 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { GROUND_SERVER_URL } from '../../constants/links.js'
 import './progress.css'
 import $ from 'jquery'
 
-export class Progress extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      source: GROUND_SERVER_URL,
-      rois: this.requestObject('/api/v1/roi'),
-      images: this.requestObject('/api/v1/image/all/0'),
-      assignments: this.requestObject('/api/v1/assignment/allusers'),
-      targetSightings: this.requestObject('/api/v1/alphanum_target_sighting'),
-      targets: this.requestObject('/api/v1/alphanum_target'),
-      imagesPending: 0,
-    }
-  }
+const Progress = () => {
+  const source = GROUND_SERVER_URL
+  const rois = useState(() => requestObject('/api/v1/roi'))
+  const images = useState(() => requestObject('/api/v1/image/all/0'))
+  const assignments = useState(() => requestObject('/api/v1/assignment/allusers'))
+  const targets = useState(() => requestObject('/api/v1/alphanum_target'))
+  const targetSightings = useState(() => requestObject())
+  const [imagesPending, setImagesPending] = useState(0)
 
-  requestObject(url) {
+  /*
+  data needed: percentage of processed images
+   */
+
+  // Getting data from the ground server
+  function requestObject(url) {
     var res = $.ajax({
       url: url,
       type: 'GET',
-      async: false
+      async: false,
     })
     return res.responseJSON
   }
 
-
-  getCount(property) {
-    return Object.keys(property).length
+  function getCount(data) {
+    return Object.keys(data).length
   }
 
-  getAssignmentsProcessed() {
+  function getNumAssignmentsProcessed(a) {
     let count = 0
-    Object.values(this.state.assignments).forEach(
+    Object.values(a).forEach(
       assignmentDetails => {
         if (assignmentDetails.done == true) { count = count + 1 }
       }
     )
-    this.state.imagesPending = Object.keys(this.state.assignments).length - count
+    setImagesPending(Object.keys(a).length - count)
     return count
   }
 
-  render(e) {
+  /*
+  Number of tagged images corresponding to each target (up to all 5)
+Number of images received, processed, and pending, with the percentage that has been processed or needs to be processed
+Number of ROIs? 
+ */
 
-    return (
+  return (
+    <div>
       <div>
-        <div>
-          <p>Images Received: {this.getCount(this.state.images)}</p>
-          <p>Images Assigned: {this.getCount(this.state.assignments)}</p>
-          <p>Images Processed: {this.getAssignmentsProcessed(this.state.assignments)}</p>
-          <p>Images Pending: {this.state.imagesPending} </p>
-          <p>Total ROIs: {this.getCount(this.state.rois)}</p>
-          <p>Total Target Sightings: {this.getCount(this.state.targetSightings)}</p>
-          <p>Total Targets: {this.getCount(this.state.targets) - 1}</p>
-        </div>
+        <p>text here</p>
+        <p>Images Received: {getCount(images)}</p>
+        <p>Images Assigned: {getCount(assignments)}</p>
+        {/* <p>Images Processed: {getNumAssignmentsProcessed(assignments)}</p> // TODO: doesn't work - BREAKS IT */}
+        <p>Images Pending: {imagesPending} </p>
+        <p>Total ROIs: {getCount(rois)}</p>
+        <p>Total Target Sightings: {getCount(targetSightings)}</p>
+        <p>Total Targets: {getCount(targets) - 1}</p>
       </div>
-    )
-  }
+    </div>
+  )
 }
 //subtracted 1 from targets for the off-axis default target
 //<img src={'http://localhost:9000' + '/api/v1/planeletTest/file/test_' + this.state.link} className='controllerimage'/>
-
 export default Progress
