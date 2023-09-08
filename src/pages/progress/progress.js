@@ -43,6 +43,7 @@ export default function Progress() {
       <div>
         <p>text here</p>
         {/* to ask: what is the difference btwn images received and processed? */}
+        {/* also what exactly is a pending image */}
         <p>Images Received: {() => getCount(images)}</p>
         <p>Images Assigned: {() => getCount(assignments)}</p>
         <p>Images Processed: {() => getNumAssignmentsProcessed()}</p>
