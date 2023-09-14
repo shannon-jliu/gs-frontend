@@ -34,24 +34,34 @@ export default function Progress() {
       }
     )
     let numPending = Object.keys(assignments).length - count
-    setImagesPending(numPending)
+    // setImagesPending(numPending)
     return count
+  }
+
+  function getNumAssignmentsPending() {
+    let count = 0
+    Object.values(assignments).forEach(
+      assignmentDetails => {
+        if (assignmentDetails.done == true) { count = count + 1 }
+      }
+    )
+    let numPending = Object.keys(assignments).length - count
+    return numPending
   }
 
   return (
     <div>
       <div>
-        <p>text here</p>
         {/* to ask: what is the difference btwn images received and processed? */}
         {/* also what exactly is a pending image */}
-        <p>Images Received: {() => getCount(images)}</p>
-        <p>Images Assigned: {() => getCount(assignments)}</p>
-        <p>Images Processed: {() => getNumAssignmentsProcessed()}</p>
-        <p>Images Pending: {imagesPending} </p>
-        <p>Percentage Images Processed: {() => (getNumAssignmentsProcessed() / getCount(images))}</p>
-        <p>Total ROIs: {() => getCount(rois)}</p>
-        <p>Total Target Sightings: {() => getCount(targetSightings)}</p>
-        <p>Total Targets: {() => getCount(targets) - 1}</p>
+        <p>Images Received: {getCount(images)}</p>
+        <p>Images Assigned: {getCount(assignments)}</p>
+        <p>Images Processed: {getNumAssignmentsProcessed()}</p>
+        <p>Images Pending: {getNumAssignmentsPending()} </p>
+        <p>Percentage Images Processed: {(getNumAssignmentsProcessed() / getCount(images)) * 100}%</p>
+        <p>Total ROIs: {getCount(rois)}</p>
+        <p>Total Target Sightings: {getCount(targetSightings)}</p>
+        <p>Total Targets: {getCount(targets) - 1}</p>
       </div>
     </div>
   )
