@@ -10,7 +10,7 @@ export default function Progress() {
   const [assignments, setAssignments] = useState(() => requestObject('/api/v1/assignment/allusers'))
   const [targets, setTargets] = useState(() => requestObject('/api/v1/alphanum_target'))
   const [targetSightings, setTargetSightings] = useState(() => requestObject('/api/v1/alphanum_target_sighting'))
-  const [imagesPending, setImagesPending] = useState(0)
+  // const [imagesPending, setImagesPending] = useState(0)
 
   // Getting data from the ground server
   function requestObject(url) {
@@ -33,7 +33,7 @@ export default function Progress() {
         if (assignmentDetails.done == true) { count = count + 1 }
       }
     )
-    let numPending = Object.keys(assignments).length - count
+    // let numPending = Object.keys(assignments).length - count
     // setImagesPending(numPending)
     return count
   }
@@ -51,9 +51,7 @@ export default function Progress() {
 
   return (
     <div>
-      <div>
-        {/* to ask: what is the difference btwn images received and processed? */}
-        {/* also what exactly is a pending image */}
+      <div class="data-body">
         <p>Images Received: {getCount(images)}</p>
         <p>Images Assigned: {getCount(assignments)}</p>
         <p>Images Processed: {getNumAssignmentsProcessed()}</p>
@@ -61,7 +59,7 @@ export default function Progress() {
         <p>Percentage Images Processed: {(getNumAssignmentsProcessed() / getCount(images)) * 100}%</p>
         <p>Total ROIs: {getCount(rois)}</p>
         <p>Total Target Sightings: {getCount(targetSightings)}</p>
-        <p>Total Targets: {getCount(targets) - 1}</p>
+        {/* <p>Total Targets: {getCount(targets) - 1}</p> */}
       </div>
     </div>
   )
