@@ -1,20 +1,30 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import { GROUND_SERVER_URL } from '../../constants/links.js'
 import './progress.css'
 import $ from 'jquery'
 
 import ImageViewer from '../../components/imageViewer'
+import PSModeSelect from './PSModeSelect.js'
+import { update } from 'lodash'
+import Slider from '../tag/components/slider.js'
 
-export default function Progress() {
+export function Progress() {
   const source = GROUND_SERVER_URL
-  const [rois, setRois] = useState(() => requestObject('/api/v1/roi'))
-  const [images, setImages] = useState(() => requestObject('/api/v1/image/all/0'))
-  const [assignments, setAssignments] = useState(() => requestObject('/api/v1/assignment/allusers'))
-  const [targets, setTargets] = useState(() => requestObject('/api/v1/alphanum_target'))
-  const [targetSightings, setTargetSightings] = useState(() => requestObject('/api/v1/alphanum_target_sighting'))
-  const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/recent')["imageUrl"])
-  // const [imagesPending, setImagesPending] = useState(0)
-  // const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/all/0'))
+  const [rois] = useState(() => requestObject('/api/v1/roi'))
+  const [images] = useState(() => requestObject('/api/v1/image/all/0'))
+  const [assignments] = useState(() => requestObject('/api/v1/assignment/allusers'))
+  const [targets] = useState(() => requestObject('/api/v1/alphanum_target'))
+  const [targetSightings] = useState(() => requestObject('/api/v1/alphanum_target_sighting'))
+  const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/recent')['imageUrl'])
+
+  // Plane System Data:
+  // const currentFocalLength = useState(() => requestObject('/endpoint/here'))
+  const [focalLength, setFocalLength] = useState(0.) // floats -> dragger..
+  // const currentGimbalPosition = useState(() => requestObject('/endpoint/here'))
+  const [gimbalPosition, setGimbalPosition] = useState(0.) // floats -> ?? two numbers
+  // const currentPSMode = useState(() => requestObject('/endpoint/here'))
+  const [psMode, setPSMode] = useState(1) // dropdown values
 
   // Getting data from the ground server
   function requestObject(url) {
@@ -53,17 +63,91 @@ export default function Progress() {
     return numPending
   }
 
+  const sliderHandler = (evt) => {
+    let fL = evt.target.value // fL: focal length
+    console.log(fL)
+    setFocalLength(fL)
+  }
+
+  const updateGimbalPosition = (evt) => {
+    let pos = evt.target.value
+    console.log(pos)
+    setGimbalPosition(pos)
+  }
+
+  const updatePSMode = (evt) => {
+    let mode = evt.target.value
+    // if want to have save button -> create sep vars for the ps mode you show 
+    // and the local ps mode var on here
+    // i.e. the ps mode displayed in text is just from the endpoint call
+    setPSMode(mode)
+  }
+
+
   return (
     <div>
       <div className="data-body">
-        <p>Images Received: {getCount(images)}</p>
-        <p>Images Assigned: {getCount(assignments)}</p>
-        <p>Images Processed: {getNumAssignmentsProcessed()}</p>
-        <p>Images Pending: {getNumAssignmentsPending()} </p>
-        <p>Percentage Images Processed: {(getNumAssignmentsProcessed() / getCount(images)) * 100}%</p>
-        <p>Total ROIs: {getCount(rois)}</p>
-        <p>Total Target Sightings: {getCount(targetSightings)}</p>
-        {/* <p>Total Targets: {getCount(targets) - 1}</p> */}
+        <div class="plane-system-info">
+          <h5>Plane System Metrics</h5>
+          {/* focal length */}
+          <div class="ps-data">
+            <p>Focal Length:</p>
+            <p>Current: {focalLength}</p>
+            <input
+              id={'t-'}  // change id to something meaningful??
+              className='focal-len-slider' // TODO: fix ugliness
+              type='range'
+              value={focalLength}
+              min='0'
+              max='10'
+              onChange={sliderHandler}
+            />
+            <p>add a submit button here, on click call plane system endpoint</p>
+          </div>
+          {/* gimbal position */}
+          <div class="ps-data">
+            <p>Gimbal Position:</p>
+            <p>Current: {gimbalPosition}</p>
+            <div className="dropdown">
+              <select onChange={(evt) => updateGimbalPosition(evt)} value={gimbalPosition} className='browser-default'>
+                <option value="1">position 1</option>
+                <option value="2">position 2</option>
+                <option value="3">position 3</option>
+                <option value="4">position 4</option>
+                <option value="5">position 5</option>
+              </select>
+            </div>
+            <p>add a submit button here</p>
+          </div>
+          <div class="ps-data">
+            <p>PS Modes:</p>
+            <p>Current: {psMode}</p>
+            {/* needs className='browser-default' to display */}
+            <div className="dropdown">
+              <select onChange={(evt) => updatePSMode(evt)} value={psMode} className='browser-default'>
+                <option value="1">mode 1</option>
+                <option value="2">mode 2</option>
+                <option value="3">mode 3</option>
+                <option value="4">mode 4</option>
+                <option value="5">mode 5</option>
+              </select>
+            </div>
+            <p>add a submit button here, on click call plane system endpoint</p>
+            {/* <button onClick={this.saveNumTargets.bind(this)} className={saveClass}>Save</button></div> */}
+          </div>
+        </div>
+
+        <div class="target-info">
+          <h5>Target Metrics</h5>
+          <p>Images Received: {getCount(images)}</p>
+          <p>Images Assigned: {getCount(assignments)}</p>
+          <p>Images Processed: {getNumAssignmentsProcessed()}</p>
+          <p>Images Pending: {getNumAssignmentsPending()} </p>
+          <p>Percentage Images Processed: {(getNumAssignmentsProcessed() / getCount(images)) * 100}%</p>
+          <p>Total ROIs: {getCount(rois)}</p>
+          <p>Total Target Sightings: {getCount(targetSightings)}</p>
+          {/* <p>Total Targets: {getCount(targets) - 1}</p> */}
+        </div>
       </div>
       <div className="recent-image">
         <div className="detect">
@@ -79,5 +163,26 @@ export default function Progress() {
     </div>
   )
 }
+
+// ignore for now: here in case we need redux..
+/*
+const mapStateToProps = (state) => ({
+  psMode: state.progressReducer,
+  // settings: state.fiveTargetsReducer,
+  // numTargets: state.fiveTargetsReducer.get('settings').get('numTargets'),
+})
+
+// Redux tool to trigger a state change
+const mapDispatchToProps = (dispatch) => ({
+  // saveTarget: TargetOperations.saveTarget(dispatch),\
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Progress)
+*/
+export default Progress
+
 //subtracted 1 from targets for the off-axis default target
 //<img src={'http://localhost:9000' + '/api/v1/planeletTest/file/test_' + this.state.link} className='controllerimage'/>
