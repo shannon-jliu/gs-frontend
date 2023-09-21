@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { GROUND_SERVER_URL } from '../../constants/links.js'
 import './progress.css'
@@ -7,22 +7,24 @@ import $ from 'jquery'
 import ImageViewer from '../../components/imageViewer'
 import PSModeSelect from './PSModeSelect.js'
 import { update } from 'lodash'
+import Slider from '../tag/components/slider.js'
 
 export function Progress() {
   const source = GROUND_SERVER_URL
-  const [rois, setRois] = useState(() => requestObject('/api/v1/roi'))
-  const [images, setImages] = useState(() => requestObject('/api/v1/image/all/0'))
-  const [assignments, setAssignments] = useState(() => requestObject('/api/v1/assignment/allusers'))
-  const [targets, setTargets] = useState(() => requestObject('/api/v1/alphanum_target'))
-  const [targetSightings, setTargetSightings] = useState(() => requestObject('/api/v1/alphanum_target_sighting'))
+  const [rois] = useState(() => requestObject('/api/v1/roi'))
+  const [images] = useState(() => requestObject('/api/v1/image/all/0'))
+  const [assignments] = useState(() => requestObject('/api/v1/assignment/allusers'))
+  const [targets] = useState(() => requestObject('/api/v1/alphanum_target'))
+  const [targetSightings] = useState(() => requestObject('/api/v1/alphanum_target_sighting'))
   const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/recent')['imageUrl'])
-  // const [imagesPending, setImagesPending] = useState(0)
-  // const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/all/0'))
 
-  // Plane System
-  const [focalLength] = useState(0) // floats -> dragger..
-  const [gimbalPosition] = useState(0) // floats -> ?? two numbers
-  const [currentPSMode, setPSMode] = useState('default-mode') // dropdown values
+  // Plane System Data:
+  // const currentFocalLength = useState(() => requestObject('/endpoint/here'))
+  const [focalLength, setFocalLength] = useState(0.) // floats -> dragger..
+  // const currentGimbalPosition = useState(() => requestObject('/endpoint/here'))
+  const [gimbalPosition, setGimbalPosition] = useState(0.) // floats -> ?? two numbers
+  // const currentPSMode = useState(() => requestObject('/endpoint/here'))
+  const [psMode, setPSMode] = useState(1) // dropdown values
 
   // Getting data from the ground server
   function requestObject(url) {
@@ -61,20 +63,23 @@ export function Progress() {
     return numPending
   }
 
-  // updateTargetInformation(evt, target, index, x) {
-  //   let newState = _.cloneDeep(this.state)
-  //   let val = evt.target.value
-  //   if (x == 1) newState.targets[index].shapeColor = val
-  //   if (x == 2) newState.targets[index].shape = val
-  //   if (x == 3) newState.targets[index].alphaColor = val
-  //   if (x == 4) newState.targets[index].alpha = val
-  //   this.setState(newState)
-  // }
+  const sliderHandler = (evt) => {
+    let fL = evt.target.value // fL: focal length
+    console.log(fL)
+    setFocalLength(fL)
+  }
 
-  function updatePSMode(evt) {
-    let mode = evt
-    console.log(currentPSMode)
-    console.log(evt)
+  const updateGimbalPosition = (evt) => {
+    let pos = evt.target.value
+    console.log(pos)
+    setGimbalPosition(pos)
+  }
+
+  const updatePSMode = (evt) => {
+    let mode = evt.target.value
+    // if want to have save button -> create sep vars for the ps mode you show 
+    // and the local ps mode var on here
+    // i.e. the ps mode displayed in text is just from the endpoint call
     setPSMode(mode)
   }
 
@@ -85,26 +90,41 @@ export function Progress() {
         <div class="plane-system-info">
           <h5>Plane System Metrics</h5>
           {/* focal length */}
-          <div>
-            {/* get focal length: insert a slider - grab focal length and display above the slider */}
+          <div class="ps-data">
             <p>Focal Length:</p>
-            <p>focal length num here</p>
-            {/* slider */}
+            <p>Current: {focalLength}</p>
+            <input
+              id={'t-'}  // change id to something meaningful??
+              className='focal-len-slider' // TODO: fix ugliness
+              type='range'
+              value={focalLength}
+              min='0'
+              max='10'
+              onChange={sliderHandler}
+            />
+            <p>add a submit button here, on click call plane system endpoint</p>
           </div>
           {/* gimbal position */}
-          <div>
+          <div class="ps-data">
             <p>Gimbal Position:</p>
-            {/* ?? */}
+            <p>Current: {gimbalPosition}</p>
+            <div className="dropdown">
+              <select onChange={(evt) => updateGimbalPosition(evt)} value={gimbalPosition} className='browser-default'>
+                <option value="1">position 1</option>
+                <option value="2">position 2</option>
+                <option value="3">position 3</option>
+                <option value="4">position 4</option>
+                <option value="5">position 5</option>
+              </select>
+            </div>
+            <p>add a submit button here</p>
           </div>
-          <div>
-            <p>Current PS Mode:</p>
-            <p>Current mode name here</p>
-            {/* grab name of current ps mode and display here */}
-            {/* <select name="selectPSMode" id="selectPSMode" onChange={(evt) => setPSMode(evt)}> */}
-
+          <div class="ps-data">
+            <p>PS Modes:</p>
+            <p>Current: {psMode}</p>
             {/* needs className='browser-default' to display */}
-            <div className="classname">
-              <select onChange={(evt) => updatePSMode(evt)} value={currentPSMode} className='browser-default'>
+            <div className="dropdown">
+              <select onChange={(evt) => updatePSMode(evt)} value={psMode} className='browser-default'>
                 <option value="1">mode 1</option>
                 <option value="2">mode 2</option>
                 <option value="3">mode 3</option>
@@ -112,12 +132,7 @@ export function Progress() {
                 <option value="5">mode 5</option>
               </select>
             </div>
-
-            {/* <select name="selectNumTargets" id="selectNumTargets" onChange={(evt) => this.updateStateTargetsNum(evt)} className='browser-default'>
-              <option value="1">1</option>
-              <option selected value="2">2</option>
-            </select> */}
-
+            <p>add a submit button here, on click call plane system endpoint</p>
             {/* <button onClick={this.saveNumTargets.bind(this)} className={saveClass}>Save</button></div> */}
           </div>
         </div>
@@ -149,27 +164,25 @@ export function Progress() {
   )
 }
 
+// ignore for now: here in case we need redux..
+/*
 const mapStateToProps = (state) => ({
   psMode: state.progressReducer,
   // settings: state.fiveTargetsReducer,
   // numTargets: state.fiveTargetsReducer.get('settings').get('numTargets'),
-  // savedTargets: state.targetReducer.get('saved'),
-  //calls reducer to get thumbnails
-  // thumbnails: getThumbnails(state.thumbnailReducer),
 })
 
 // Redux tool to trigger a state change
 const mapDispatchToProps = (dispatch) => ({
-
-  // saveTarget: TargetOperations.saveTarget(dispatch),
-  // deleteTargets: TargetOperations.deleteAllTargets(dispatch),
-  // updateNumTargets: fiveTargetsSettingsOperations.updateNumTargets(dispatch),
+  // saveTarget: TargetOperations.saveTarget(dispatch),\
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Progress)
+*/
+export default Progress
 
 //subtracted 1 from targets for the off-axis default target
 //<img src={'http://localhost:9000' + '/api/v1/planeletTest/file/test_' + this.state.link} className='controllerimage'/>
