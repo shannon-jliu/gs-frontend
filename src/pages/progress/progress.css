@@ -1,10 +1,13 @@
 .data-body {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  height: 400px;
   margin: 1%;
   background-color: rgb(219, 219, 219);
   border-radius: 10px;
   padding: 0.5% 1% 1% 2%;
-  max-width: 35%;
-  max-height: 50%;
+  max-width: 40%;
+  max-height: 60%;
   font-size: 15px;
 }
 
@@ -15,37 +18,44 @@
 }
 
 .ps-data {
-  margin: 20px 0 20px 0;
+  margin: 5px 0 5px 0;
 }
 
 .focal-len-slider {
   /* TODO: fix styling and make not ugly */
   /* below from w3 schools */
-  -webkit-appearance: none;  /* Override default CSS styles */
+  margin: 1px;
+  -webkit-appearance: none;
+  /* Override default CSS styles */
   appearance: none;
-  width: 100%; /* Full-width */
-  height: 25px; /* Specified height */
+  width: 100%;
+  /* Full-width */
+  height: 15px;
+  /* Specified height */
   background: rgb(255, 219, 219);
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  outline: none;
+  /* Remove outline */
+  opacity: 0.7;
+  /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s;
+  /* 0.2 seconds transition on hover */
   transition: opacity .2s;
 }
 
 .recent-image {
   position: absolute;
-  top: 50%;
+  top: 65%;
   left: -10%;
-  right: 0;
-  bottom: 0;
+  right: 10%;
+  bottom: -10%;
   display: flex;
 }
 
 .recent-image .detect {
   /* uncomment margin-top for slider area*/
   margin-top: 10px;
-  margin-left: 140px;
-  width: 35%;
+  margin-left: 160px;
+  width: 40%;
   height: 100%;
   display: flex;
   flex-direction: column;

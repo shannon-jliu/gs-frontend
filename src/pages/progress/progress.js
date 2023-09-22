@@ -83,16 +83,17 @@ export function Progress() {
     setPSMode(mode)
   }
 
-
   return (
     <div>
       <div className="data-body">
         <div class="plane-system-info">
-          <h5>Plane System Metrics</h5>
+          <h6>Plane System Metrics</h6>
           {/* focal length */}
           <div class="ps-data">
-            <p>Focal Length:</p>
-            <p>Current: {focalLength}</p>
+            <p>Focal Length:
+            </p>
+            <p>Current: {focalLength} <button onClick={() => 0} className={'waves-effect waves-light btn'}>Save</button>
+            </p>
             <input
               id={'t-'}  // change id to something meaningful??
               className='focal-len-slider' // TODO: fix ugliness
@@ -102,12 +103,13 @@ export function Progress() {
               max='10'
               onChange={sliderHandler}
             />
-            <p>add a submit button here, on click call plane system endpoint</p>
+            {/* change onClick */}
           </div>
           {/* gimbal position */}
           <div class="ps-data">
             <p>Gimbal Position:</p>
-            <p>Current: {gimbalPosition}</p>
+            <p>Current: {gimbalPosition} <button onClick={() => 0} className={'waves-effect waves-light btn'}>Save</button>
+            </p>
             <div className="dropdown">
               <select onChange={(evt) => updateGimbalPosition(evt)} value={gimbalPosition} className='browser-default'>
                 <option value="1">position 1</option>
@@ -117,11 +119,10 @@ export function Progress() {
                 <option value="5">position 5</option>
               </select>
             </div>
-            <p>add a submit button here</p>
           </div>
           <div class="ps-data">
             <p>PS Modes:</p>
-            <p>Current: {psMode}</p>
+            <p>Current: {psMode} <button onClick={() => 0} className={'waves-effect waves-light btn'}>Save</button></p>
             {/* needs className='browser-default' to display */}
             <div className="dropdown">
               <select onChange={(evt) => updatePSMode(evt)} value={psMode} className='browser-default'>
@@ -132,13 +133,10 @@ export function Progress() {
                 <option value="5">mode 5</option>
               </select>
             </div>
-            <p>add a submit button here, on click call plane system endpoint</p>
-            {/* <button onClick={this.saveNumTargets.bind(this)} className={saveClass}>Save</button></div> */}
           </div>
         </div>
-
         <div class="target-info">
-          <h5>Target Metrics</h5>
+          <h6>Target Metrics</h6>
           <p>Images Received: {getCount(images)}</p>
           <p>Images Assigned: {getCount(assignments)}</p>
           <p>Images Processed: {getNumAssignmentsProcessed()}</p>
