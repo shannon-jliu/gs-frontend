@@ -54,7 +54,7 @@
 .recent-image .detect {
   /* uncomment margin-top for slider area*/
   margin-top: 10px;
-  margin-left: 160px;
+  margin-left: 10%;
   width: 40%;
   height: 100%;
   display: flex;
