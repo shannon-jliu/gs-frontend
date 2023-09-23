@@ -118,10 +118,10 @@ export function Progress() {
           <h6>Plane System Metrics</h6>
           {/* focal length */}
           <div class="ps-data">
-            <p>Focal Length:
-            </p>
-            <p>Current: {focalLength} <button onClick={saveFocalLength} className={'waves-effect waves-light btn'}>Save</button>
-            </p>
+            <h5>Focal Length:
+            </h5>
+            <h7>Current: {focalLength} <button onClick={saveFocalLength} className={'waves-effect waves-light btn'}>Save</button>
+            </h7>
             <div className="dropdown">
               <select onChange={(evt) => updateFocalLength(evt)} value={focalLength} className='browser-default'>
                 <option value="1">focal length 1</option>
@@ -134,16 +134,16 @@ export function Progress() {
           </div>
           {/* gimbal position */}
           <div class="ps-data">
-            <p>Gimbal Position:</p>
+            <h5>Gimbal Position:</h5>
             {/* TODO: change display values to those directly from the endpoint */}
-            <p>Current: Roll = {roll}, Pitch = {pitch} <button onClick={saveGimbalPosition} className={'waves-effect waves-light btn'}>Save</button>
-            </p>
+            <h7>Current: Roll = {roll}, Pitch = {pitch} <button onClick={saveGimbalPosition} className={'waves-effect waves-light btn'}>Save</button>
+            </h7>
             {/* TODO: fix styling, add validation, maybe call endpoint */}
             <h6>Angle</h6>
             <div>
               <span>
                 <input
-                  type="roll"
+                  type="text"
                   onChange={updateRoll}
                   value={roll}
                 />
@@ -160,9 +160,9 @@ export function Progress() {
             </div>
           </div>
           <div class="ps-data">
-            <p>PS Modes:</p>
-            <p>Current: {psMode} <button onClick={savePSMode} className={'waves-effect waves-light btn'}>Save</button></p>
-            {/* needs className='browser-default' to display */}
+            <h5>PS Modes:</h5>
+            <h7>Current: {psMode} <button onClick={savePSMode} className={'waves-effect waves-light btn'}>Save</button></h7>
+            {/* Note: needs className='browser-default' to display */}
             <div className="dropdown">
               <select onChange={(evt) => updatePSMode(evt)} value={psMode} className='browser-default'>
                 <option value="1">mode 1</option>
@@ -174,14 +174,6 @@ export function Progress() {
             </div>
           </div>
         </div>
-        {/* <div
-          className="image-viewer-progress"
-          style={{
-            backgroundImage: recentImageTest,
-            backgroundSize: '100px 100px',
-          }}
-        >
-        </div> */}
         <div class="target-info">
           <h6>Target Metrics</h6>
           <p>Images Received: {getCount(images)}</p>
@@ -191,16 +183,7 @@ export function Progress() {
           <p>Percentage Images Processed: {(getNumAssignmentsProcessed() / getCount(images)) * 100}%</p>
           <p>Total ROIs: {getCount(rois)}</p>
           <p>Total Target Sightings: {getCount(targetSightings)}</p>
-          {/* <p>Total Targets: {getCount(targets) - 1}</p> */}
         </div>
-        {/* <div
-          className="image-viewer-progress"
-          style={{
-            backgroundImage: recentImageTest,
-            backgroundSize: '100px 100px',
-          }}
-        >
-        </div> */}
       </div>
       <img width="45%" height="100%" src={recentImageTestTwo}></img>
 
