@@ -8,6 +8,7 @@ import ImageViewer from '../../components/imageViewer'
 import PSModeSelect from './PSModeSelect.js'
 import { update } from 'lodash'
 import Slider from '../tag/components/slider.js'
+import TextField from '../settings/components/TextField.js'
 
 export function Progress() {
   const source = GROUND_SERVER_URL
@@ -23,6 +24,8 @@ export function Progress() {
   const [focalLength, setFocalLength] = useState(0.) // floats -> dragger..
   // const currentGimbalPosition = useState(() => requestObject('/endpoint/here'))
   const [gimbalPosition, setGimbalPosition] = useState(0.) // floats -> ?? two numbers
+  const [roll, setRoll] = useState(0.)
+  const [pitch, setPitch] = useState(0.)
   // const currentPSMode = useState(() => requestObject('/endpoint/here'))
   const [psMode, setPSMode] = useState(1) // dropdown values
 
@@ -63,10 +66,14 @@ export function Progress() {
     return numPending
   }
 
-  const sliderHandler = (evt) => {
+  const updateFocalLength = (evt) => {
     let fL = evt.target.value // fL: focal length
     console.log(fL)
     setFocalLength(fL)
+  }
+
+  const saveFocalLength = () => {
+    console.log(focalLength)
   }
 
   const updateGimbalPosition = (evt) => {
@@ -75,12 +82,31 @@ export function Progress() {
     setGimbalPosition(pos)
   }
 
+  const saveGimbalPosition = () => {
+    console.log(roll)
+    console.log(pitch)
+  }
+
+  const updateRoll = (evt) => {
+    let r = evt.target.value
+    setRoll(r)
+  }
+
+  const updatePitch = (evt) => {
+    let p = evt.target.value
+    setPitch(p)
+  }
+
   const updatePSMode = (evt) => {
     let mode = evt.target.value
     // if want to have save button -> create sep vars for the ps mode you show 
     // and the local ps mode var on here
     // i.e. the ps mode displayed in text is just from the endpoint call
     setPSMode(mode)
+  }
+
+  const savePSMode = () => {
+    console.log(psMode)
   }
 
   return (
@@ -92,37 +118,48 @@ export function Progress() {
           <div class="ps-data">
             <p>Focal Length:
             </p>
-            <p>Current: {focalLength} <button onClick={() => 0} className={'waves-effect waves-light btn'}>Save</button>
+            <p>Current: {focalLength} <button onClick={saveFocalLength} className={'waves-effect waves-light btn'}>Save</button>
             </p>
-            <input
-              id={'t-'}  // change id to something meaningful??
-              className='focal-len-slider' // TODO: fix ugliness
-              type='range'
-              value={focalLength}
-              min='0'
-              max='10'
-              onChange={sliderHandler}
-            />
-            {/* change onClick */}
+            <div className="dropdown">
+              <select onChange={(evt) => updateFocalLength(evt)} value={focalLength} className='browser-default'>
+                <option value="1">focal length 1</option>
+                <option value="2">focal length 2</option>
+                <option value="3">focal length 3</option>
+                <option value="4">focal length 4</option>
+                <option value="5">focal length 5</option>
+              </select>
+            </div>
           </div>
           {/* gimbal position */}
           <div class="ps-data">
             <p>Gimbal Position:</p>
-            <p>Current: {gimbalPosition} <button onClick={() => 0} className={'waves-effect waves-light btn'}>Save</button>
+            {/* TODO: change display values to those directly from the endpoint */}
+            <p>Current: Roll = {roll}, Pitch = {pitch} <button onClick={saveGimbalPosition} className={'waves-effect waves-light btn'}>Save</button>
             </p>
-            <div className="dropdown">
-              <select onChange={(evt) => updateGimbalPosition(evt)} value={gimbalPosition} className='browser-default'>
-                <option value="1">position 1</option>
-                <option value="2">position 2</option>
-                <option value="3">position 3</option>
-                <option value="4">position 4</option>
-                <option value="5">position 5</option>
-              </select>
+            {/* TODO: fix styling, add validation, maybe call endpoint */}
+            <h6>Angle</h6>
+            <div>
+              <span>
+                <input
+                  type="roll"
+                  onChange={updateRoll}
+                  value={roll}
+                />
+              </span>
+            </div>
+            <div>
+              <span>
+                <input
+                  type="text"
+                  onChange={updatePitch}
+                  value={pitch}
+                />
+              </span>
             </div>
           </div>
           <div class="ps-data">
             <p>PS Modes:</p>
-            <p>Current: {psMode} <button onClick={() => 0} className={'waves-effect waves-light btn'}>Save</button></p>
+            <p>Current: {psMode} <button onClick={savePSMode} className={'waves-effect waves-light btn'}>Save</button></p>
             {/* needs className='browser-default' to display */}
             <div className="dropdown">
               <select onChange={(evt) => updatePSMode(evt)} value={psMode} className='browser-default'>
@@ -146,17 +183,20 @@ export function Progress() {
           <p>Total Target Sightings: {getCount(targetSightings)}</p>
           {/* <p>Total Targets: {getCount(targets) - 1}</p> */}
         </div>
-      </div>
-      <div className="recent-image">
-        <div className="detect">
-          <div className="tag-image card">
-            <ImageViewer
-              imageUrl={recentImage}
-              taggable={false}
-              onTag={() => 0}
-            />
+        <div className='image-div'>
+          <div className="recent-image">
+            <div className="detect">
+              <div className="tag-image card">
+                <ImageViewer
+                  imageUrl={recentImage}
+                  taggable={false}
+                  onTag={() => 0}
+                />
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   )
