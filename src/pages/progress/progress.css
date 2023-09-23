@@ -9,7 +9,7 @@
   max-width: 45%;
   max-height: 100%;
   font-size: 15px;
-  
+
 }
 
 .data-body p {
@@ -40,7 +40,7 @@
 }
 
 .recent-image {
-  position:relative;
+  position: relative;
   /* position: absolute;
   top: 65%;
   left: -10%;
@@ -69,8 +69,10 @@
   background-color: blue;
 }
 
+
 ImageViewer {
   background-color: bisque;
+  background-size: 200px 200px;
   /* min-width: 500px;
   min-height: 500px; */
   margin: 0%;
