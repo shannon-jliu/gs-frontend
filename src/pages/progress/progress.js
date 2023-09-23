@@ -4,7 +4,6 @@ import { GROUND_SERVER_URL } from '../../constants/links.js'
 import './progress.css'
 import $ from 'jquery'
 
-import ImageViewer from './imageViewerProgress.js'
 import PSModeSelect from './PSModeSelect.js'
 import { update } from 'lodash'
 import Slider from '../tag/components/slider.js'
@@ -19,6 +18,8 @@ export function Progress() {
   const [targetSightings] = useState(() => requestObject('/api/v1/alphanum_target_sighting'))
   const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/recent')['imageUrl'])
   const [recentImageTest, setRecentImageTest] = useState(() => 'url("' + GROUND_SERVER_URL + requestObject('/api/v1/image/recent')['imageUrl'] + '")')
+  const [recentImageTestTwo, setRecentImageTestTwo] = useState(() => GROUND_SERVER_URL + requestObject('/api/v1/image/recent')['imageUrl'])
+
 
   // Plane System Data:
   // const currentFocalLength = useState(() => requestObject('/endpoint/here'))
@@ -173,14 +174,14 @@ export function Progress() {
             </div>
           </div>
         </div>
-        <div
+        {/* <div
           className="image-viewer-progress"
           style={{
             backgroundImage: recentImageTest,
             backgroundSize: '100px 100px',
           }}
         >
-        </div>
+        </div> */}
         <div class="target-info">
           <h6>Target Metrics</h6>
           <p>Images Received: {getCount(images)}</p>
@@ -192,20 +193,17 @@ export function Progress() {
           <p>Total Target Sightings: {getCount(targetSightings)}</p>
           {/* <p>Total Targets: {getCount(targets) - 1}</p> */}
         </div>
-        <div className='image-div'>
-          <div className="recent-image">
-            <div className="detect">
-              <div className="tag-image card">
-                <ImageViewer
-                  imageUrl={recentImage}
-                  taggable={false}
-                  onTag={() => 0}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* <div
+          className="image-viewer-progress"
+          style={{
+            backgroundImage: recentImageTest,
+            backgroundSize: '100px 100px',
+          }}
+        >
+        </div> */}
       </div>
+      <img width="45%" height="100%" src={recentImageTestTwo}></img>
+
     </div >
   )
 }
