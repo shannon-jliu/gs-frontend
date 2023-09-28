@@ -16,9 +16,7 @@ export function Progress() {
   const [assignments] = useState(() => requestObject('/api/v1/assignment/allusers'))
   const [targets] = useState(() => requestObject('/api/v1/alphanum_target'))
   const [targetSightings] = useState(() => requestObject('/api/v1/alphanum_target_sighting'))
-  const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/recent')['imageUrl'])
-  const [recentImageTest, setRecentImageTest] = useState(() => 'url("' + GROUND_SERVER_URL + requestObject('/api/v1/image/recent')['imageUrl'] + '")')
-  const [recentImageTestTwo, setRecentImageTestTwo] = useState(() => GROUND_SERVER_URL + requestObject('/api/v1/image/recent')['imageUrl'])
+  const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/recent'))
 
 
   // Plane System Data:
@@ -41,7 +39,18 @@ export function Progress() {
     return res.responseJSON
   }
 
+  function getImageUrl() {
+    if (recentImage == undefined) {
+      // fun other to do: switch 0 to like a fun default image that says "no images found" or something idk
+      return 0
+    }
+    return GROUND_SERVER_URL + recentImage['imageUrl']
+  }
+
   function getCount(data) {
+    if (data == undefined) {
+      return 0
+    }
     return Object.keys(data).length
   }
 
@@ -66,6 +75,13 @@ export function Progress() {
     )
     let numPending = Object.keys(assignments).length - count
     return numPending
+  }
+
+  function getPercentProcessed() {
+    if (getCount(images) == 0) {
+      return 0
+    }
+    return (getNumAssignmentsProcessed() / getCount(images)) * 100
   }
 
   const updateFocalLength = (evt) => {
@@ -180,13 +196,12 @@ export function Progress() {
           <p>Images Assigned: {getCount(assignments)}</p>
           <p>Images Processed: {getNumAssignmentsProcessed()}</p>
           <p>Images Pending: {getNumAssignmentsPending()} </p>
-          <p>Percentage Images Processed: {(getNumAssignmentsProcessed() / getCount(images)) * 100}%</p>
+          <p>Percentage Images Processed: {getPercentProcessed()}%</p>
           <p>Total ROIs: {getCount(rois)}</p>
           <p>Total Target Sightings: {getCount(targetSightings)}</p>
         </div>
       </div>
-      <img width="45%" height="100%" src={recentImageTestTwo}></img>
-
+      <img width="40%" height="100%" src={getImageUrl()} alt="No Images"></img>
     </div >
   )
 }
