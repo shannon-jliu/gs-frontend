@@ -25,6 +25,7 @@ export function Progress() {
   // const currentFocalLength = useState(() => requestObject('/endpoint/here'))
   const [focalLength, setFocalLength] = useState(0.) // floats -> dragger..
   // const currentGimbalPosition = useState(() => requestObject('/endpoint/here'))
+  // change based on how data is sent
   const [gimbalPosition, setGimbalPosition] = useState(0.) // floats -> ?? two numbers
   const [roll, setRoll] = useState(0.)
   const [pitch, setPitch] = useState(0.)
@@ -52,8 +53,6 @@ export function Progress() {
         if (assignmentDetails.done == true) { count = count + 1 }
       }
     )
-    // let numPending = Object.keys(assignments).length - count
-    // setImagesPending(numPending)
     return count
   }
 
@@ -185,8 +184,9 @@ export function Progress() {
           <p>Total Target Sightings: {getCount(targetSightings)}</p>
         </div>
       </div>
-      <img width="45%" height="100%" src={recentImageTestTwo}></img>
-
+      <div class='img-body'>
+        <img width="45%" height="100%" src={recentImageTestTwo}></img>
+      </div>
     </div >
   )
 }
