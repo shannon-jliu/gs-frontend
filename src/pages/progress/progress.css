@@ -5,7 +5,7 @@
   background-color: rgb(219, 219, 219);
   border-radius: 10px;
   padding: 1% 1% 1% 2%;
-  max-width: 45%;
+  max-width: 40%;
   max-height: 100%;
   font-size: 15px;
 
@@ -26,8 +26,12 @@
 }
 
 button {
-  float:right;
-  margin-right:2%;
+  float: right;
+  margin-right: 2%;
+}
+
+.img-body {
+  margin: 1%;
 }
 
 .img-body {
