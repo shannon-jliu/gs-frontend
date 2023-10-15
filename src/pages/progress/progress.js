@@ -8,6 +8,8 @@ import PSModeSelect from './PSModeSelect.js'
 import { update } from 'lodash'
 import Slider from '../tag/components/slider.js'
 import TextField from '../settings/components/TextField.js'
+import { PlaneSystemRequests } from '../../util/sendApi'
+import SnackbarUtil from '../../util/snackbarUtil.js'
 
 export function Progress() {
   const source = GROUND_SERVER_URL
@@ -21,7 +23,7 @@ export function Progress() {
 
   // Plane System Data:
   // const currentFocalLength = useState(() => requestObject('/endpoint/here'))
-  const [focalLength, setFocalLength] = useState(0.) // floats -> dragger..
+  const [focalLength, setFocalLength] = useState(10.0) // insert a default val
   // const currentGimbalPosition = useState(() => requestObject('/endpoint/here'))
   // change based on how data is sent
   const [gimbalPosition, setGimbalPosition] = useState(0.) // floats -> ?? two numbers
@@ -84,13 +86,28 @@ export function Progress() {
   }
 
   const updateFocalLength = (evt) => {
+    // maybe delete local storing to just have it update focal length with 
+    // endpoint, and locally grab focal length with endpoint later
     let fL = evt.target.value // fL: focal length
-    console.log(fL)
+    console.log('value: ' + fL)
     setFocalLength(fL)
   }
 
   const saveFocalLength = () => {
-    console.log(focalLength)
+    console.log('focal length' + focalLength)
+    let fLFloat = parseFloat(focalLength)
+    const success = data => {
+      console.log(data)
+      // dispatch(action.updateAssignment(fromJS(data)))
+      // AssignmentOperations.getNextAssignment(dispatch)(currAssignment)
+    }
+    const failure = () => {
+      // TODO: bug... goes here instead of success
+      SnackbarUtil.render('Failed to complete assignment')
+      // dispatch(action.finishLoading())
+    }
+    PlaneSystemRequests.saveFocalLength(fLFloat, success, failure)
+    console.log('after the maybe post request')
   }
 
   const updateGimbalPosition = (evt) => {
@@ -102,6 +119,13 @@ export function Progress() {
   const saveGimbalPosition = () => {
     console.log(roll)
     console.log(pitch)
+    const success = data => {
+      console.log(data)
+    }
+    const failure = () => {
+      SnackbarUtil.render('Failed to complete assignment')
+    }
+    PlaneSystemRequests.saveGimbalPosition(roll, pitch, success, failure)
   }
 
   const updateRoll = (evt) => {
@@ -139,11 +163,11 @@ export function Progress() {
             </h7>
             <div className="dropdown">
               <select onChange={(evt) => updateFocalLength(evt)} value={focalLength} className='browser-default'>
-                <option value="1">focal length 1</option>
-                <option value="2">focal length 2</option>
-                <option value="3">focal length 3</option>
-                <option value="4">focal length 4</option>
-                <option value="5">focal length 5</option>
+                <option value="10.0">10.0</option>
+                <option value="22.1">22.1</option>
+                <option value="14.5">14.5</option>
+                <option value="40.4">40.4</option>
+                <option value="105.6">105.6</option>
               </select>
             </div>
           </div>

@@ -2,6 +2,33 @@ import $ from 'jquery'
 import _ from 'lodash'
 // non-GET requests here
 
+export const PlaneSystemRequests = {
+  saveFocalLength: function (
+    focalLength,
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      '/api/v1/progress/focal-len/',
+      { method: 'POST', headers: { 'focalLength': focalLength } })
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+  saveGimbalPosition: function (
+    roll,
+    pitch,
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      'api/v1/progress/set-gimbal/',
+      { method: 'POST', headers: { 'roll': roll, 'pitch': pitch } }
+    )
+      .done(successCallback)
+      .fail(failureCallback)
+  }
+}
+
 export const TargetSightingRequests = {
   getGeotag: function (targetId, ids, successCallback, failureCallback) {
     $.ajax(
