@@ -90,6 +90,29 @@ export const PlaneSystemRequests = {
       .done(successCallback)
       .fail(failureCallback)
   },
+  savePlaneSystemMode: function (
+    psMode,
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      '/api/v1/progress/' + psMode,
+      { method: 'POST' })
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+  savePlaneSystemModeTimeSearch: function (
+    inactive,
+    active,
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      '/api/v1/progress/time-search',
+      { method: 'POST', headers: { 'inactive': inactive, 'active': active } })
+      .done(successCallback)
+      .fail(failureCallback)
+  }
 }
 
 export const TargetSightingRequests = {

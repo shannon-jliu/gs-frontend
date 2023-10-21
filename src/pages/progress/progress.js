@@ -20,7 +20,6 @@ export function Progress() {
   const [targetSightings] = useState(() => requestObject('/api/v1/alphanum_target_sighting'))
   const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/recent'))
 
-
   // Plane System Data:
   // const currentFocalLength = useState(() => requestObject('/endpoint/here'))
   const [focalLength, setFocalLength] = useState(10.0) // insert a default val
@@ -155,6 +154,30 @@ export function Progress() {
 
   const savePSMode = () => {
     console.log(psMode)
+    const success = data => {
+      console.log(data)
+    }
+    const failure = () => {
+      SnackbarUtil.render('Failed to complete assignment')
+    }
+
+    let val = "time-search"
+    if (psMode == 1) {
+      val = "pan-search"
+    }
+    else if (psMode == 2) {
+      val = "manual-search"
+    }
+    else if (psMode == 3) {
+      val = "distance-search"
+    }
+
+    if (val != "time-search") {
+      PlaneSystemRequests.savePlaneSystemMode(val, success, failure)
+    }
+    else {
+      PlaneSystemRequests.savePlaneSystemModeTimeSearch(inactive, active, success, failure)
+    }
   }
 
   return (
