@@ -3,36 +3,14 @@ import _ from 'lodash'
 // non-GET requests here
 
 export const PlaneSystemRequests = {
-  startPanSearch: function (
+  savePlaneSystemMode: function (
+    psMode,
     successCallback,
     failureCallback
   ) {
     $.ajax(
-      'api/v1/progress/pan-search/',
-      { method: 'POST' }
-    )
-      .done(successCallback)
-      .fail(failureCallback)
-  },
-  startManualSearch: function (
-    successCallback,
-    failureCallback
-  ) {
-    $.ajax(
-      'api/v1/progress/manual-search/',
-      { method: 'POST' }
-    )
-      .done(successCallback)
-      .fail(failureCallback)
-  },
-  startDistanceSearch: function (
-    successCallback,
-    failureCallback
-  ) {
-    $.ajax(
-      'api/v1/progress/distance-search/',
-      { method: 'POST' }
-    )
+      '/api/v1/progress/' + psMode,
+      { method: 'POST' })
       .done(successCallback)
       .fail(failureCallback)
   },
@@ -86,17 +64,6 @@ export const PlaneSystemRequests = {
   },
   captureImage: function (successCallback, failureCallback) {
     $.ajax('/api/v1/progress/capture/',
-      { method: 'POST' })
-      .done(successCallback)
-      .fail(failureCallback)
-  },
-  savePlaneSystemMode: function (
-    psMode,
-    successCallback,
-    failureCallback
-  ) {
-    $.ajax(
-      '/api/v1/progress/' + psMode,
       { method: 'POST' })
       .done(successCallback)
       .fail(failureCallback)
