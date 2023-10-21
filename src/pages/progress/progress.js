@@ -140,9 +140,8 @@ export function Progress() {
 
   const updatePSMode = (evt) => {
     let mode = evt.target.value
-    // if want to have save button -> create sep vars for the ps mode you show 
-    // and the local ps mode var on here
-    // i.e. the ps mode displayed in text is just from the endpoint call
+    // based on ps mode sent, show diff divs
+    // aka if time-search then show div for taking in inactive and active inputs
     setPSMode(mode)
   }
 
@@ -162,6 +161,7 @@ export function Progress() {
             <h7>Current: {focalLength} <button onClick={saveFocalLength} className={'waves-effect waves-light btn'}>Save</button>
             </h7>
             <div className="dropdown">
+              {/* change to be text input -> add some sort of validation ?? unless dropdown is easier */}
               <select onChange={(evt) => updateFocalLength(evt)} value={focalLength} className='browser-default'>
                 <option value="10.0">10.0</option>
                 <option value="22.1">22.1</option>
@@ -177,7 +177,6 @@ export function Progress() {
             {/* TODO: change display values to those directly from the endpoint */}
             <h7>Current: Roll = {roll}, Pitch = {pitch} <button onClick={saveGimbalPosition} className={'waves-effect waves-light btn'}>Save</button>
             </h7>
-            {/* TODO: fix styling, add validation, maybe call endpoint */}
             <h6>Angle</h6>
             <div>
               <span>
@@ -204,11 +203,10 @@ export function Progress() {
             {/* Note: needs className='browser-default' to display */}
             <div className="dropdown">
               <select onChange={(evt) => updatePSMode(evt)} value={psMode} className='browser-default'>
-                <option value="1">mode 1</option>
-                <option value="2">mode 2</option>
-                <option value="3">mode 3</option>
-                <option value="4">mode 4</option>
-                <option value="5">mode 5</option>
+                <option value="1">Pan Search</option>
+                <option value="2">Manual Search</option>
+                <option value="3">Distance Search</option>
+                <option value="4">Time Search (add input for inactive & timed)</option>
               </select>
             </div>
           </div>

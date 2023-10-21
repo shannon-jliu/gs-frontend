@@ -3,14 +3,49 @@ import _ from 'lodash'
 // non-GET requests here
 
 export const PlaneSystemRequests = {
-  saveFocalLength: function (
-    focalLength,
+  startPanSearch: function (
     successCallback,
     failureCallback
   ) {
     $.ajax(
-      '/api/v1/progress/focal-len/',
-      { method: 'POST', headers: { 'focalLength': focalLength } })
+      'api/v1/progress/pan-search/',
+      { method: 'POST' }
+    )
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+  startManualSearch: function (
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      'api/v1/progress/manual-search/',
+      { method: 'POST' }
+    )
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+  startDistanceSearch: function (
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      'api/v1/progress/distance-search/',
+      { method: 'POST' }
+    )
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+  startTimeSearch: function (
+    inactive,
+    active,
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      'api/v1/progress/time-search/',
+      { method: 'POST', headers: { 'inactive': inactive, 'active': active } }
+    )
       .done(successCallback)
       .fail(failureCallback)
   },
@@ -26,7 +61,35 @@ export const PlaneSystemRequests = {
     )
       .done(successCallback)
       .fail(failureCallback)
-  }
+  },
+  saveFocalLength: function (
+    focalLength,
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      '/api/v1/progress/focal-len/',
+      { method: 'POST', headers: { 'focalLength': focalLength } })
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+  saveZoomLevel: function (
+    level,
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      '/api/v1/progress/set-zoom-level/',
+      { method: 'POST', headers: { 'level': level } })
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+  captureImage: function (successCallback, failureCallback) {
+    $.ajax('/api/v1/progress/capture/',
+      { method: 'POST' })
+      .done(successCallback)
+      .fail(failureCallback)
+  },
 }
 
 export const TargetSightingRequests = {

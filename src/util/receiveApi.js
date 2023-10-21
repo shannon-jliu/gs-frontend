@@ -5,6 +5,15 @@ import _ from 'lodash'
 import { AUTH_TOKEN_ID } from '../constants/constants'
 import { GET_SETTINGS } from './config.js'
 
+export const PlaneSystemGetRequests = {
+  getZoomLevel: function (successCallback, failureCallback) {
+    $.get('/api/v1/progress/get-zoom-level/',
+      { method: 'GET' })
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+}
+
 export const TargetGetRequests = {
   getAlphanumTargets: function (successCallback, failureCallback) {
     $.get('/api/v1/alphanum_target')
