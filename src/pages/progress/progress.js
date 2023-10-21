@@ -29,6 +29,8 @@ export function Progress() {
   const [gimbalPosition, setGimbalPosition] = useState(0.) // floats -> ?? two numbers
   const [roll, setRoll] = useState(0.)
   const [pitch, setPitch] = useState(0.)
+  const [inactive, setInactive] = useState(0.)
+  const [active, setActive] = useState(0.)
   // const currentPSMode = useState(() => requestObject('/endpoint/here'))
   const [psMode, setPSMode] = useState(1) // dropdown values
 
@@ -59,11 +61,13 @@ export function Progress() {
 
   function getNumAssignmentsProcessed() {
     let count = 0
-    Object.values(assignments).forEach(
-      assignmentDetails => {
-        if (assignmentDetails.done == true) { count = count + 1 }
-      }
-    )
+    if (Object.values(assignments) != null) {
+      Object.values(assignments).forEach(
+        assignmentDetails => {
+          if (assignmentDetails.done == true) { count = count + 1 }
+        }
+      )
+    }
     return count
   }
 
@@ -82,7 +86,7 @@ export function Progress() {
     if (getCount(images) == 0) {
       return 0
     }
-    return (getNumAssignmentsProcessed() / getCount(images)) * 100
+    return ((getNumAssignmentsProcessed() / getCount(images)) * 100).toFixed(2)
   }
 
   const updateFocalLength = (evt) => {
@@ -128,14 +132,18 @@ export function Progress() {
     PlaneSystemRequests.saveGimbalPosition(roll, pitch, success, failure)
   }
 
-  const updateRoll = (evt) => {
-    let r = evt.target.value
-    setRoll(r)
-  }
-
-  const updatePitch = (evt) => {
-    let p = evt.target.value
-    setPitch(p)
+  const updateTextFields = (evt) => {
+    let val = evt.target.value.match(/^[-]?[\d]*\.?[\d]*$/)
+    if (val === null) {
+      val = ''
+    } else {
+      val = parseFloat(val[0])
+      val = isNaN(val) ? '' : val
+    }
+    if (evt.target.id === "roll") { setRoll(val) }
+    if (evt.target.id === "pitch") { setPitch(val) }
+    if (evt.target.id === "inactive") { setInactive(val) }
+    if (evt.target.id === "active") { setActive(val) }
   }
 
   const updatePSMode = (evt) => {
@@ -153,13 +161,11 @@ export function Progress() {
     <div>
       <div className="data-body">
         <div class="plane-system-info">
-          <h6>Plane System Metrics</h6>
+          <h5>Plane System Metrics</h5>
           {/* focal length */}
           <div class="ps-data">
-            <h5>Focal Length:
-            </h5>
-            <h7>Current: {focalLength} <button onClick={saveFocalLength} className={'waves-effect waves-light btn'}>Save</button>
-            </h7>
+            <h6>Focal Length:<button onClick={saveFocalLength} className={'waves-effect waves-light btn'}>Save</button></h6>
+            <h7>Current: {focalLength}</h7>
             <div className="dropdown">
               {/* change to be text input -> add some sort of validation ?? unless dropdown is easier */}
               <select onChange={(evt) => updateFocalLength(evt)} value={focalLength} className='browser-default'>
@@ -173,46 +179,66 @@ export function Progress() {
           </div>
           {/* gimbal position */}
           <div class="ps-data">
-            <h5>Gimbal Position:</h5>
+            <h6>Gimbal Position: <button onClick={saveGimbalPosition} className={'waves-effect waves-light btn'}>Save</button></h6>
             {/* TODO: change display values to those directly from the endpoint */}
-            <h7>Current: Roll = {roll}, Pitch = {pitch} <button onClick={saveGimbalPosition} className={'waves-effect waves-light btn'}>Save</button>
-            </h7>
-            <h6>Angle</h6>
+            <h7>Current: Roll = {roll}, Pitch = {pitch}</h7>
             <div>
-              <span>
-                <input
-                  type="text"
-                  onChange={updateRoll}
-                  value={roll}
-                />
-              </span>
-            </div>
-            <div>
-              <span>
-                <input
-                  type="text"
-                  onChange={updatePitch}
-                  value={pitch}
-                />
-              </span>
+              <input
+                type="text"
+                onChange={updateTextFields}
+                value={roll}
+                id="roll"
+              />
+              <label>Roll</label>
+              <input
+                type="text"
+                onChange={updateTextFields}
+                value={pitch}
+                id="pitch"
+              />
+              <label>Pitch</label>
             </div>
           </div>
           <div class="ps-data">
-            <h5>PS Modes:</h5>
-            <h7>Current: {psMode} <button onClick={savePSMode} className={'waves-effect waves-light btn'}>Save</button></h7>
+            <h6>PS Modes:<button onClick={savePSMode} className={'waves-effect waves-light btn'}>Save</button></h6>
+            <h7>Current: {psMode}</h7>
             {/* Note: needs className='browser-default' to display */}
             <div className="dropdown">
               <select onChange={(evt) => updatePSMode(evt)} value={psMode} className='browser-default'>
                 <option value="1">Pan Search</option>
                 <option value="2">Manual Search</option>
                 <option value="3">Distance Search</option>
-                <option value="4">Time Search (add input for inactive & timed)</option>
+                <option value="4">Time Search</option>
               </select>
+              <div className={psMode == "4" ? "" : "hidden"}>
+                <div>
+                  <span>
+                    <input
+                      type="text"
+                      onChange={updateTextFields}
+                      value={inactive}
+                      id="inactive"
+                    />
+                    <label>Inactive</label>
+                  </span>
+                </div>
+                <div>
+                  <span>
+                    <input
+                      type="text"
+                      onChange={updateTextFields}
+                      value={active}
+                      id="active"
+                    />
+                    <label>Active</label>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="target-info">
-          <h6>Target Metrics</h6>
+          <h5>Target Metrics</h5>
           <p>Images Received: {getCount(images)}</p>
           <p>Images Assigned: {getCount(assignments)}</p>
           <p>Images Processed: {getNumAssignmentsProcessed()}</p>
