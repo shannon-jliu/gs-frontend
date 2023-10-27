@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { GROUND_SERVER_URL } from '../../constants/links.js'
 import './progress.css'
@@ -13,11 +13,10 @@ import SnackbarUtil from '../../util/snackbarUtil.js'
 
 export function Progress() {
   const source = GROUND_SERVER_URL
-  const [rois] = useState(() => requestObject('/api/v1/roi'))
-  const [images] = useState(() => requestObject('/api/v1/image/all/0'))
-  const [assignments] = useState(() => requestObject('/api/v1/assignment/allusers'))
-  const [targets] = useState(() => requestObject('/api/v1/alphanum_target'))
-  const [targetSightings] = useState(() => requestObject('/api/v1/alphanum_target_sighting'))
+  const [rois, setRois] = useState(() => requestObject('/api/v1/roi'))
+  const [images, setImages] = useState(() => requestObject('/api/v1/image/all/0'))
+  const [assignments, setAssignments] = useState(() => requestObject('/api/v1/assignment/allusers'))
+  const [targetSightings, setTargetSightings] = useState(() => requestObject('/api/v1/alphanum_target_sighting'))
   const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/recent'))
 
   // Plane System Data:
@@ -43,6 +42,47 @@ export function Progress() {
     return res.responseJSON
   }
 
+  const fetchTargetMetrics = async () => {
+    try {
+      const newRois = await requestObject('/api/v1/roi')
+      setRois(newRois)
+      const newImages = await requestObject('/api/v1/image/all/0')
+      setImages(newImages)
+      const newAssignments = await requestObject('/api/v1/assingment/allusers')
+      setAssignments(newAssignments)
+      const newTargetSightings = await requestObject('/api/v1/image/recent')
+      setTargetSightings(newTargetSightings)
+    }
+    catch (error) {
+      console.error("Error fetching target metrics: ", error)
+    }
+  }
+
+  const fetchRecentImage = async () => {
+    try {
+      const newRecentImage = await requestObject('/api/v1/image/recent');
+      setRecentImage(newRecentImage);
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error('Error fetching recent image:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch the recent image immediately
+    fetchRecentImage()
+    fetchTargetMetrics()
+
+    // Set up an interval to fetch the recent image every 3.5 seconds (3500 milliseconds)
+    const intervalId = setInterval(() => {
+      fetchRecentImage();
+      fetchTargetMetrics()
+    }, 3500);
+
+    // Clear the interval when the component unmounts to prevent memory leaks
+    return () => clearInterval(intervalId);
+  }, []);
+
   function getImageUrl() {
     if (recentImage == undefined) {
       // fun other to do: switch 0 to like a fun default image that says "no images found" or something idk
@@ -60,7 +100,7 @@ export function Progress() {
 
   function getNumAssignmentsProcessed() {
     let count = 0
-    if (Object.values(assignments) != null) {
+    if (assignments != null) {
       Object.values(assignments).forEach(
         assignmentDetails => {
           if (assignmentDetails.done == true) { count = count + 1 }
@@ -72,13 +112,15 @@ export function Progress() {
 
   function getNumAssignmentsPending() {
     let count = 0
-    Object.values(assignments).forEach(
-      assignmentDetails => {
-        if (assignmentDetails.done == true) { count = count + 1 }
-      }
-    )
-    let numPending = Object.keys(assignments).length - count
-    return numPending
+    if (assignments != null) {
+      Object.values(assignments).forEach(
+        assignmentDetails => {
+          if (assignmentDetails.done == true) { count = count + 1 }
+        }
+      )
+      let numPending = Object.keys(assignments).length - count
+      return numPending
+    }
   }
 
   function getPercentProcessed() {
