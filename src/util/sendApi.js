@@ -62,24 +62,47 @@ export const PlaneSystemRequests = {
       .done(successCallback)
       .fail(failureCallback)
   },
+  saveAperture: function (
+    aperture,
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      '/api/v1/progress/set-aperture/',
+      { method: 'POST', headers: { 'aperture': aperture } })
+      .done(successCallback)
+      .fail(failureCallback)
+  },
+  saveShutterSpeed: function (
+    numerator,
+    denominator,
+    successCallback,
+    failureCallback
+  ) {
+    $.ajax(
+      '/api/v1/progress/set-shutter-speed/',
+      { method: 'POST', headers: { 'numerator': numerator, 'denominator': denominator } })
+      .done(successCallback)
+      .fail(failureCallback)
+  },
   captureImage: function (successCallback, failureCallback) {
     $.ajax('/api/v1/progress/capture/',
       { method: 'POST' })
       .done(successCallback)
       .fail(failureCallback)
   },
-  savePlaneSystemModeTimeSearch: function (
-    inactive,
-    active,
-    successCallback,
-    failureCallback
-  ) {
-    $.ajax(
-      '/api/v1/progress/time-search',
-      { method: 'POST', headers: { 'inactive': inactive, 'active': active } })
-      .done(successCallback)
-      .fail(failureCallback)
-  }
+  // savePlaneSystemModeTimeSearch: function (
+  //   inactive,
+  //   active,
+  //   successCallback,
+  //   failureCallback
+  // ) {
+  //   $.ajax(
+  //     '/api/v1/progress/time-search',
+  //     { method: 'POST', headers: { 'inactive': inactive, 'active': active } })
+  //     .done(successCallback)
+  //     .fail(failureCallback)
+  // }
 }
 
 export const TargetSightingRequests = {

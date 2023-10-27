@@ -9,6 +9,7 @@ import { update } from 'lodash'
 import Slider from '../tag/components/slider.js'
 import TextField from '../settings/components/TextField.js'
 import { PlaneSystemRequests } from '../../util/sendApi'
+import ProgressOperations from '../../operations/progressOperations.js'
 import SnackbarUtil from '../../util/snackbarUtil.js'
 
 export function Progress() {
@@ -20,16 +21,17 @@ export function Progress() {
   const [recentImage, setRecentImage] = useState(() => requestObject('/api/v1/image/recent'))
 
   // Plane System Data:
-  // const currentFocalLength = useState(() => requestObject('/endpoint/here'))
+  // floats:
   const [focalLength, setFocalLength] = useState(10.0) // insert a default val
-  // const currentGimbalPosition = useState(() => requestObject('/endpoint/here'))
-  // change based on how data is sent
-  const [gimbalPosition, setGimbalPosition] = useState(0.) // floats -> ?? two numbers
   const [roll, setRoll] = useState(0.)
   const [pitch, setPitch] = useState(0.)
   const [inactive, setInactive] = useState(0.)
   const [active, setActive] = useState(0.)
-  // const currentPSMode = useState(() => requestObject('/endpoint/here'))
+  // ints:
+  const [zoomLevel, setZoomLevel] = useState(0)
+  const [aperture, setAperture] = useState(0)
+  const [numerator, setNumerator] = useState(0)
+  const [denominator, setDenominator] = useState(0)
   const [psMode, setPSMode] = useState(1) // dropdown values
 
   // Getting data from the ground server
@@ -130,62 +132,28 @@ export function Progress() {
     return ((getNumAssignmentsProcessed() / getCount(images)) * 100).toFixed(2)
   }
 
-  const updateFocalLength = (evt) => {
-    // maybe delete local storing to just have it update focal length with 
-    // endpoint, and locally grab focal length with endpoint later
-    let fL = evt.target.value // fL: focal length
-    console.log('value: ' + fL)
-    setFocalLength(fL)
-  }
-
-  const saveFocalLength = () => {
-    console.log('focal length' + focalLength)
-    let fLFloat = parseFloat(focalLength)
-    const success = data => {
-      console.log(data)
-      // dispatch(action.updateAssignment(fromJS(data)))
-      // AssignmentOperations.getNextAssignment(dispatch)(currAssignment)
-    }
-    const failure = () => {
-      // TODO: bug... goes here instead of success
-      SnackbarUtil.render('Failed to complete assignment')
-      // dispatch(action.finishLoading())
-    }
-    PlaneSystemRequests.saveFocalLength(fLFloat, success, failure)
-    console.log('after the maybe post request')
-  }
-
-  const updateGimbalPosition = (evt) => {
-    let pos = evt.target.value
-    console.log(pos)
-    setGimbalPosition(pos)
-  }
-
-  const saveGimbalPosition = () => {
-    console.log(roll)
-    console.log(pitch)
-    const success = data => {
-      console.log(data)
-    }
-    const failure = () => {
-      SnackbarUtil.render('Failed to complete assignment')
-    }
-    PlaneSystemRequests.saveGimbalPosition(roll, pitch, success, failure)
-    console.log('after the maybe save gimbal position post request')
-  }
-
   const updateTextFields = (evt) => {
     let val = evt.target.value.match(/^[-]?[\d]*\.?[\d]*$/)
+    let id = evt.target.id
     if (val === null) {
       val = ''
     } else {
-      val = parseFloat(val[0])
+      if (id === 'zoomLevel' || id === 'aperture' || id === 'numerator' || id === 'denominator') {
+        val = parseInt(val[0])
+      } else {
+        val = parseFloat(val[0])
+      }
       val = isNaN(val) ? '' : val
     }
-    if (evt.target.id === "roll") { setRoll(val) }
-    if (evt.target.id === "pitch") { setPitch(val) }
-    if (evt.target.id === "inactive") { setInactive(val) }
-    if (evt.target.id === "active") { setActive(val) }
+    if (id === 'roll') { setRoll(val) }
+    if (id === 'pitch') { setPitch(val) }
+    if (id === 'inactive') { setInactive(val) }
+    if (id === 'active') { setActive(val) }
+    if (id === 'focalLength') { setFocalLength(val) }
+    if (id === 'zoomLevel') { setZoomLevel(val) }
+    if (id === 'aperture') { setAperture(val) }
+    if (id === 'numerator') { setNumerator(val) }
+    if (id === 'denominator') { setDenominator(val) }
   }
 
   const updatePSMode = (evt) => {
@@ -195,78 +163,39 @@ export function Progress() {
     setPSMode(mode)
   }
 
+  const saveFocalLength = () => {
+    let fLFloat = parseFloat(focalLength)
+    console.log('focal length' + fLFloat)
+    // TODO: if dispatch is needed change this call and the below
+    ProgressOperations.saveFocalLength(fLFloat)
+  }
+
+  const saveZoomLevel = () => {
+    ProgressOperations.saveZoomLevel(zoomLevel)
+  }
+
+  const saveAperture = () => {
+    ProgressOperations.saveAperture(aperture)
+  }
+
+  const saveShutterSpeed = () => {
+    ProgressOperations.saveShutterSpeed(numerator, denominator)
+  }
+
+  const saveGimbalPosition = () => {
+    ProgressOperations.saveGimbalPosition(roll, pitch)
+  }
+
   const savePSMode = () => {
-    console.log(psMode)
-    const success = data => {
-      console.log(data)
-    }
-    const failure = () => {
-      SnackbarUtil.render('Failed to complete assignment')
-    }
-
-    let val = 'time-search'
-    if (psMode == 1) {
-      val = 'pan-search'
-    }
-    else if (psMode == 2) {
-      val = 'manual-search'
-    }
-    else if (psMode == 3) {
-      val = 'distance-search'
-    }
-
-    if (val != 'time-search') {
-      PlaneSystemRequests.savePlaneSystemMode(val, success, failure)
-      console.log('after the maybe ps mode post request')
-    }
-    else {
-      PlaneSystemRequests.savePlaneSystemModeTimeSearch(inactive, active, success, failure)
-      console.log('after the maybe time search post request')
-    }
+    ProgressOperations.savePSMode(psMode, inactive, active)
   }
 
   return (
     <div>
       <div className="data-body">
         <div class="plane-system-info">
-          <h5>Plane System Metrics</h5>
-          {/* focal length */}
-          <div class="ps-data">
-            <h6>Focal Length:<button onClick={saveFocalLength} className={'waves-effect waves-light btn'}>Save</button></h6>
-            <h7>Current: {focalLength}</h7>
-            <div className="dropdown">
-              {/* change to be text input -> add some sort of validation ?? unless dropdown is easier */}
-              <select onChange={(evt) => updateFocalLength(evt)} value={focalLength} className='browser-default'>
-                <option value="10.0">10.0</option>
-                <option value="22.1">22.1</option>
-                <option value="14.5">14.5</option>
-                <option value="40.4">40.4</option>
-                <option value="105.6">105.6</option>
-              </select>
-            </div>
-          </div>
-          {/* gimbal position */}
-          <div class="ps-data">
-            <h6>Gimbal Position: <button onClick={saveGimbalPosition} className={'waves-effect waves-light btn'}>Save</button></h6>
-            {/* TODO: change display values to those directly from the endpoint */}
-            <h7>Current: Roll = {roll}, Pitch = {pitch}</h7>
-            <div>
-              <input
-                type="text"
-                onChange={updateTextFields}
-                value={roll}
-                id="roll"
-              />
-              <label>Roll</label>
-              <input
-                type="text"
-                onChange={updateTextFields}
-                value={pitch}
-                id="pitch"
-              />
-              <label>Pitch</label>
-            </div>
-          </div>
+          <h5>Plane System Settings & Metrics</h5>
+          {/* PS Modes */}
           <div class="ps-data">
             <h6>PS Modes:<button onClick={savePSMode} className={'waves-effect waves-light btn'}>Save</button></h6>
             <h7>Current: {psMode}</h7>
@@ -278,7 +207,7 @@ export function Progress() {
                 <option value="3">Distance Search</option>
                 <option value="4">Time Search</option>
               </select>
-              <div className={psMode == "4" ? "" : "hidden"}>
+              <div className={psMode == '4' ? '' : 'hidden'}>
                 <div>
                   <span>
                     <input
@@ -302,6 +231,88 @@ export function Progress() {
                   </span>
                 </div>
               </div>
+            </div>
+          </div>
+          {/* gimbal position */}
+          <div class="ps-data">
+            <h6>Gimbal Position: <button onClick={saveGimbalPosition} className={'waves-effect waves-light btn'}>Save</button></h6>
+            <h7>Current: Roll = {roll}, Pitch = {pitch}</h7>
+            <div>
+              <input
+                type="text"
+                onChange={updateTextFields}
+                value={roll}
+                id="roll"
+              />
+              <label>Roll</label>
+              <input
+                type="text"
+                onChange={updateTextFields}
+                value={pitch}
+                id="pitch"
+              />
+              <label>Pitch</label>
+            </div>
+          </div>
+          {/* focal length */}
+          <div class="ps-data">
+            <h6>Focal Length:<button onClick={saveFocalLength} className={'waves-effect waves-light btn'}>Save</button></h6>
+            {/* Note: doesn't actually display current focal length - does not exist a way to get focal length on ps rn */}
+            <h7>Current: {focalLength}</h7>
+            <div>
+              <input
+                type="text"
+                onChange={updateTextFields}
+                value={focalLength}
+                id="focalLength"
+              />
+            </div>
+          </div>
+          {/* zoom level */}
+          <div class="ps-data">
+            <h6>Zoom Level: <button onClick={saveZoomLevel} className={'waves-effect waves-light btn'}>Save</button></h6>
+            <h7>Current: {zoomLevel}</h7>
+            <div>
+              <input
+                type="text"
+                onChange={updateTextFields}
+                value={zoomLevel}
+                id="zoomLevel"
+              />
+            </div>
+          </div>
+          {/* aperture */}
+          <div class="ps-data">
+            <h6>Aperture: <button onClick={saveAperture} className={'waves-effect waves-light btn'}>Save</button></h6>
+            <h7>Current: {aperture}</h7>
+            <div>
+              <input
+                type="text"
+                onChange={updateTextFields}
+                value={aperture}
+                id="aperture"
+              />
+            </div>
+          </div>
+          {/* shutter speed */}
+          <div class="ps-data">
+            <h6>Shutter Speed: <button onClick={saveShutterSpeed} className={'waves-effect waves-light btn'}>Save</button></h6>
+            <h7>Current: Numerator = {numerator}, Denominator = {denominator}</h7>
+            <div>
+              <input
+                type="text"
+                onChange={updateTextFields}
+                value={numerator}
+                id="numerator"
+              />
+              <label>Numerator</label>
+              <input
+                type="text"
+                onChange={updateTextFields}
+                value={denominator}
+                id="denominator"
+              />
+              <label>Denominator</label>
             </div>
           </div>
         </div>
