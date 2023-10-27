@@ -171,6 +171,7 @@ export function Progress() {
       SnackbarUtil.render('Failed to complete assignment')
     }
     PlaneSystemRequests.saveGimbalPosition(roll, pitch, success, failure)
+    console.log('after the maybe save gimbal position post request')
   }
 
   const updateTextFields = (evt) => {
@@ -203,22 +204,24 @@ export function Progress() {
       SnackbarUtil.render('Failed to complete assignment')
     }
 
-    let val = "time-search"
+    let val = 'time-search'
     if (psMode == 1) {
-      val = "pan-search"
+      val = 'pan-search'
     }
     else if (psMode == 2) {
-      val = "manual-search"
+      val = 'manual-search'
     }
     else if (psMode == 3) {
-      val = "distance-search"
+      val = 'distance-search'
     }
 
-    if (val != "time-search") {
+    if (val != 'time-search') {
       PlaneSystemRequests.savePlaneSystemMode(val, success, failure)
+      console.log('after the maybe ps mode post request')
     }
     else {
       PlaneSystemRequests.savePlaneSystemModeTimeSearch(inactive, active, success, failure)
+      console.log('after the maybe time search post request')
     }
   }
 
