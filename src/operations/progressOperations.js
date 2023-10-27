@@ -37,8 +37,6 @@ const ProgressOperations = {
     }
   },
   saveGimbalPosition: (roll, pitch) => {
-    console.log(roll)
-    console.log(pitch)
     const success = data => {
       console.log(data)
     }
@@ -92,6 +90,16 @@ const ProgressOperations = {
     PlaneSystemRequests.saveShutterSpeed(numerator, denominator, success, failure)
     console.log('after post request')
   },
+  saveCapture: () => {
+    const success = data => {
+      console.log('success: ' + data)
+    }
+    const failure = () => {
+      SnackbarUtil.render('Failed to complete assignment')
+    }
+    PlaneSystemRequests.captureImage(success, failure)
+    console.log('after post request')
+  }
 }
 
 export default ProgressOperations

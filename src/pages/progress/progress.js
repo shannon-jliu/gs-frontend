@@ -190,6 +190,10 @@ export function Progress() {
     ProgressOperations.savePSMode(psMode, inactive, active)
   }
 
+  const saveCapture = () => {
+    ProgressOperations.saveCapture()
+  }
+
   return (
     <div>
       <div className="data-body">
@@ -314,6 +318,10 @@ export function Progress() {
               />
               <label>Denominator</label>
             </div>
+          </div>
+          {/* capture */}
+          <div>
+            <h6>Capture: <button onClick={saveCapture} className={'waves-effect waves-light btn'}>Capture</button></h6>
           </div>
         </div>
         <div class="target-info">

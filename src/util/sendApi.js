@@ -21,7 +21,7 @@ export const PlaneSystemRequests = {
     failureCallback
   ) {
     $.ajax(
-      'api/v1/progress/time-search/',
+      '/api/v1/progress/time-search/',
       { method: 'POST', headers: { 'inactive': inactive, 'active': active } }
     )
       .done(successCallback)
@@ -34,7 +34,7 @@ export const PlaneSystemRequests = {
     failureCallback
   ) {
     $.ajax(
-      'api/v1/progress/set-gimbal/',
+      '/api/v1/progress/set-gimbal/',
       { method: 'POST', headers: { 'roll': roll, 'pitch': pitch } }
     )
       .done(successCallback)
