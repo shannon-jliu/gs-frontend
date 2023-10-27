@@ -48,7 +48,7 @@ export function Progress() {
       setRois(newRois)
       const newImages = await requestObject('/api/v1/image/all/0')
       setImages(newImages)
-      const newAssignments = await requestObject('/api/v1/assingment/allusers')
+      const newAssignments = await requestObject('/api/v1/assignment/allusers')
       setAssignments(newAssignments)
       const newTargetSightings = await requestObject('/api/v1/image/recent')
       setTargetSightings(newTargetSightings)
